@@ -1,0 +1,340 @@
+{
+  "class": "GraphLinksModel",
+  "nodeCategoryProperty": "type",
+  "linkFromPortIdProperty": "fromPort",
+  "linkToPortIdProperty": "toPort",
+  "nodeDataArray": [
+    {
+      "key": 2,
+      "type": "RRL",
+      "vendor": "Nec",
+      "model": "iPassolink",
+      "name": "РРЛ2",
+      "group": "g4",
+      "slots": [
+        {
+          "id": "slot1",
+          "slotNo": 1,
+          "title": "ODU",
+          "ports": [
+            {
+              "id": "p001",
+              "name": "38",
+              "portTypeId": 5,
+              "label": "",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "slot2",
+          "slotNo": 2,
+          "title": "Radio",
+          "ports": [
+            {
+              "id": "p002",
+              "name": "26",
+              "portTypeId": 2,
+              "label": "",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "slot3",
+          "slotNo": 3,
+          "title": "E1",
+          "ports": [
+            {
+              "id": "e001",
+              "name": "1",
+              "portTypeId": 4,
+              "label": "",
+              "note": ""
+            },
+            {
+              "id": "e002",
+              "name": "25",
+              "portTypeId": 4,
+              "label": "",
+              "note": ""
+            },
+            {
+              "id": "e003",
+              "name": "36",
+              "portTypeId": 4,
+              "label": "",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "slot4",
+          "slotNo": 4,
+          "title": "LAN",
+          "ports": [
+            {
+              "id": "t001",
+              "name": "1",
+              "portTypeId": 3,
+              "label": "",
+              "note": ""
+            },
+            {
+              "id": "t002",
+              "name": "22",
+              "portTypeId": 3,
+              "label": "",
+              "note": ""
+            },
+            {
+              "id": "t003",
+              "name": "39",
+              "portTypeId": 3,
+              "label": "",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "slot5",
+          "slotNo": 5,
+          "title": "OPT",
+          "ports": [
+            {
+              "id": "o001",
+              "name": "1",
+              "portTypeId": 1,
+              "label": "",
+              "note": ""
+            },
+            {
+              "id": "o002",
+              "name": "2",
+              "portTypeId": 1,
+              "label": "",
+              "note": ""
+            },
+            {
+              "id": "o003",
+              "name": "16",
+              "portTypeId": 1,
+              "label": "",
+              "note": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "1",
+      "type": "Other",
+      "vendor": "No",
+      "model": "0000",
+      "name": "Что-то",
+      "group": "g10",
+      "slots": []
+    },
+    {
+      "key": "3",
+      "type": "MUX",
+      "vendor": "Cisco",
+      "model": "2900",
+      "name": "мультиплексор",
+      "group": "g1",
+      "slots": []
+    },
+    {
+      "key": "4",
+      "type": "BTS",
+      "vendor": "Huawei",
+      "model": "3900",
+      "name": "станция",
+      "group": "g1",
+      "slots": []
+    },
+    {
+      "key": "5",
+      "type": "ATS",
+      "vendor": "МТА",
+      "model": "М200",
+      "name": "станция",
+      "group": "g1",
+      "slots": []
+    },
+    {
+      "key": "6",
+      "type": "VSAT",
+      "vendor": "Gilat",
+      "model": "SkyEdge 2 IP",
+      "name": "станция",
+      "group": "g2",
+      "slots": []
+    },
+    {
+      "key": "7",
+      "type": "Wifi",
+      "vendor": "Ubiquiti",
+      "model": "PB 5AC Gen2",
+      "name": "мост",
+      "group": "g2",
+      "slots": []
+    },
+    {
+      "key": "8",
+      "type": "Router",
+      "vendor": "TP-Link",
+      "model": "TD-W9970",
+      "name": "Сарыколь",
+      "group": "g2",
+      "slots": []
+    },
+    {
+      "key": "9",
+      "type": "DSLAM",
+      "vendor": "Zyxel",
+      "model": "IES-1248",
+      "name": "Черниговка",
+      "group": "g2",
+      "slots": []
+    },
+    {
+      "key": "10",
+      "type": "MSAN",
+      "vendor": "Eltex",
+      "model": "MC1000-PX",
+      "name": "МАД5",
+      "group": "g2",
+      "slots": []
+    },
+    {
+      "key": "11",
+      "type": "Frame",
+      "vendor": "Huawei",
+      "model": "1",
+      "name": "111",
+      "group": "g3",
+      "slots": []
+    },
+    {
+      "key": "12",
+      "type": "Board",
+      "vendor": "Huawei",
+      "model": "BCKM",
+      "name": "нижняя",
+      "group": "g3",
+      "slots": []
+    },
+    {
+      "key": "13",
+      "type": "Cross",
+      "vendor": "Huawei",
+      "model": "16",
+      "name": "ааа",
+      "group": "g3",
+      "slots": []
+    },
+    {
+      "key": "14",
+      "type": "PC",
+      "vendor": "Asus",
+      "model": "A1000",
+      "name": "сервер",
+      "group": "g3",
+      "slots": []
+    },
+    {
+      "key": "16",
+      "type": "RRL",
+      "vendor": "Nec",
+      "model": "iPassolink",
+      "name": "РРЛ1",
+      "group": "17",
+      "slots": [
+        {
+          "id": "slot1",
+          "slotNo": 1,
+          "title": "ODU",
+          "ports": [
+            {
+              "id": "p001",
+              "name": "1",
+              "portTypeId": 5,
+              "label": "",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "slot2",
+          "slotNo": 2,
+          "title": "Radio",
+          "ports": [
+            {
+              "id": "p002",
+              "name": "1",
+              "portTypeId": 2,
+              "label": "",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "slot3",
+          "slotNo": 3,
+          "title": "E1",
+          "ports": [
+            {
+              "id": "e001",
+              "name": "1",
+              "portTypeId": 4,
+              "label": "",
+              "note": ""
+            }
+          ]
+        },
+        {
+          "id": "slot4",
+          "slotNo": 4,
+          "title": "LAN",
+          "ports": []
+        },
+        {
+          "id": "slot5",
+          "slotNo": 5,
+          "title": "OPT",
+          "ports": []
+        }
+      ]
+    },
+    {
+      "key": "17",
+      "type": "gBuilding",
+      "text": "test",
+      "isGroup": true
+    }
+  ],
+  "linkDataArray": [
+    {
+      "from": "16",
+      "to": 2,
+      "fromPort": "p002",
+      "toPort": "p002",
+      "linkTypeId": 1
+    },
+    {
+      "from": "16",
+      "to": 2,
+      "fromPort": "p001",
+      "toPort": "p001",
+      "linkTypeId": 2
+    },
+    {
+      "from": "16",
+      "to": 2,
+      "fromPort": "e001",
+      "toPort": "e001",
+      "linkTypeId": 3
+    }
+  ]
+}
