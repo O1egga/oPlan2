@@ -1,0 +1,12 @@
+# Временная рабочая папка
+!tmp/
+
+# Системные файлы Windows
+Thumbs.db
+Desktop.ini
+
+# Системные файлы macOS
+.DS_Store
+
+# Логи
+*.log
