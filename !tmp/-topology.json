@@ -1,0 +1,38 @@
+{
+  "class": "GraphLinksModel",
+  "nodeCategoryProperty": "type",
+  "linkCategoryProperty": "type",
+  "nodeDataArray": [
+    { "key": 1, "text": "Что-то", "type": "", "group": "g10" },
+    { "key": 2, "text": "РРЛ2", "type": "RRL", "group": "g4" },
+    { "key": 3, "text": "MUX", "type": "MUX", "group": "g1" },
+    { "key": 4, "text": "BTS", "type": "BTS", "group": "g1" },
+    { "key": 5, "text": "M200", "type": "ATS", "group": "g1" },
+    { "key": 6, "text": "VAST", "type": "VSAT", "group": "g2" },
+    { "key": 7, "text": "Wifi", "type": "Wifi", "group": "g2" },
+    { "key": 8, "text": "Router", "type": "Router", "group": "g2" },
+    { "key": 9, "text": "DSLAM", "type": "DSLAM", "group": "g2" },
+    { "key": 10, "text": "MSAN", "type": "MSAN", "group": "g2" },
+    { "key": 11, "text": "Frame", "type": "Frame", "group": "g3" },
+    { "key": 12, "text": "Board", "type": "Board", "group": "g3" },
+    { "key": 13, "text": "Cross", "type": "Cross", "group": "g3" },
+    { "key": 14, "text": "PC", "type": "PC", "group": "g3" },
+    { "key": 15, "text": "Other", "type": "Other", "group": "g2" },
+    { "key": 16, "text": "РРЛ1", "type": "RRL", "group": "g2" },
+    { "key": "g1", "text": "Казахстан", "type": "gCountry", "isGroup": true },
+    { "key": "g2", "text": "Костанайская область", "type": "gRegion", "isGroup": true, "group": "g1" },
+    { "key": "g3", "text": "Сарыкольский район", "type": "gDistrict", "isGroup": true, "group": "g2" },
+    { "key": "g4", "text": "Сарыколь", "type": "gTown", "isGroup": true, "group": "g3" },
+    { "key": "g5", "text": "Крыловский с.о.", "type": "gArea", "isGroup": true, "group": "g3" },
+    { "key": "g6", "text": "АТС", "type": "gBuilding", "isGroup": true, "group": "g5" },
+    { "key": "g7", "text": "203", "type": "gRoom", "isGroup": true, "group": "g6" },
+    { "key": "g8", "text": "А5", "type": "gRack", "isGroup": true, "group": "g7" },
+    { "key": "g9", "text": "2", "type": "gFrame", "isGroup": true, "group": "g8" },
+    { "key": "g10", "text": "ОДС", "type": "gNet", "isGroup": true, "group": "g1" }
+  ],
+  "linkDataArray": [
+    { "from": 16, "to": 2, "type": "radio" },
+    { "from": 3, "to": 4, "type": "e1" },
+    { "from": 3, "to": 5, "type": "opt" }
+  ]
+}
