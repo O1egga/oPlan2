@@ -1,17 +1,173 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>oPlan2</title>
 
-    <link rel="stylesheet" href="css/style.css" />
-    <script src="pluginJsCss/go-debug.js"></script>
-  </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>oPlan2</title>
 
-  <body>
-    <div id="myDiagramDiv"></div>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="pluginJsCss/beer.scoped.min.css">
 
-    <script type="module" src="main.js"></script>
-  </body>
+  <script src="pluginJsCss/go-debug.js"></script>
+  <script type="module" src="pluginJsCss/beer.min.js"></script>
+</head>
+
+<body>
+  <div id="myDiagramDiv"></div>
+
+  <div class="beer">
+
+
+    <dialog class="right active">
+
+
+      <h5>Добавить оборудование</h5>
+
+      <div class="large-space"></div>
+
+      <!-- тип -->
+      <div class="row">
+        <div class="max">
+          <div class="field border label">
+            <select>
+              <option>РРЛ</option>
+              <option>BTS</option>
+              <option>WiFi</option>
+            </select>
+            <label>Тип</label>
+          </div>
+        </div>
+
+        <!-- название -->
+        <div class="max">
+          <div class="field border label">
+            <input>
+            <label>Название</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- производитель -->
+      <div class="row">
+        <div class="max">
+          <div class="field border label">
+            <select>
+              <option>Nec</option>
+              <option>Huawei</option>
+              <option>Ubiquiti</option>
+            </select>
+            <label>Производитель</label>
+          </div>
+        </div>
+
+        <!-- модель -->
+        <div class="max">
+          <div class="field border label">
+            <select>
+              <option>iPassolink400</option>
+              <option>3606C</option>
+              <option>PB-M5-500</option>
+            </select>
+            <label>Модель</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- слот -->
+      <article class="border">
+
+        <!-- заголовок слота -->
+        <nav>
+          <strong class="max">Слот 1:</strong>
+          <button class="square small error"><i>delete</i></button>
+        </nav>
+
+        <hr class="medium">
+
+        <!-- порты слота -->
+        <ul class="list no-space">
+          <li class="no-padding">
+            <div class="max">1 Cross</div><button class="square small fill"><i>delete</i></button>
+          </li>
+          <li class="no-padding">
+            <div class="max">2 Cross</div><button class="square small fill"><i>delete</i></button>
+          </li>
+          <li class="no-padding">
+            <div class="max">3 Cross</div><button class="square small fill"><i>delete</i></button>
+          </li>
+          <li class="no-padding">
+            <div class="max">4 Cross</div><button class="square small fill"><i>delete</i></button>
+          </li>
+        </ul>
+
+        <hr class="medium">
+
+        <!-- добавить порты -->
+        <nav>
+          <div class="max"></div>
+          <button class="fill">
+            <span>Добавить порты</span>
+
+          </button>
+          <menu class="top no-wrap">
+            <li>
+
+              <div class="row padding">
+                <div class="field small border">
+                  <select>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                  </select>
+                </div>
+
+                <div class="field small border label">
+                  <select>
+                    <option>Radio</option>
+                    <option>Cross</option>
+                    <option>Ethernet</option>
+                    <option>Optical</option>
+                    <option>Other</option>
+                  </select>
+                  <label>тип</label>
+                </div>
+
+                <button class="square fill">
+                  <i>add</i>
+                </button>
+              </div>
+
+            </li>
+          </menu>
+        </nav>
+
+      </article>
+
+      <!-- добавить слот -->
+      <div class="row">
+        <div class="max"></div>
+        <button class="fill">добавить слот</button>
+      </div>
+
+      <div class="large-space"></div>
+
+      <!-- созранить/отменаа -->
+      <nav>
+        <button>Сохранить</button>
+        <button class="border">Отмена</button>
+      </nav>
+
+    </dialog>
+
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+
 </html>
