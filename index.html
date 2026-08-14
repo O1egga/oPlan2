@@ -19,7 +19,7 @@
   <div class="beer">
 
 
-    <dialog class="right active">
+    <dialog id="equipmentDialog" class="right active">
 
 
       <h5>Добавить оборудование</h5>
@@ -74,85 +74,17 @@
         </div>
       </div>
 
-      <!-- слот -->
-      <article class="border">
 
-        <!-- заголовок слота -->
-        <nav>
-          <strong class="max">Слот 1:</strong>
-          <button class="square small error"><i>delete</i></button>
-        </nav>
+      <!-- место для слотов -->
 
-        <hr class="medium">
 
-        <!-- порты слота -->
-        <ul class="list no-space">
-          <li class="no-padding">
-            <div class="max">1 Cross</div><button class="square small fill"><i>delete</i></button>
-          </li>
-          <li class="no-padding">
-            <div class="max">2 Cross</div><button class="square small fill"><i>delete</i></button>
-          </li>
-          <li class="no-padding">
-            <div class="max">3 Cross</div><button class="square small fill"><i>delete</i></button>
-          </li>
-          <li class="no-padding">
-            <div class="max">4 Cross</div><button class="square small fill"><i>delete</i></button>
-          </li>
-        </ul>
 
-        <hr class="medium">
 
-        <!-- добавить порты -->
-        <nav>
-          <div class="max"></div>
-          <button class="fill">
-            <span>Добавить порты</span>
-
-          </button>
-          <menu class="top no-wrap">
-            <li>
-
-              <div class="row padding">
-                <div class="field small border">
-                  <select>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                  </select>
-                </div>
-
-                <div class="field small border label">
-                  <select>
-                    <option>Radio</option>
-                    <option>Cross</option>
-                    <option>Ethernet</option>
-                    <option>Optical</option>
-                    <option>Other</option>
-                  </select>
-                  <label>тип</label>
-                </div>
-
-                <button class="square fill">
-                  <i>add</i>
-                </button>
-              </div>
-
-            </li>
-          </menu>
-        </nav>
-
-      </article>
 
       <!-- добавить слот -->
       <div class="row">
         <div class="max"></div>
-        <button class="fill">добавить слот</button>
+        <button id="addSlot" class="fill">добавить слот</button>
       </div>
 
       <div class="large-space"></div>

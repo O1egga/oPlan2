@@ -1,3 +1,4 @@
+// облако
 go.Shape.defineFigureGenerator('Cloud', (shape, w, h) => new go.Geometry()
   .add(new go.PathFigure(0.08034461 * w, 0.1944299 * h, true)
     .add(new go.PathSegment(go.SegmentType.Bezier, 0.2008615 * w, 0.05349299 * h, -0.09239631 * w, 0.07836421 * h, 0.1406031 * w, -0.0542823 * h))
@@ -16,41 +17,144 @@ go.Shape.defineFigureGenerator('Cloud', (shape, w, h) => new go.Geometry()
     .add(new go.PathSegment(go.SegmentType.Bezier, 0.08034461 * w, 0.1944299 * h, -0.01606892 * w, 0.3892545 * h, -0.01205169 * w, 0.1944299 * h)))
   .setSpots(0.1, 0.1, 0.9, 0.9));
 
-go.Shape.defineFigureGenerator('Trapezoid1', (shape, w, h) => {
-  let param1 = shape ? shape.parameter1 : NaN; // indent's percent distance
-  if (isNaN(param1))
-    param1 = 0.2;
-  else if (param1 < 0.5)
-    param1 = -0.5;
-  else if (param1 > 0.5)
-    param1 = 0.5;
-  const indent = Math.abs(param1) * w;
-  if (param1 === 0) {
-    const geo = new go.Geometry(go.GeometryType.Rectangle);
-    geo.startX = 0;
-    geo.startY = 0;
-    geo.endX = w;
-    geo.endY = h;
-    return geo;
-  }
-  else {
-    const geo = new go.Geometry();
-    if (param1 > 0) {
-      geo.add(new go.PathFigure(indent, 0)
-        .add(new go.PathSegment(go.SegmentType.Line, w - indent, 0))
-        .add(new go.PathSegment(go.SegmentType.Line, w, h))
-        .add(new go.PathSegment(go.SegmentType.Line, 0, h).close()));
-    }
-    else {
-      // param1 < 0
-      geo.add(new go.PathFigure(0, 0)
-        .add(new go.PathSegment(go.SegmentType.Line, w, 0))
-        .add(new go.PathSegment(go.SegmentType.Line, w - indent, h))
-        .add(new go.PathSegment(go.SegmentType.Line, indent, h).close()));
-    }
-    if (indent < w / 2) {
-      geo.setSpots(indent / w, 0, (w - indent) / w, 1);
-    }
-    return geo;
-  }
+// пятиугольник
+// go.Shape.defineFigureGenerator("Pentagon", (shape, w, h) => {
+
+//   const geo = new go.Geometry();
+
+//   const fig = new go.PathFigure(w / 2, 0, true);
+
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w, h * 0.38));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w * 0.81, h));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w * 0.19, h));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, 0, h * 0.38));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w / 2, 0));
+
+//   geo.add(fig)
+
+//   return geo;
+// });
+
+// пятиугольник с прямыми боками
+// go.Shape.defineFigureGenerator("Pentagon2", (shape, w, h) => {
+
+//   const geo = new go.Geometry();
+
+//   const fig = new go.PathFigure(w * 0.5, 0, true);
+
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w, h * 0.6));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w, h));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, 0, h));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, 0, h * 0.6));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w * 0.5, 0));
+
+//   geo.add(fig)
+
+//   return geo;
+// });
+
+// трапеция с узкой вершиной
+go.Shape.defineFigureGenerator("Trapezoid1", (shape, w, h) => {
+
+  const geo = new go.Geometry();
+
+  const fig = new go.PathFigure(w * 0.2, 0, true);
+
+  fig.add(new go.PathSegment(go.PathSegment.Line, w * 0.8, 0));
+  fig.add(new go.PathSegment(go.PathSegment.Line, w, h));
+  fig.add(new go.PathSegment(go.PathSegment.Line, 0, h));
+  fig.add(new go.PathSegment(go.PathSegment.Line, w * 0.2, 0));
+  geo.add(fig);
+
+  return geo;
 });
+
+// трапеция с очень узкой вершиной
+go.Shape.defineFigureGenerator("TrapezoidTriangle", (shape, w, h) => {
+
+  const geo = new go.Geometry();
+
+  const fig = new go.PathFigure(w * 0.4, 0, true);
+
+  fig.add(new go.PathSegment(go.PathSegment.Line, w * 0.6, 0));
+  fig.add(new go.PathSegment(go.PathSegment.Line, w, h));
+  fig.add(new go.PathSegment(go.PathSegment.Line, 0, h));
+  fig.add(new go.PathSegment(go.PathSegment.Line, w * 0.4, 0));
+  geo.add(fig);
+
+  return geo;
+});
+
+// трапеция с широкой вершиной
+// go.Shape.defineFigureGenerator("Trapezoid2", (shape, w, h) => {
+
+//   const geo = new go.Geometry();
+
+//   const fig = new go.PathFigure(0, 0, true);
+
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w, 0));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w * 0.8, h));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w * 0.2, h));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, 0, 0));
+
+//   geo.add(fig);
+
+//   return geo;
+// });
+
+// шестиугольник с плоской вершиной
+// go.Shape.defineFigureGenerator("Hexagon", (shape, w, h) => {
+
+//   const geo = new go.Geometry();
+
+//   const fig = new go.PathFigure(w * 0.25, 0, true);
+
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w * 0.75, 0));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w, h * 0.5));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w * 0.75, h));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w * 0.25, h));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, 0, h * 0.5));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w * 0.25, 0));
+//   geo.add(fig);
+
+//   return geo;
+// });
+
+// шестиугольник с острой вершиной
+// go.Shape.defineFigureGenerator("Hexagon2", (shape, w, h) => {
+
+//   const geo = new go.Geometry();
+
+//   const fig = new go.PathFigure(w / 2, 0, true);
+
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w, h * 0.25));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w, h * 0.75));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w / 2, h));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, 0, h * 0.75));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, 0, h * 0.25));
+//   fig.add(new go.PathSegment(go.PathSegment.Line, w / 2, 0));
+
+//   geo.add(fig);
+
+//   return geo;
+// });
+
+// квадрат со скошенными верхними углами
+go.Shape.defineFigureGenerator("Square2", (shape, w, h) => {
+
+  const geo = new go.Geometry();
+
+  const fig = new go.PathFigure(w * 0.2, 0, true);
+
+  fig.add(new go.PathSegment(go.PathSegment.Line, w * 0.8, 0));
+  fig.add(new go.PathSegment(go.PathSegment.Line, w, h * 0.2));
+  fig.add(new go.PathSegment(go.PathSegment.Line, w, h));
+  fig.add(new go.PathSegment(go.PathSegment.Line, 0, h));
+  fig.add(new go.PathSegment(go.PathSegment.Line, 0, h * 0.2));
+  fig.add(new go.PathSegment(go.PathSegment.Line, w * 0.2, 0));
+
+  geo.add(fig);
+
+  return geo;
+});
+
