@@ -74,17 +74,62 @@
         </div>
       </div>
 
+      <!-- порты -->
+      <ul class="list no-space ports">
+      </ul>
 
-      <!-- место для слотов -->
+      <hr class="medium">
 
-
-
-
-
-      <!-- добавить слот -->
       <div class="row">
+        <div class="field small border">
+          <select class="port-count">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+          </select>
+        </div>
+
+        <div class="field small border label">
+          <select class="port-type">
+            <option value="1">Radio</option>
+            <option value="2">Coaxial</option>
+            <option value="3">Cross</option>
+            <option value="4">Ethernet</option>
+            <option value="5">Optical</option>
+            <option value="6">SFP-Eth</option>
+            <option value="7">SFP-Opt</option>
+            <option value="10">Other</option>
+          </select>
+          <label>тип</label>
+        </div>
+
         <div class="max"></div>
-        <button id="addSlot" class="fill">добавить слот</button>
+
+        <!-- добавить порты -->
+        <nav class="group connected">
+
+          <button class="left-round square add-ports">
+            <i>add</i>
+            <span class="tooltip">Добавить порты</span>
+          </button>
+
+          <!-- удалить все порты -->
+          <button class="square delete-all-ports">
+            <i>delete</i>
+            <span class="tooltip">Удалить все порты</span>
+
+            <!-- удалить порты -->
+            <button class="right-round square delete-ports">
+              <i>remove</i>
+              <span class="tooltip">Удалить порты</span>
+            </button>
+        </nav>
+
       </div>
 
       <div class="large-space"></div>

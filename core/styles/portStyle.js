@@ -76,7 +76,7 @@ const PORT_STYLE = {
     textColor: "#000000"
   },
 
-  6: {
+  7: {
     title: "SFP-Opt",
     figure: "Square",
     width: 15,
