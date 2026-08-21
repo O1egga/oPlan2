@@ -1,4 +1,4 @@
-export function createPort() {
+export function createPort(portTypes) {
 
   return new go.Panel("Spot", {
 
@@ -8,34 +8,33 @@ export function createPort() {
 
     fromLinkable: true,
     toLinkable: true,
+
     margin: 1
 
   })
 
     .bind("portId", "id")
-
-    .bind("width", "style", style => style.width)
-    .bind("height", "style", style => style.height)
+    .bind("width", "portTypeId", type => { return portTypes[type].width })
+    .bind("height", "portTypeId", type => { return portTypes[type].height })
 
     .add(
 
       new go.Shape()
 
-        .bind("figure", "style", style => style.figure)
-        .bind("fill", "style", style => style.fill)
-        .bind("stroke", "style", style => style.stroke)
-        .bind("strokeWidth", "style", style => style.strokeWidth),
+        .bind("figure", "portTypeId", type => { return portTypes[type].figure })
+        .bind("fill", "portTypeId", type => { return portTypes[type].fill })
+        .bind("stroke", "portTypeId", type => { return portTypes[type].stroke })
+        .bind("strokeWidth", "portTypeId", type => { return portTypes[type].strokeWidth }),
 
       new go.TextBlock({
-
         editable: false,
-        isMultiline: false,
+        isMultiline: false
       })
 
         .bind("text", "name")
-        .bind("font", "style", style => style.font)
-        .bind("stroke", "style", style => style.textColor)
+        .bind("font", "portTypeId", type => { return portTypes[type].font })
+        .bind("stroke", "portTypeId", type => { return portTypes[type].textColor })
 
-    );
+    )
 
 }

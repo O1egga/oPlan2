@@ -1,9 +1,9 @@
-import { getPortStyle } from "../../styles/portStyle.js"
-
-export function applyPortStyle(port) {
+export function applyPortStyle(port, portTypes) {
 
   port.style = {
-    ...getPortStyle(port.portTypeId)
+
+    ...portTypes[port.portTypeId]
+
   }
 
 }

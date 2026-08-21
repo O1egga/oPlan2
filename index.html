@@ -19,8 +19,8 @@
   <div class="beer">
 
 
-    <dialog id="equipmentDialog" class="right active">
-
+    <!-- диалог "Добавить оборудование" -->
+    <dialog id="equipmentDialog" class="right">
 
       <h5>Добавить оборудование</h5>
 
@@ -30,11 +30,7 @@
       <div class="row">
         <div class="max">
           <div class="field border label">
-            <select>
-              <option>РРЛ</option>
-              <option>BTS</option>
-              <option>WiFi</option>
-            </select>
+            <select class="equipment-type"></select>
             <label>Тип</label>
           </div>
         </div>
@@ -42,7 +38,7 @@
         <!-- название -->
         <div class="max">
           <div class="field border label">
-            <input>
+            <input class="equipment-name">
             <label>Название</label>
           </div>
         </div>
@@ -52,11 +48,7 @@
       <div class="row">
         <div class="max">
           <div class="field border label">
-            <select>
-              <option>Nec</option>
-              <option>Huawei</option>
-              <option>Ubiquiti</option>
-            </select>
+            <select class="equipment-vendor" disabled></select>
             <label>Производитель</label>
           </div>
         </div>
@@ -64,7 +56,7 @@
         <!-- модель -->
         <div class="max">
           <div class="field border label">
-            <select>
+            <select class="equipment-model" disabled>
               <option>iPassolink400</option>
               <option>3606C</option>
               <option>PB-M5-500</option>
@@ -75,7 +67,7 @@
       </div>
 
       <!-- порты -->
-      <ul class="list no-space ports">
+      <ul class="no-space ports">
       </ul>
 
       <hr class="medium">
@@ -157,8 +149,8 @@
 
       <!-- созранить/отменаа -->
       <nav>
-        <button>Сохранить</button>
-        <button class="border">Отмена</button>
+        <button class="save-equipment" disabled>Сохранить</button>
+        <button class="border cancel-equipment">Отмена</button>
       </nav>
 
     </dialog>

@@ -1,5 +1,4 @@
 import { renumberPorts } from "./portUtils.js"
-import { getPortStyle } from "../../core/styles/portStyle.js"
 
 export function addPorts(button) {
 
@@ -8,36 +7,26 @@ export function addPorts(button) {
   const row = button.closest(".row")
 
   const count = Number(row.querySelector(".port-count").value)
+  const type = Number(row.querySelector(".port-type").value)
 
-  const type = row.querySelector(".port-type").value
-
-  const style = getPortStyle(type)
-
-  // существующие порты этого типа
+  // Находим последний порт этого типа
   const sameTypePorts = [...portList.querySelectorAll(`li[data-type="${type}"]`)]
 
   // вставляем после последнего порта этого типа
   let insertAfter = sameTypePorts.at(-1)
 
-  // следующий номер этого типа
-  let portNumber = sameTypePorts.length + 1
-
   for (let i = 0; i < count; i++) {
 
     const li = document.createElement("li")
 
-    li.className = "no-padding"
+    li.className = "grid"
     li.dataset.type = type
 
     li.innerHTML = `
-      <span class="port-number">${portNumber}</span>
-
-      <span class="chip small port-type" style="background-color: ${style.fill};">${style.title}</span>
-      <div class="max"></div>
-      <button class="square small fill delete-port">
-        <i>delete</i>
-      </button>
-    `
+      <span class="s1 port-number"></span>
+      <span class="s4 chip small port-type" style="background-color: ${style.fill};">${style.title}</span>
+      <span class="s7"></span>
+      `
 
     if (insertAfter) {
       insertAfter.after(li)

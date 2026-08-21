@@ -1,5 +1,4 @@
 import { renumberPorts } from "./portUtils.js"
-import { getPortStyle } from "../../core/styles/portStyle.js"
 import { showConfirmDialog } from "./confirmDialog.js"
 
 export function deletePorts(button) {
@@ -9,19 +8,12 @@ export function deletePorts(button) {
   const row = button.closest(".row")
 
   const count = Number(row.querySelector(".port-count").value)
-
-  const type = row.querySelector(".port-type").value
-
+  const type = Number(row.querySelector(".port-type").value)
   const ports = [...portList.querySelectorAll(`li[data-type="${type}"]`)]
 
-  if (ports.length === 0) {
-    return
-  }
-
-  const style = getPortStyle(type)
+  if (ports.length === 0) { return }
 
   const typeName = style.title
-
   const actualCount = Math.min(count, ports.length)
 
   showConfirmDialog(
@@ -32,11 +24,7 @@ export function deletePorts(button) {
 
       const portsToDelete = ports.slice(-count)
 
-
-      portsToDelete.forEach(port => {
-        port.remove()
-      })
-
+      portsToDelete.forEach(port => { port.remove() })
 
       renumberPorts(portList, type)
     }

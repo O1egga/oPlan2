@@ -1,7 +1,7 @@
-import { applyPortStyle } from "./applyPortStyle.js";
-import { applyLinkStyle } from "./applyLinkStyle.js";
+import { applyPortStyle } from "./applyPortStyle.js"
+import { applyLinkStyle } from "./applyLinkStyle.js"
 
-export function applyPresentation(model) {
+export function applyPresentation(model, portTypes, linkTypes) {
 
   //
   // Groups + Nodes
@@ -15,32 +15,21 @@ export function applyPresentation(model) {
     // Ports
     //
 
-    if (!node.slots)
-      return;
+    if (!node.slots) return
 
     node.slots.forEach(slot => {
 
-      if (!slot.ports)
-        return;
+      if (!slot.ports) return
+      slot.ports.forEach(port => { applyPortStyle(port, portTypes) })
 
-      slot.ports.forEach(port => {
+    })
 
-        applyPortStyle(port);
-
-      });
-
-    });
-
-  });
+  })
 
   //
   // Links
   //
 
-  model.linkDataArray?.forEach(link => {
-
-    applyLinkStyle(link);
-
-  });
+  model.linkDataArray?.forEach(link => { applyLinkStyle(link, linkTypes) })
 
 }

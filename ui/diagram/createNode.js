@@ -1,6 +1,6 @@
 import { createNodeBody } from "./createNodeBody.js"
 
-export function createNode(category, fill) {
+export function createNode(category, fill, title, portTypes) {
 
   return new go.Node("Auto")
     .add(
@@ -20,10 +20,10 @@ export function createNode(category, fill) {
 
         .add(
 
-          createNodeHeaderType(category),
+          createNodeHeaderType(title),
           new go.TextBlock({ row: 1, stroke: "#2f4f4f" }).bind("text", "", data => `${data.vendor}: ${data.model}`),
           new go.TextBlock({ row: 2, stroke: "#ffffff" }).bind("text", "name"),
-          createNodeBody()
+          createNodeBody(portTypes)
         )
 
     )
@@ -31,7 +31,7 @@ export function createNode(category, fill) {
 }
 
 // функция создания заголовка узла с типом, индикатором и кнопкой сворачивания
-function createNodeHeaderType(category) {
+function createNodeHeaderType(title) {
 
   return new go.Panel("Table", { row: 0, stretch: go.Stretch.Horizontal })
 
@@ -45,7 +45,7 @@ function createNodeHeaderType(category) {
       new go.Shape("Circle", { column: 0, width: 7, height: 7, fill: "lime", stroke: null }),
 
       // Тип узла
-      new go.TextBlock(category, { column: 1, stroke: "#000000" }),
+      new go.TextBlock(title, { column: 1, stroke: "#000000" }),
 
       // Кнопка сворачивания
       go.GraphObject.build("PanelExpanderButton", { column: 2, "ButtonIcon.stroke": "#ffff00" }, "NodeBody")

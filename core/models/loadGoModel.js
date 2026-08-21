@@ -1,7 +1,7 @@
 // загрузка модели
 import { applyPresentation } from "../builders/presentation/applyPresentation.js";
 
-export async function loadModel(diagram, url) {
+export async function loadModel(diagram, url, portTypes, linkTypes) {
   try {
     const response = await fetch(url);
 
@@ -13,7 +13,7 @@ export async function loadModel(diagram, url) {
 
     // подготовка данных для отображения
 
-    applyPresentation(json);
+    applyPresentation(json, portTypes, linkTypes);
 
     diagram.model = go.Model.fromJson(json);
   } catch (err) {

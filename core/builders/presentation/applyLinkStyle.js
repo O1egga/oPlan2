@@ -1,9 +1,7 @@
-import { getLinkStyle } from "../../styles/linkStyle.js";
-
-export function applyLinkStyle(link) {
+export function applyLinkStyle(link, linkTypes) {
 
   link.style = {
-    ...getLinkStyle(link.linkTypeId)
+    ...linkTypes[link.linkTypeId]
   }
 
 }
