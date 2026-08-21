@@ -1,4 +1,4 @@
-import { createLink } from "./createLink.js";
+import { createLink } from "./createLinkTemplate.js";
 
 export function registerLinkTemplates(diagram) {
 

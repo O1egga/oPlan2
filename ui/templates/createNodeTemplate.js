@@ -1,6 +1,6 @@
 import { createNodeBody } from "./createNodeBody.js"
 
-export function createNode(category, fill, title, portTypes) {
+export function createNode(fill, title, portTypes) {
 
   return new go.Node("Auto")
     .add(

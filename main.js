@@ -1,7 +1,7 @@
 import { configureDiagram } from "./core/utils/settings.js"
-import { registerNodeTemplates } from "./ui/diagram/nodeTemplates.js"
-import { registerLinkTemplates } from "./ui/diagram/linkTemplates.js"
-import { registerGroupTemplates } from "./ui/diagram/groupTemplates.js"
+import { registerNodeTemplates } from "./ui/templates/registerNodeTemplates.js"
+import { registerLinkTemplates } from "./ui/templates/registerLinkTemplates.js"
+import { registerGroupTemplates } from "./ui/templates/registerGroupTemplates.js"
 import { loadModel } from "./core/models/loadGoModel.js"
 import "./pluginJsCss/customFigures.js"
 import { initEquipmentContextMenu } from "./ui/equipment/equipmentContextMenu.js" // контекстное меню

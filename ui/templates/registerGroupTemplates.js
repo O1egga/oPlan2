@@ -1,4 +1,4 @@
-import { createGroup } from "./createGroup.js"
+import { createGroup } from "./createGroupTemplate.js"
 
 export function registerGroupTemplates(diagram, groupTypes) {
 

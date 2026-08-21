@@ -1,6 +1,6 @@
 // все шаблоны узлов
 
-import { createNode } from "./createNode.js"
+import { createNode } from "./createNodeTemplate.js"
 
 export function registerNodeTemplates(myDiagram, portTypes, nodeTypes) {
 
@@ -9,7 +9,6 @@ export function registerNodeTemplates(myDiagram, portTypes, nodeTypes) {
     myDiagram.nodeTemplateMap.add(
       nodeType.category,
       createNode(
-        nodeType.category,
         nodeType.fill,
         nodeType.name,
         portTypes
