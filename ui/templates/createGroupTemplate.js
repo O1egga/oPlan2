@@ -23,7 +23,9 @@ export function createGroup(figure, fill, header) {
         .addColumnDefinition(2, { width: 24 })
 
         .addRowDefinition(0, { background: header })
+
         .add(
+
           go.GraphObject.build("SubGraphExpanderButton", {
             row: 0,
             column: 0,
@@ -33,16 +35,13 @@ export function createGroup(figure, fill, header) {
           new go.TextBlock({
             row: 0,
             column: 1,
-
             stroke: "white",
             textAlign: "center",
             stretch: go.Stretch.Horizontal,
             margin: 8
-
           })
             .bind("text"),
 
-          // Пустая колонка справа для симметрии
           new go.Panel("Position", {
             row: 0,
             column: 2
@@ -56,6 +55,5 @@ export function createGroup(figure, fill, header) {
 
         )
 
-    );
-
+    )
 }

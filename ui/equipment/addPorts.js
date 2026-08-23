@@ -1,6 +1,6 @@
 import { renumberPorts } from "./portUtils.js"
 
-export function addPorts(button) {
+export function addPorts(button, portTypes) {
 
   const dialog = button.closest("dialog")
   const portList = dialog.querySelector(".ports")
@@ -8,6 +8,8 @@ export function addPorts(button) {
 
   const count = Number(row.querySelector(".port-count").value)
   const type = Number(row.querySelector(".port-type").value)
+
+  const portType = portTypes[type]
 
   // Находим последний порт этого типа
   const sameTypePorts = [...portList.querySelectorAll(`li[data-type="${type}"]`)]
@@ -24,7 +26,7 @@ export function addPorts(button) {
 
     li.innerHTML = `
       <span class="s1 port-number"></span>
-      <span class="s4 chip small port-type" style="background-color: ${style.fill};">${style.title}</span>
+      <span class="s4 chip small port-type" style="background-color: ${portType.fill};">${portType.name}</span>
       <span class="s7"></span>
       `
 

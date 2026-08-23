@@ -4,7 +4,7 @@ import { applyLinkStyle } from "./applyLinkStyle.js"
 export function applyPresentation(model, portTypes, linkTypes) {
 
   //
-  // Groups + Nodes
+  // Groups + Ports
   //
 
   model.nodeDataArray.forEach(node => {
@@ -15,12 +15,11 @@ export function applyPresentation(model, portTypes, linkTypes) {
     // Ports
     //
 
-    if (!node.slots) return
+    if (!node.ports) return
 
-    node.slots.forEach(slot => {
+    node.ports.forEach(port => {
 
-      if (!slot.ports) return
-      slot.ports.forEach(port => { applyPortStyle(port, portTypes) })
+      applyPortStyle(port, portTypes)
 
     })
 

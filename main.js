@@ -4,7 +4,7 @@ import { registerLinkTemplates } from "./ui/templates/registerLinkTemplates.js"
 import { registerGroupTemplates } from "./ui/templates/registerGroupTemplates.js"
 import { loadModel } from "./core/models/loadGoModel.js"
 import "./pluginJsCss/customFigures.js"
-import { initEquipmentContextMenu } from "./ui/equipment/equipmentContextMenu.js" // контекстное меню
+import { initEquipmentContextMenu } from "./ui/equipment/equipmentContextMenu.js"
 import { initEquipmentDialog } from "./ui/equipment/equipmentDialog.js"
 
 
@@ -22,15 +22,10 @@ async function loadNodeTypes() {
 
   const response = await fetch("./api/getNodeTypes.php")
 
-  if (!response.ok) {
-    throw new Error(`Ошибка загрузки NodeTypes: ${response.status}`)
-  }
+  if (!response.ok) { throw new Error(`Ошибка загрузки NodeTypes: ${response.status}`) }
 
   const data = await response.json()
-
-  return Object.fromEntries(
-    data.map(nodeType => [nodeType.id, nodeType])
-  )
+  return Object.fromEntries(data.map(nodeType => [nodeType.id, nodeType]))
 
 }
 
@@ -39,15 +34,10 @@ async function loadPortTypes() {
 
   const response = await fetch("./api/getPortTypes.php")
 
-  if (!response.ok) {
-    throw new Error(`Ошибка загрузки PortTypes: ${response.status}`)
-  }
+  if (!response.ok) { throw new Error(`Ошибка загрузки PortTypes: ${response.status}`) }
 
   const data = await response.json()
-
-  return Object.fromEntries(
-    data.map(portType => [portType.id, portType])
-  )
+  return Object.fromEntries(data.map(portType => [portType.id, portType]))
 }
 
 // получить типы линков
@@ -55,12 +45,9 @@ async function loadLinkTypes() {
 
   const response = await fetch("./api/getLinkTypes.php")
 
-  if (!response.ok) {
-    throw new Error(`Ошибка загрузки LinkTypes: ${response.status}`)
-  }
+  if (!response.ok) { throw new Error(`Ошибка загрузки LinkTypes: ${response.status}`) }
 
   const data = await response.json()
-
   return Object.fromEntries(
     data.map(linkType => {
 
@@ -83,15 +70,11 @@ async function loadGroupTypes() {
 
   const response = await fetch("./api/getGroupTypes.php")
 
-  if (!response.ok) {
-    throw new Error(`Ошибка загрузки GroupTypes: ${response.status}`)
-  }
+  if (!response.ok) { throw new Error(`Ошибка загрузки GroupTypes: ${response.status}`) }
 
   const data = await response.json()
 
-  return Object.fromEntries(
-    data.map(groupType => [groupType.id, groupType])
-  )
+  return Object.fromEntries(data.map(groupType => [groupType.id, groupType]))
 
 }
 
@@ -106,11 +89,10 @@ registerGroupTemplates(myDiagram, groupTypes)
 
 initEquipmentContextMenu(myDiagram, groupTypes)
 
-initEquipmentDialog(myDiagram)
+initEquipmentDialog(myDiagram, portTypes)
 
 await loadModel(
   myDiagram,
-  "./data/topologyTmp_new.json",
   portTypes,
   linkTypes
 )
