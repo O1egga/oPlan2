@@ -1,6 +1,6 @@
 import { createGroup } from "./createGroupTemplate.js"
 
-export function registerGroupTemplates(diagram, groupTypes) {
+export function registerGroupTemplates(diagram, groupTypes, contextMenu) {
 
   Object.values(groupTypes).forEach(group => {
 
@@ -11,7 +11,9 @@ export function registerGroupTemplates(diagram, groupTypes) {
       createGroup(
         group.figure,
         group.fill,
-        group.header
+        group.header,
+        contextMenu,
+        groupTypes
       )
 
     )

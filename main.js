@@ -6,7 +6,9 @@ import { loadModel } from "./core/models/loadGoModel.js"
 import "./pluginJsCss/customFigures.js"
 import { initEquipmentContextMenu } from "./ui/equipment/equipmentContextMenu.js"
 import { initEquipmentDialog } from "./ui/equipment/equipmentDialog.js"
-
+import { initGroupDialog } from "./ui/groups/groupDialog.js"
+import { registerGroupModelListener } from "./core/listeners/groupModelListener.js"
+import { registerNodeModelListener } from "./core/listeners/nodeModelListener.js"
 
 const myDiagram = new go.Diagram("myDiagramDiv", {
   "undoManager.isEnabled": true,
@@ -16,6 +18,29 @@ const myDiagram = new go.Diagram("myDiagramDiv", {
 })
 
 configureDiagram(myDiagram)
+
+// Обработка перемещения элементов на верхний уровень
+myDiagram.mouseDrop = event => {
+
+  const selection = event.diagram.selection
+
+  const target = event.diagram.findPartAt(
+    event.diagram.lastInput.documentPoint,
+    true
+  )
+
+  // Если отпустили внутри другой группы,
+  // Group.mouseDrop обработает перемещение самостоятельно
+  if (
+    target instanceof go.Group &&
+    !selection.has(target)
+  ) {
+    return
+  }
+
+  // Перемещаем выбранные элементы на верхний уровень
+  myDiagram.commandHandler.addTopLevelParts(selection)
+}
 
 // получить типы узлов
 async function loadNodeTypes() {
@@ -85,11 +110,13 @@ const groupTypes = await loadGroupTypes()
 
 registerNodeTemplates(myDiagram, portTypes, nodeTypes)
 registerLinkTemplates(myDiagram)
-registerGroupTemplates(myDiagram, groupTypes)
-
-initEquipmentContextMenu(myDiagram, groupTypes)
 
 initEquipmentDialog(myDiagram, portTypes)
+
+const groupDialog = initGroupDialog(myDiagram, groupTypes)
+const contextMenu = initEquipmentContextMenu(myDiagram, groupDialog)
+
+registerGroupTemplates(myDiagram, groupTypes, contextMenu)
 
 await loadModel(
   myDiagram,
@@ -97,3 +124,5 @@ await loadModel(
   linkTypes
 )
 
+registerGroupModelListener(myDiagram)
+registerNodeModelListener(myDiagram)

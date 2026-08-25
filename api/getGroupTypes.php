@@ -1,5 +1,4 @@
 <?php
-
 // получить все типы групп
 
 $db = new PDO('sqlite:../oPlan2.db');
@@ -11,6 +10,7 @@ $stmt = $db->query("
         id,
         name,
         category,
+        level,
         figure,
         fill,
         header

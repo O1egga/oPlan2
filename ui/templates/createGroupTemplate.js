@@ -1,16 +1,66 @@
-export function createGroup(figure, fill, header) {
+import { canMoveGroup } from "../../core/utils/groupMoveValidation.js"
+
+export function createGroup(figure, fill, header, contextMenu, groupTypes) {
 
   return new go.Group("Auto", {
 
-    layout: new go.LayeredDigraphLayout({
-      isRealtime: false
-    })
+    // Группа пересчитывает границы после завершения перетаскивания
+    computesBoundsAfterDrag: true,
+
+    // Добавляем перетаскиваемые элементы в группу
+    mouseDrop: async (event, group) => {
+
+      const selection = event.diagram.selection
+
+      // Проверяем каждый выбранный элемент
+      const canMove = selection.all(
+        item => canMoveGroup(item, group, groupTypes)
+      )
+
+      if (!canMove) { return }
+
+      // Добавляем выбранные элементы в группу
+      group.addMembers(selection, true)
+
+    },
+
+    // Проверяем возможность помещения элемента в группу
+    mouseDragEnter: (event, group, obj) => {
+
+      const shape = group.findObject("GROUP_SHAPE")
+
+      if (!shape) { return }
+
+      const selection = event.diagram.selection
+
+      // Проверяем каждый выбранный элемент
+      const canMove = selection.all(
+        item => canMoveGroup(item, group, groupTypes)
+      )
+
+      if (canMove) {
+        shape.strokeWidth = 4
+      }
+
+    },
+
+    // Убираем подсветку после выхода
+    mouseDragLeave: (event, group, obj) => {
+
+      const shape = group.findObject("GROUP_SHAPE")
+      if (shape) { shape.strokeWidth = 2 }
+
+    },
+
+    layout: new go.LayeredDigraphLayout({ isRealtime: false }),
+    contextMenu: contextMenu
 
   })
 
     .add(
 
       new go.Shape(figure, {
+        name: "GROUP_SHAPE",
         fill: fill,
         stroke: header,
         strokeWidth: 2
