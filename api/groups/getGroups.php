@@ -20,7 +20,8 @@ try {
             gt.category,
             gt.figure,
             gt.fill,
-            gt.header
+            gt.header,
+            gt.icon
 
         FROM Groups g
 

@@ -9,9 +9,12 @@ import { initEquipmentDialog } from "./ui/equipment/equipmentDialog.js"
 import { initGroupDialog } from "./ui/groups/groupDialog.js"
 import { registerGroupModelListener } from "./core/listeners/groupModelListener.js"
 import { registerNodeModelListener } from "./core/listeners/nodeModelListener.js"
+import { GroupCommandHandler } from "./core/commands/groupCommandHandler.js"
 
 const myDiagram = new go.Diagram("myDiagramDiv", {
-  "undoManager.isEnabled": true,
+
+  commandHandler: new GroupCommandHandler(),
+
   layout: new go.LayeredDigraphLayout({
     isRealtime: false, // отключаем анимацию перестроения пока перетаскиваете мышью объект
   }),

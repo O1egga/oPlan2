@@ -68,20 +68,26 @@ export function createGroup(figure, fill, header, contextMenu, groupTypes) {
 
       new go.Panel("Table")
 
-        .addColumnDefinition(0, { width: 24 })
+        .addColumnDefinition(0, { width: 32 })
         .addColumnDefinition(1, { stretch: go.Stretch.Horizontal })
-        .addColumnDefinition(2, { width: 24 })
+        .addColumnDefinition(2, { width: 32 })
 
         .addRowDefinition(0, { background: header })
 
         .add(
 
-          go.GraphObject.build("SubGraphExpanderButton", {
+          // Иконка
+          new go.TextBlock({
             row: 0,
             column: 0,
-            margin: 4
-          }),
+            stroke: "white",
+            font: "bold 16px sans-serif",
+            textAlign: "center",
+            alignment: go.Spot.Center
+          })
+            .bind("text", "icon"),
 
+          // Название
           new go.TextBlock({
             row: 0,
             column: 1,
@@ -92,11 +98,14 @@ export function createGroup(figure, fill, header, contextMenu, groupTypes) {
           })
             .bind("text"),
 
-          new go.Panel("Position", {
+          // Кнопка свернуть
+          go.GraphObject.build("SubGraphExpanderButton", {
             row: 0,
-            column: 2
+            column: 2,
+            margin: 4
           }),
 
+          // Содержимое группы
           new go.Placeholder({
             row: 1,
             columnSpan: 3,

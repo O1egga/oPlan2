@@ -13,7 +13,8 @@ $stmt = $db->query("
         level,
         figure,
         fill,
-        header
+        header,
+        icon
     FROM GroupTypes
     ORDER BY id
 ");

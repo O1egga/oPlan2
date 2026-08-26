@@ -91,6 +91,8 @@ export async function loadModel(diagram, portTypes, linkTypes) {
 
           groupTypeId: group.groupTypeId,
 
+          icon: group.icon,
+
           ...(group.parentId !== null
             ? { group: `g${group.parentId}` }
             : {}),

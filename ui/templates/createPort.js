@@ -13,7 +13,7 @@ export function createPort(portTypes) {
 
   })
 
-    .bind("portId", "id")
+    .bind("portId", "id", id => String(id))
     .bind("width", "portTypeId", type => { return portTypes[type].width })
     .bind("height", "portTypeId", type => { return portTypes[type].height })
 

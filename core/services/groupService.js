@@ -23,3 +23,27 @@ export async function updateGroupParent(groupId, parentId) {
   return result
 
 }
+
+// Удаляем группу из БД
+export async function deleteGroup(groupId) {
+
+  const response = await fetch("./api/groups/deleteGroup.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      id: groupId
+    })
+  })
+
+  const result = await response.json()
+
+  if (!response.ok || !result.success) {
+    throw new Error(
+      result.error || "Не удалось удалить группу"
+    )
+  }
+
+  return result
+}

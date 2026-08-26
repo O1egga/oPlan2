@@ -95,8 +95,6 @@ export function initGroupDialog(myDiagram, groupTypes) {
       note: ""
     }
 
-    console.log("Сохраняем группу:", data)
-
     try {
 
       const response = await fetch("./api/groups/createGroup.php", {
@@ -117,8 +115,6 @@ export function initGroupDialog(myDiagram, groupTypes) {
         throw new Error(result.error || "Ошибка сохранения группы")
       }
 
-      console.log("Группа создана, id:", result.id)
-
       const groupType = groupTypes[data.groupTypeId]
 
       const groupData = {
@@ -127,6 +123,7 @@ export function initGroupDialog(myDiagram, groupTypes) {
         type: groupType.category,
         text: data.name,
         groupTypeId: data.groupTypeId,
+        icon: groupType.icon,
         note: data.note
       }
 
