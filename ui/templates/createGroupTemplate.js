@@ -94,9 +94,10 @@ export function createGroup(figure, fill, header, contextMenu, groupTypes) {
             stroke: "white",
             textAlign: "center",
             stretch: go.Stretch.Horizontal,
-            margin: 8
+            margin: 8,
+            editable: true
           })
-            .bind("text"),
+            .bindTwoWay("text"),
 
           // Кнопка свернуть
           go.GraphObject.build("SubGraphExpanderButton", {

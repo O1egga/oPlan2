@@ -1,7 +1,4 @@
-import {
-  updateGroupParent,
-  deleteGroup
-} from "../services/groupService.js"
+import { updateGroupParent, updateGroupName, deleteGroup } from "../services/groupService.js"
 
 export function registerGroupModelListener(diagram) {
 
@@ -44,6 +41,48 @@ export function registerGroupModelListener(diagram) {
       return
     }
 
+    // =====================================================
+    // Переименование группы
+    // =====================================================
+
+    if (event.propertyName === "text") {
+
+      const group = event.object
+
+      if (!group?.isGroup) {
+        return
+      }
+
+      const groupId = Number(
+        String(group.key).replace("g", "")
+      )
+
+      const name = String(group.text ?? "").trim()
+
+      if (name === "") {
+        return
+      }
+
+      console.log(
+        "Сохраняем новое название группы в БД:",
+        groupId,
+        name
+      )
+
+      updateGroupName(
+        groupId,
+        name
+      ).catch(error => {
+
+        console.error(
+          "Ошибка сохранения названия группы:",
+          error
+        )
+
+      })
+
+      return
+    }
 
     // =====================================================
     // Удаление группы

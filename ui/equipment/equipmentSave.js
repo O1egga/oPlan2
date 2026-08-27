@@ -62,3 +62,43 @@ export async function saveEquipment(dialog, myDiagram) {
 
   return nodeData
 }
+
+// Обновляем оборудование в БД
+export async function updateEquipment(
+  nodeId,
+  data
+) {
+
+  const response = await fetch(
+    "api/nodes/updateNode.php",
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        id: nodeId,
+        nodeTypeId: data.nodeTypeId,
+        modelId: data.modelId,
+        name: data.name
+      })
+    }
+  )
+
+  const result =
+    await response.json()
+
+  if (!response.ok || !result.success) {
+
+    throw new Error(
+      result.error ||
+      `Ошибка обновления оборудования: ${response.status}`
+    )
+
+  }
+
+  return result
+
+}

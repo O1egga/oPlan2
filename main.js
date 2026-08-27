@@ -10,6 +10,7 @@ import { initGroupDialog } from "./ui/groups/groupDialog.js"
 import { registerGroupModelListener } from "./core/listeners/groupModelListener.js"
 import { registerNodeModelListener } from "./core/listeners/nodeModelListener.js"
 import { GroupCommandHandler } from "./core/commands/groupCommandHandler.js"
+import { initEquipmentDoubleClick } from "./ui/equipment/equipmentDoubleClick.js"
 
 const myDiagram = new go.Diagram("myDiagramDiv", {
 
@@ -115,6 +116,7 @@ registerNodeTemplates(myDiagram, portTypes, nodeTypes)
 registerLinkTemplates(myDiagram)
 
 initEquipmentDialog(myDiagram, portTypes)
+initEquipmentDoubleClick(myDiagram, portTypes)
 
 const groupDialog = initGroupDialog(myDiagram, groupTypes)
 const contextMenu = initEquipmentContextMenu(myDiagram, groupDialog)

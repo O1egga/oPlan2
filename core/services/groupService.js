@@ -47,3 +47,34 @@ export async function deleteGroup(groupId) {
 
   return result
 }
+
+// Обновляем название группы в БД
+export async function updateGroupName(groupId, name) {
+
+  const response = await fetch("./api/groups/updateName.php", {
+
+    method: "POST",
+
+    headers: {
+      "Content-Type": "application/json"
+    },
+
+    body: JSON.stringify({
+      id: groupId,
+      name: name
+    })
+
+  })
+
+  const result = await response.json()
+
+  if (!response.ok || !result.success) {
+
+    throw new Error(
+      result.error || "Не удалось сохранить название группы"
+    )
+
+  }
+
+  return result
+}

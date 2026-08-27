@@ -1,0 +1,11 @@
+{
+  "files.exclude": {
+    "!docs/": true,
+    "!tmp": true,
+    "pluginJsCss": true,
+    ".codegraphy": true,
+    ".nogic": true,
+    ".gitattributes": true,
+    ".gitignore": true,
+  }
+}

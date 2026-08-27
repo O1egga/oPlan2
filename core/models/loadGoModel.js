@@ -105,6 +105,7 @@ export async function loadModel(diagram, portTypes, linkTypes) {
           key: node.id,
 
           type: String(node.nodeTypeId),
+          nodeTypeId: node.nodeTypeId,
 
           name: node.name,
 

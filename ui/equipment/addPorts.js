@@ -1,34 +1,59 @@
 import { renumberPorts } from "./portUtils.js"
 
+
+// Создаёт один порт в списке
+export function createPortListItem(
+  portType,
+  portTypeId,
+  portNo
+) {
+
+  const li = document.createElement("li")
+
+  li.className = "grid"
+  li.dataset.type = portTypeId
+
+  li.innerHTML = `
+    <span class="s1 port-number">${portNo}</span>
+    <span class="s4 chip small port-type" style="background-color: ${portType.fill};">${portType.name}</span>
+    <span class="s7"></span>
+  `
+
+  return li
+}
+
+
+// Добавляет порты
 export function addPorts(button, portTypes) {
 
   const dialog = button.closest("dialog")
   const portList = dialog.querySelector(".ports")
   const row = button.closest(".row")
 
-  const count = Number(row.querySelector(".port-count").value)
-  const type = Number(row.querySelector(".port-type").value)
+  const count =
+    Number(row.querySelector(".port-count").value)
+
+  const type =
+    Number(row.querySelector(".port-type").value)
 
   const portType = portTypes[type]
 
   // Находим последний порт этого типа
-  const sameTypePorts = [...portList.querySelectorAll(`li[data-type="${type}"]`)]
+  const sameTypePorts =
+    [...portList.querySelectorAll(
+      `li[data-type="${type}"]`
+    )]
 
-  // вставляем после последнего порта этого типа
+  // Вставляем после последнего порта этого типа
   let insertAfter = sameTypePorts.at(-1)
 
   for (let i = 0; i < count; i++) {
 
-    const li = document.createElement("li")
-
-    li.className = "grid"
-    li.dataset.type = type
-
-    li.innerHTML = `
-      <span class="s1 port-number"></span>
-      <span class="s4 chip small port-type" style="background-color: ${portType.fill};">${portType.name}</span>
-      <span class="s7"></span>
-      `
+    const li = createPortListItem(
+      portType,
+      type,
+      ""
+    )
 
     if (insertAfter) {
       insertAfter.after(li)
@@ -38,5 +63,6 @@ export function addPorts(button, portTypes) {
 
     insertAfter = li
   }
+
   renumberPorts(portList, type)
 }

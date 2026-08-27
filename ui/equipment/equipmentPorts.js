@@ -1,3 +1,5 @@
+import { createPortListItem } from "./addPorts.js"
+
 export function collectPorts(dialog) {
 
   const portList = dialog.querySelector(".ports")
@@ -36,5 +38,42 @@ export async function loadPorts(nodeId) {
   if (!response.ok) { throw new Error(`Ошибка загрузки портов: ${response.status}`) }
 
   return await response.json()
+
+}
+
+export function fillPorts(
+  dialog,
+  ports,
+  portTypes
+) {
+
+  const portList =
+    dialog.querySelector(".ports")
+
+  portList.innerHTML = ""
+
+  ports.forEach(port => {
+
+    const portType =
+      portTypes[port.portTypeId]
+
+    if (!portType) {
+      console.warn(
+        "Не найден тип порта:",
+        port.portTypeId
+      )
+      return
+    }
+
+    const li =
+      createPortListItem(
+        portType,
+        port.portTypeId,
+        port.portNo
+      )
+
+    portList.append(li)
+
+  })
 
 }
