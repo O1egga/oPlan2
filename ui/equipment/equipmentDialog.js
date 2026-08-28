@@ -186,19 +186,18 @@ export async function openEquipmentDialog(node, portTypes) {
   const dialog =
     document.querySelector("#equipmentDialog")
 
+  const title = dialog.querySelector(".equipment-dialog-title")
+
+  title.textContent = "Редактировать оборудование"
+
   await fillEquipmentForm(
     dialog,
     node.data
   )
 
-  const ports =
-    await loadPorts(node.data.key)
+  const ports = await loadPorts(node.data.key)
 
-  fillPorts(
-    dialog,
-    ports,
-    portTypes
-  )
+  fillPorts(dialog, ports, portTypes)
 
   dialog.dataset.mode = "edit"
   dialog.dataset.nodeId = node.data.key

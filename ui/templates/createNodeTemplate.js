@@ -3,6 +3,7 @@ import { createNodeBody } from "./createNodeBody.js"
 export function createNode(fill, title, portTypes) {
 
   return new go.Node("Auto")
+
     .add(
       new go.Shape("RoundedRectangle", {
         fill,

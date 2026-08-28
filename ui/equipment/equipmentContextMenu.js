@@ -9,6 +9,12 @@ export function initEquipmentContextMenu(myDiagram, groupDialog) {
           click: () => {
 
             const dialog = document.querySelector("#equipmentDialog")
+
+            dialog.querySelector(".equipment-dialog-title").textContent = "Добавить оборудование"
+
+            delete dialog.dataset.mode
+            delete dialog.dataset.nodeId
+
             dialog.showModal()
 
           }

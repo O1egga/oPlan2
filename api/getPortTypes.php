@@ -17,7 +17,8 @@ $stmt = $db->query("
         stroke,
         strokeWidth,
         font,
-        textColor
+        textColor,
+        linkTypeId
     FROM PortTypes
     ORDER BY id
 ");

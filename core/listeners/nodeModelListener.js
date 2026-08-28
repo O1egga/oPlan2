@@ -3,6 +3,11 @@ import {
   deleteNode
 } from "../services/nodeService.js"
 
+
+// Очередь удаления оборудования
+let deleteQueue = Promise.resolve()
+
+
 export function registerNodeModelListener(diagram) {
 
   diagram.model.addChangedListener(event => {
@@ -61,18 +66,29 @@ export function registerNodeModelListener(diagram) {
       const nodeId = Number(node.key)
 
       console.log(
-        "Удаляем оборудование из БД:",
+        "Добавляем оборудование в очередь удаления:",
         nodeId
       )
 
-      deleteNode(nodeId).catch(error => {
+      deleteQueue = deleteQueue
+        .then(() => {
 
-        console.error(
-          "Ошибка удаления оборудования из БД:",
-          error
-        )
+          console.log(
+            "Удаляем оборудование из БД:",
+            nodeId
+          )
 
-      })
+          return deleteNode(nodeId)
+
+        })
+        .catch(error => {
+
+          console.error(
+            "Ошибка удаления оборудования из БД:",
+            error
+          )
+
+        })
 
     }
 

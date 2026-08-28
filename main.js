@@ -11,6 +11,7 @@ import { registerGroupModelListener } from "./core/listeners/groupModelListener.
 import { registerNodeModelListener } from "./core/listeners/nodeModelListener.js"
 import { GroupCommandHandler } from "./core/commands/groupCommandHandler.js"
 import { initEquipmentDoubleClick } from "./ui/equipment/equipmentDoubleClick.js"
+import { registerLinkModelListener } from "./core/listeners/linkModelListener.js"
 
 const myDiagram = new go.Diagram("myDiagramDiv", {
 
@@ -112,6 +113,17 @@ const portTypes = await loadPortTypes()
 const linkTypes = await loadLinkTypes()
 const groupTypes = await loadGroupTypes()
 
+function validateLink(fromNode, fromPort, toNode, toPort) {
+
+  if (!fromPort || !toPort) {
+    return false
+  }
+
+  return fromPort.data.portTypeId === toPort.data.portTypeId
+}
+
+myDiagram.toolManager.linkingTool.linkValidation = validateLink
+
 registerNodeTemplates(myDiagram, portTypes, nodeTypes)
 registerLinkTemplates(myDiagram)
 
@@ -131,3 +143,4 @@ await loadModel(
 
 registerGroupModelListener(myDiagram)
 registerNodeModelListener(myDiagram)
+registerLinkModelListener(myDiagram, portTypes, linkTypes)
