@@ -1,5 +1,5 @@
 // загрузка модели
-import { applyPresentation } from "../builders/presentation/applyPresentation.js"
+import { applyPresentation } from "../presentation/applyPresentation.js"
 
 export async function loadModel(diagram, portTypes, linkTypes) {
 

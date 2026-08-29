@@ -1,4 +1,4 @@
-import { canPlaceGroup } from "./groupHierarchy.js"
+import { canPlaceGroup } from "./groupPlacementValidation.js"
 
 // Проверка возможности перемещения группы
 export function canMoveGroup(group, targetGroup, groupTypes) {

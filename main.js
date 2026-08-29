@@ -1,4 +1,4 @@
-import { configureDiagram } from "./core/utils/settings.js"
+import { configureDiagram } from "./core/utils/configureDiagram.js"
 import { registerNodeTemplates } from "./ui/templates/registerNodeTemplates.js"
 import { registerLinkTemplates } from "./ui/templates/registerLinkTemplates.js"
 import { registerGroupTemplates } from "./ui/templates/registerGroupTemplates.js"
@@ -134,4 +134,4 @@ await loadModel(
 
 registerGroupModelListener(myDiagram)
 registerNodeModelListener(myDiagram)
-registerLinkModelListener(myDiagram, portTypes, linkTypes)
+registerLinkModelListener(myDiagram, portTypes, linkTypes, nodeTypes)

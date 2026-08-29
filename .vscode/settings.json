@@ -3,9 +3,12 @@
     "!docs/": true,
     "!tmp": true,
     "pluginJsCss": true,
+    "css": true,
     ".codegraphy": true,
     ".nogic": true,
     ".gitattributes": true,
     ".gitignore": true,
+    "oPlan2.db": true,
+    "README.MD": true
   }
 }

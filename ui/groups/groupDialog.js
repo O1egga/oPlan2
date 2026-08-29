@@ -1,4 +1,4 @@
-import { canPlaceGroup } from "../../core/utils/groupHierarchy.js"
+import { canPlaceGroup } from "../../core/utils/groupPlacementValidation.js"
 
 export function initGroupDialog(myDiagram, groupTypes) {
 

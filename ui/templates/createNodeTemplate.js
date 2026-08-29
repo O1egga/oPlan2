@@ -24,7 +24,7 @@ export function createNode(fill, title, portTypes) {
           createNodeHeaderType(title),
           new go.TextBlock({ row: 1, stroke: "#2f4f4f" }).bind("text", "", data => `${data.vendor}: ${data.model}`),
           new go.TextBlock({ row: 2, stroke: "#ffffff" }).bind("text", "name"),
-          createNodeBody(portTypes)
+          createNodeBody(portTypes, title)
         )
 
     )

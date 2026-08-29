@@ -80,7 +80,7 @@ async function loadVendors(
 
   try {
 
-    const response = await fetch(`api/vendors.php?nodeTypeId=${nodeTypeId}`)
+    const response = await fetch(`api/getVendorsForForm.php?nodeTypeId=${nodeTypeId}`)
 
     if (!response.ok) { throw new Error("Ошибка загрузки производителей") }
 
@@ -132,7 +132,7 @@ async function loadModels(
 
     const response =
       await fetch(
-        `api/models.php?nodeTypeId=${nodeTypeId}&vendorId=${vendorId}`
+        `api/getModelsForForm.php?nodeTypeId=${nodeTypeId}&vendorId=${vendorId}`
       )
 
     if (!response.ok) {
@@ -190,7 +190,7 @@ async function loadNodeTypes(select) {
   try {
 
     const response =
-      await fetch("api/nodeTypes.php")
+      await fetch("api/getNodeTypesForForm.php")
 
     if (!response.ok) {
 

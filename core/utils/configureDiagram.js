@@ -1,6 +1,6 @@
 // Настройки диаграммы
 
-export function configureDiagram(diagram, portTypes) {
+export function configureDiagram(diagram) {
   diagram.grid = new go.Panel("Grid").add(
     new go.Shape("LineH", {
       stroke: "#e6e6e6", //303030

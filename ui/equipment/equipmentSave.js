@@ -112,22 +112,17 @@ export async function updateEquipment(
   // Удаляем порты
   // ============================================
 
-  const deletedPortIds =
-    dialog._deletedPortIds || []
+  const deletedPortIds = dialog._deletedPortIds || []
 
-  for (const portId of deletedPortIds) {
-
+  if (deletedPortIds.length > 0) {
     await deletePorts(deletedPortIds)
-
   }
-
 
   // ============================================
   // Находим новые порты
   // ============================================
 
-  const ports =
-    collectPorts(dialog)
+  const ports = collectPorts(dialog)
 
   const newPorts =
     ports.filter(

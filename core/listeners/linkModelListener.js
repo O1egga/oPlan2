@@ -1,14 +1,11 @@
-import {
-  createLink,
-  updateLink,
-  deleteLink
-} from "../services/linkService.js"
-
+import { createLink, updateLink, deleteLink } from "../services/linkService.js"
+import { updateLinkLabels } from "../utils/updateLinkLabels.js"
 
 export function registerLinkModelListener(
   diagram,
   portTypes,
-  linkTypes
+  linkTypes,
+  nodeTypes
 ) {
 
   // =====================================================
@@ -113,6 +110,49 @@ export function registerLinkModelListener(
           "Link обновлён в БД:",
           link.data.key
         )
+
+        const fromNode = link.fromNode
+        const toNode = link.toNode
+
+
+        if (
+          fromNode &&
+          fromNode.data.showLinkLabels === true
+        ) {
+
+          const nodeType =
+            nodeTypes[fromNode.data.nodeTypeId]
+
+          if (nodeType) {
+
+            updateLinkLabels(
+              fromNode,
+              true,
+              nodeType.name
+            )
+          }
+
+        }
+
+
+        if (
+          toNode &&
+          toNode.data.showLinkLabels === true
+        ) {
+
+          const nodeType =
+            nodeTypes[toNode.data.nodeTypeId]
+
+          if (nodeType) {
+
+            updateLinkLabels(
+              fromNode,
+              true,
+              nodeType.name
+            )
+          }
+
+        }
 
       })
       .catch(error => {
