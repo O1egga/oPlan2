@@ -5,7 +5,8 @@ import { renumberPorts } from "./portUtils.js"
 export function createPortListItem(
   portType,
   portTypeId,
-  portNo
+  portNo,
+  portId = null
 ) {
 
   const li = document.createElement("li")
@@ -13,9 +14,16 @@ export function createPortListItem(
   li.className = "grid"
   li.dataset.type = portTypeId
 
+  if (portId !== null) {
+    li.dataset.id = portId
+  }
+
   li.innerHTML = `
     <span class="s1 port-number">${portNo}</span>
-    <span class="s4 chip small port-type" style="background-color: ${portType.fill};">${portType.name}</span>
+    <span class="s4 chip small port-type"
+      style="background-color: ${portType.fill};">
+      ${portType.name}
+    </span>
     <span class="s7"></span>
   `
 
@@ -65,4 +73,5 @@ export function addPorts(button, portTypes) {
   }
 
   renumberPorts(portList, type)
+
 }

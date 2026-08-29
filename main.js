@@ -22,7 +22,7 @@ const myDiagram = new go.Diagram("myDiagramDiv", {
   }),
 })
 
-configureDiagram(myDiagram)
+
 
 // Обработка перемещения элементов на верхний уровень
 myDiagram.mouseDrop = event => {
@@ -113,16 +113,7 @@ const portTypes = await loadPortTypes()
 const linkTypes = await loadLinkTypes()
 const groupTypes = await loadGroupTypes()
 
-function validateLink(fromNode, fromPort, toNode, toPort) {
-
-  if (!fromPort || !toPort) {
-    return false
-  }
-
-  return fromPort.data.portTypeId === toPort.data.portTypeId
-}
-
-myDiagram.toolManager.linkingTool.linkValidation = validateLink
+configureDiagram(myDiagram)
 
 registerNodeTemplates(myDiagram, portTypes, nodeTypes)
 registerLinkTemplates(myDiagram)

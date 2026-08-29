@@ -4,7 +4,11 @@ export function createLink() {
 
     routing: go.Routing.Normal,
     curve: go.Curve.None,
-    corner: 5
+    corner: 5,
+
+    // Разрешаем изменение концов Link
+    relinkableFrom: true,
+    relinkableTo: true
 
   })
 

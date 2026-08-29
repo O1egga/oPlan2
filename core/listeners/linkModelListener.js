@@ -1,5 +1,6 @@
 import {
   createLink,
+  updateLink,
   deleteLink
 } from "../services/linkService.js"
 
@@ -83,6 +84,47 @@ export function registerLinkModelListener(
 
   })
 
+
+  // =====================================================
+  // Переподключение Link
+  // =====================================================
+
+  diagram.addDiagramListener("LinkRelinked", event => {
+
+    const link = event.subject
+
+    if (!(link instanceof go.Link)) {
+      return
+    }
+
+    if (!link.data) {
+      return
+    }
+
+    console.log(
+      "ПЕРЕПОДКЛЮЧЕНИЕ LINK:",
+      link.data
+    )
+
+    updateLink(link.data)
+      .then(() => {
+
+        console.log(
+          "Link обновлён в БД:",
+          link.data.key
+        )
+
+      })
+      .catch(error => {
+
+        console.error(
+          "Ошибка обновления Link в БД:",
+          error
+        )
+
+      })
+
+  })
 
   // =====================================================
   // Удаление Link

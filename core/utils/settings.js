@@ -1,6 +1,6 @@
 // Настройки диаграммы
 
-export function configureDiagram(diagram) {
+export function configureDiagram(diagram, portTypes) {
   diagram.grid = new go.Panel("Grid").add(
     new go.Shape("LineH", {
       stroke: "#e6e6e6", //303030
@@ -13,4 +13,7 @@ export function configureDiagram(diagram) {
   )
 
   diagram.grid.visible = true
+
+  // Перетаскивание концов существующих Link
+  diagram.toolManager.relinkingTool.isEnabled = true
 }

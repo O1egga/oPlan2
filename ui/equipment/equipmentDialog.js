@@ -19,30 +19,90 @@ export function initEquipmentDialog(myDiagram, portTypes) {
 
   initEquipmentForm(dialog)
 
+  dialog.addEventListener(
+    "portsChanged",
+    () => {
+
+      if (dialog.dataset.mode === "edit") {
+        checkEquipmentChanges(dialog)
+      }
+
+    }
+  )
+
+
+
+  dialog.addEventListener("input", () => {
+
+    if (dialog.dataset.mode === "edit") {
+      checkEquipmentChanges(dialog)
+    }
+
+  })
+
+  dialog.addEventListener("change", () => {
+
+    if (dialog.dataset.mode === "edit") {
+      checkEquipmentChanges(dialog)
+    }
+
+  })
+
+
+
+
+
   // Кнопки диалога
   dialog.addEventListener("click", async (event) => {
 
     const addPortsButton = event.target.closest(".add-ports")
     if (addPortsButton) {
-      addPorts(addPortsButton, portTypes)
+
+      addPorts(
+        addPortsButton,
+        portTypes
+      )
+
+      if (dialog.dataset.mode === "edit") {
+        checkEquipmentChanges(dialog)
+      }
+
       return
     }
+
 
     const deletePortsButton = event.target.closest(".delete-ports")
     if (deletePortsButton) {
-      deletePorts(deletePortsButton)
+
+      deletePorts(
+        deletePortsButton
+      )
+
       return
     }
 
-    const deleteAllPortsButton = event.target.closest(".delete-all-ports")
+    const deleteAllPortsButton =
+      event.target.closest(".delete-all-ports")
+
     if (deleteAllPortsButton) {
-      deleteAllPorts(deleteAllPortsButton)
+
+      await deleteAllPorts(
+        deleteAllPortsButton
+      )
+
       return
     }
 
     const cancelButton = event.target.closest(".cancel-equipment")
     if (cancelButton) {
       dialog.close()
+
+      delete dialog.dataset.mode
+      delete dialog.dataset.nodeId
+
+      dialog._originalEquipmentState = null
+      dialog._deletedPortIds = []
+
       return
     }
 
@@ -89,10 +149,12 @@ export function initEquipmentDialog(myDiagram, portTypes) {
 
           }
 
-          await updateEquipment(
-            nodeId,
-            data
-          )
+          const result =
+            await updateEquipment(
+              nodeId,
+              data,
+              dialog
+            )
 
           // Обновляем Node в GoJS
           const node =
@@ -146,6 +208,13 @@ export function initEquipmentDialog(myDiagram, portTypes) {
               ].text
             )
 
+            // Обновляем порты
+            myDiagram.model.setDataProperty(
+              node.data,
+              "ports",
+              result.ports
+            )
+
           }
 
         } else {
@@ -181,14 +250,90 @@ export function initEquipmentDialog(myDiagram, portTypes) {
 
 }
 
+function checkEquipmentChanges(dialog) {
+
+  const original =
+    dialog._originalEquipmentState
+
+  if (!original) {
+    return
+  }
+
+  const current = {
+
+    nodeTypeId:
+      Number(
+        dialog.querySelector(".equipment-type").value
+      ),
+
+    vendorId:
+      Number(
+        dialog.querySelector(".equipment-vendor").value
+      ),
+
+    modelId:
+      Number(
+        dialog.querySelector(".equipment-model").value
+      ),
+
+    name:
+      dialog.querySelector(".equipment-name").value.trim()
+
+  }
+
+  const equipmentChanged =
+    current.nodeTypeId !== original.nodeTypeId ||
+    current.vendorId !== original.vendorId ||
+    current.modelId !== original.modelId ||
+    current.name !== original.name
+
+
+  const portsChanged =
+    JSON.stringify(
+      getCurrentPorts(dialog)
+    ) !==
+    JSON.stringify(
+      original.ports
+    )
+
+
+  dialog.querySelector(
+    ".save-equipment"
+  ).disabled =
+    !(equipmentChanged || portsChanged)
+
+}
+
+
+function getCurrentPorts(dialog) {
+
+  return [
+    ...dialog.querySelectorAll(".ports li")
+  ].map(port => ({
+
+    portTypeId:
+      Number(port.dataset.type),
+
+    portNo:
+      Number(
+        port.querySelector(".port-number").textContent
+      )
+
+  }))
+
+}
+
+
 export async function openEquipmentDialog(node, portTypes) {
 
-  const dialog =
-    document.querySelector("#equipmentDialog")
-
+  const dialog = document.querySelector("#equipmentDialog")
   const title = dialog.querySelector(".equipment-dialog-title")
 
   title.textContent = "Редактировать оборудование"
+
+  // Список портов, удалённых пользователем
+  dialog._deletedPortIds = []
+
 
   await fillEquipmentForm(
     dialog,
@@ -198,6 +343,47 @@ export async function openEquipmentDialog(node, portTypes) {
   const ports = await loadPorts(node.data.key)
 
   fillPorts(dialog, ports, portTypes)
+
+
+
+
+
+  dialog._originalEquipmentState = {
+
+    nodeTypeId:
+      Number(
+        dialog.querySelector(".equipment-type").value
+      ),
+
+    vendorId:
+      Number(
+        dialog.querySelector(".equipment-vendor").value
+      ),
+
+    modelId:
+      Number(
+        dialog.querySelector(".equipment-model").value
+      ),
+
+    name:
+      dialog.querySelector(".equipment-name").value.trim(),
+
+    ports:
+      ports.map(port => ({
+        portTypeId: Number(port.portTypeId),
+        portNo: Number(port.portNo)
+      }))
+
+  }
+
+  dialog.querySelector(
+    ".save-equipment"
+  ).disabled = true
+
+
+
+
+
 
   dialog.dataset.mode = "edit"
   dialog.dataset.nodeId = node.data.key

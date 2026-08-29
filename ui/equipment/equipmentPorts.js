@@ -6,9 +6,12 @@ export function collectPorts(dialog) {
   const ports = [...portList.querySelectorAll("li")]
 
   return ports.map(port => ({
+
+    id: port.dataset.id ? Number(port.dataset.id) : null,
     portTypeId: Number(port.dataset.type),
     portNo: Number(port.querySelector(".port-number").textContent),
     name: port.querySelector(".port-number").textContent
+
   }))
 
 }
@@ -41,27 +44,18 @@ export async function loadPorts(nodeId) {
 
 }
 
-export function fillPorts(
-  dialog,
-  ports,
-  portTypes
-) {
+export function fillPorts(dialog, ports, portTypes) {
 
-  const portList =
-    dialog.querySelector(".ports")
+  const portList = dialog.querySelector(".ports")
 
   portList.innerHTML = ""
 
   ports.forEach(port => {
 
-    const portType =
-      portTypes[port.portTypeId]
+    const portType = portTypes[port.portTypeId]
 
     if (!portType) {
-      console.warn(
-        "Не найден тип порта:",
-        port.portTypeId
-      )
+      console.warn("Не найден тип порта:", port.portTypeId)
       return
     }
 
@@ -69,11 +63,87 @@ export function fillPorts(
       createPortListItem(
         portType,
         port.portTypeId,
-        port.portNo
+        port.portNo,
+        port.id
       )
 
     portList.append(li)
 
   })
 
+}
+
+export async function deletePorts(portIds) {
+
+  if (!portIds || portIds.length === 0) {
+    return
+  }
+
+  const response = await fetch(
+    "api/nodes/ports/deletePort.php",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        ids: portIds
+      })
+    }
+  )
+
+  const result =
+    await response.json()
+
+  if (!response.ok || !result.success) {
+
+    const error =
+      new Error(
+        result.error ||
+        "Ошибка удаления портов"
+      )
+
+    error.usedPortIds =
+      result.usedPortIds || []
+
+    throw error
+  }
+
+}
+
+export async function checkPorts(portIds) {
+
+  if (!portIds || portIds.length === 0) {
+    return []
+  }
+
+  const response = await fetch(
+    "api/nodes/ports/deletePort.php",
+    {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        ids: portIds,
+        checkOnly: true
+      })
+    }
+  )
+
+  const result =
+    await response.json()
+
+  if (!response.ok) {
+
+    throw new Error(
+      result.error ||
+      "Ошибка проверки портов"
+    )
+
+  }
+
+  return result.usedPortIds || []
 }

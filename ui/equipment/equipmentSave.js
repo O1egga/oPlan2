@@ -1,4 +1,4 @@
-import { collectPorts, savePorts, loadPorts } from "./equipmentPorts.js"
+import { collectPorts, savePorts, loadPorts, deletePorts } from "./equipmentPorts.js"
 
 export async function saveEquipment(dialog, myDiagram) {
 
@@ -50,6 +50,9 @@ export async function saveEquipment(dialog, myDiagram) {
 
     key: nodeId,
     type: String(nodeTypeId),
+    nodeTypeId: Number(nodeTypeId),
+    vendorId: Number(vendorId),
+    modelId: Number(modelId),
     vendor: vendorSelect.options[vendorSelect.selectedIndex].text,
     model: modelSelect.options[modelSelect.selectedIndex].text,
     name: name,
@@ -66,8 +69,13 @@ export async function saveEquipment(dialog, myDiagram) {
 // Обновляем оборудование в БД
 export async function updateEquipment(
   nodeId,
-  data
+  data,
+  dialog
 ) {
+
+  // ============================================
+  // Обновляем оборудование
+  // ============================================
 
   const response = await fetch(
     "api/nodes/updateNode.php",
@@ -99,6 +107,50 @@ export async function updateEquipment(
 
   }
 
-  return result
 
+  // ============================================
+  // Удаляем порты
+  // ============================================
+
+  const deletedPortIds =
+    dialog._deletedPortIds || []
+
+  for (const portId of deletedPortIds) {
+
+    await deletePorts(deletedPortIds)
+
+  }
+
+
+  // ============================================
+  // Находим новые порты
+  // ============================================
+
+  const ports =
+    collectPorts(dialog)
+
+  const newPorts =
+    ports.filter(
+      port => !port.id
+    )
+
+
+  // ============================================
+  // Сохраняем новые порты
+  // ============================================
+
+  await savePorts(
+    nodeId,
+    newPorts
+  )
+
+
+  // Получаем актуальный список портов из БД
+  const updatedPorts =
+    await loadPorts(nodeId)
+
+  return {
+    ...result,
+    ports: updatedPorts
+  }
 }

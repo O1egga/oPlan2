@@ -6,9 +6,49 @@ export class GroupCommandHandler extends go.CommandHandler {
 
     const selection = this.diagram.selection
 
+    // ============================================
+    // Проверяем оборудование
+    // ============================================
+
+    const nodesWithLinks = []
+
+    selection.each(part => {
+
+      if (!(part instanceof go.Node)) {
+        return
+      }
+
+      if (part instanceof go.Group) {
+        return
+      }
+
+      if (part.findLinksConnected().count > 0) {
+
+        nodesWithLinks.push(part)
+
+      }
+
+    })
+
+
+    if (nodesWithLinks.length > 0) {
+
+      alert(
+        "Нельзя удалить оборудование.\n\n" +
+        "Оно используется в Link."
+      )
+
+      return
+    }
+
+
+    // ============================================
+    // Проверяем группы
+    // ============================================
+
     const canDelete = selection.all(part => {
 
-      // Обычные узлы удаляем стандартно
+      // Обычные узлы уже проверены выше
       if (!(part instanceof go.Group)) {
         return true
       }
@@ -17,6 +57,7 @@ export class GroupCommandHandler extends go.CommandHandler {
       return canDeleteGroup(part)
 
     })
+
 
     if (!canDelete) {
 
@@ -28,7 +69,11 @@ export class GroupCommandHandler extends go.CommandHandler {
       return
     }
 
-    // Всё разрешено — используем стандартное удаление GoJS
+
+    // ============================================
+    // Всё разрешено
+    // ============================================
+
     super.deleteSelection()
 
   }
