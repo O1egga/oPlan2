@@ -22,7 +22,11 @@ export function createReferenceSelector(
       </div>
     </nav>
 
-    <div style="height: 200px; overflow-y: auto;">
+    <div class="right-align">
+      <span id="countItem" class="large-padding"></span>
+    </div>
+
+    <div style="height: 400px; overflow-y: auto;">
       <ul class="list no-space"></ul>
     </div>
   `
@@ -30,6 +34,7 @@ export function createReferenceSelector(
   const input = container.querySelector("input")
   const addButton = container.querySelector(".reference-add")
   const list = container.querySelector("ul")
+  const countItem = container.querySelector("#countItem")
 
   let items = [...data]
   let selected = null
@@ -49,6 +54,8 @@ export function createReferenceSelector(
     const filteredItems = items.filter(item =>
       item.trim().toLowerCase().includes(search)
     )
+
+    countItem.textContent = filteredItems.length
 
     list.innerHTML = filteredItems.map(item => `
 

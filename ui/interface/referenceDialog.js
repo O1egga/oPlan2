@@ -14,12 +14,7 @@ export async function initReferenceDialog() {
   const editSave = document.querySelector("#referenceEditSave")
 
   const referenceDialog = document.querySelector("#referenceDialog")
-  const referenceDialogClose =
-    referenceDialog.querySelector("#reference-dialog-close")
-
-  const relationTable = referenceDialog.querySelector("table")
-  const relationTbody = relationTable.querySelector("tbody")
-
+  const referenceDialogClose = referenceDialog.querySelector("#reference-dialog-close")
 
   // --------------------------------------------------
   // Состояние
@@ -52,7 +47,6 @@ export async function initReferenceDialog() {
   const models = referenceData.models
   const modelNodeTypes = referenceData.modelNodeTypes
 
-
   // --------------------------------------------------
   // ID приводим к числам
   // --------------------------------------------------
@@ -75,6 +69,9 @@ export async function initReferenceDialog() {
     item.nodeTypeId = Number(item.nodeTypeId)
   })
 
+  nodeTypes.sort((a, b) => a.name.localeCompare(b.name, "ru"))
+  vendors.sort((a, b) => a.name.localeCompare(b.name, "ru"))
+  models.sort((a, b) => a.name.localeCompare(b.name, "ru"))
 
   console.log("Справочники загружены:", {
     nodeTypes,
@@ -212,49 +209,6 @@ export async function initReferenceDialog() {
     modelSelector.setAddEnabled(canAddModel)
   }
 
-
-  // --------------------------------------------------
-  // Отрисовка таблицы связей
-  // --------------------------------------------------
-
-  function renderModelNodeTypes() {
-
-    relationTbody.innerHTML =
-      modelNodeTypes.map(relation => {
-
-        const model = models.find(item =>
-          item.id === relation.modelId
-        )
-
-        const nodeType = nodeTypes.find(item =>
-          item.id === relation.nodeTypeId
-        )
-
-        if (!model || !nodeType) {
-          return ""
-        }
-
-        const vendor = vendors.find(item =>
-          item.id === model.vendorId
-        )
-
-        if (!vendor) {
-          return ""
-        }
-
-        return `
-          <tr>
-            <td>${nodeType.name}</td>
-            <td>${vendor.name}</td>
-            <td>${model.name}</td>
-            <td></td>
-          </tr>
-        `
-
-      }).join("")
-  }
-
-
   // --------------------------------------------------
   // Add
   // --------------------------------------------------
@@ -359,6 +313,16 @@ export async function initReferenceDialog() {
         return
       }
 
+      const exists = models.some(model =>
+        model.vendorId === selectedVendor.id &&
+        model.name.trim().toLowerCase() === value.trim().toLowerCase()
+      )
+
+      if (exists) {
+        alert("У производителя уже есть такая модель")
+        return
+      }
+
       const response = await fetch(
         "./api/references/createModel.php",
         {
@@ -403,11 +367,8 @@ export async function initReferenceDialog() {
         getModelsForSelection().map(item => item.name)
       )
 
-      modelSelector.add(newModel.name)
-
       selectedModel = newModel
 
-      renderModelNodeTypes()
       updateModelAddButton()
     }
   }
@@ -551,8 +512,6 @@ export async function initReferenceDialog() {
 
     selector.rename(oldValue, newValue)
 
-    renderModelNodeTypes()
-
     return true
   }
 
@@ -572,6 +531,15 @@ export async function initReferenceDialog() {
       const type = getNodeType(value)
 
       if (!type) {
+        return
+      }
+
+      const hasModels = modelNodeTypes.some(item =>
+        item.nodeTypeId === type.id
+      )
+
+      if (hasModels) {
+        alert("Нельзя удалить тип: с ним связаны модели")
         return
       }
 
@@ -622,11 +590,9 @@ export async function initReferenceDialog() {
       )
 
       updateModels()
-      renderModelNodeTypes()
 
       return
     }
-
 
     // ------------------------------------------------
     // Производитель
@@ -637,6 +603,15 @@ export async function initReferenceDialog() {
       const vendor = getVendor(value)
 
       if (!vendor) {
+        return
+      }
+
+      const hasModels = models.some(item =>
+        item.vendorId === vendor.id
+      )
+
+      if (hasModels) {
+        alert("Нельзя удалить производителя: у него есть модели")
         return
       }
 
@@ -689,11 +664,9 @@ export async function initReferenceDialog() {
       )
 
       updateModels()
-      renderModelNodeTypes()
 
       return
     }
-
 
     // ------------------------------------------------
     // Модель
@@ -767,7 +740,6 @@ export async function initReferenceDialog() {
         getModelsForSelection().map(item => item.name)
       )
 
-      renderModelNodeTypes()
       updateModelAddButton()
     }
   }
@@ -957,6 +929,5 @@ export async function initReferenceDialog() {
   // Первая отрисовка
   // --------------------------------------------------
 
-  renderModelNodeTypes()
   updateModels()
 }
