@@ -3,8 +3,34 @@ export function initEquipmentContextMenu(myDiagram, groupDialog) {
   const contextMenu = go.GraphObject.build("ContextMenu")
     .add(
 
+
       go.GraphObject.build("ContextMenuButton")
-        .add(new go.TextBlock("Добавить оборудование"))
+        .add(new go.TextBlock("Добавить группу", {
+          textAlign: "left",
+          stretch: go.Stretch.Horizontal
+        })
+        )
+        .set({
+          click: (event, obj) => {
+
+            const part = obj.part.adornedPart
+
+            const group =
+              part instanceof go.Group
+                ? part.data
+                : null
+
+            groupDialog.openGroupDialog(group)
+
+          }
+        }),
+
+      go.GraphObject.build("ContextMenuButton")
+        .add(new go.TextBlock("Добавить оборудование", {
+          textAlign: "left",
+          stretch: go.Stretch.Horizontal
+        })
+        )
         .set({
           click: () => {
 
@@ -29,23 +55,6 @@ export function initEquipmentContextMenu(myDiagram, groupDialog) {
               !modelSelect.value
 
             dialog.showModal()
-
-          }
-        }),
-
-      go.GraphObject.build("ContextMenuButton")
-        .add(new go.TextBlock("Добавить группу"))
-        .set({
-          click: (event, obj) => {
-
-            const part = obj.part.adornedPart
-
-            const group =
-              part instanceof go.Group
-                ? part.data
-                : null
-
-            groupDialog.openGroupDialog(group)
 
           }
         })

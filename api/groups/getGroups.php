@@ -17,7 +17,6 @@ try {
             g.note,
 
             gt.name AS groupTypeName,
-            gt.category,
             gt.figure,
             gt.fill,
             gt.header,

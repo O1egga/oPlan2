@@ -7,7 +7,7 @@ export function registerNodeTemplates(myDiagram, portTypes, nodeTypes) {
   Object.values(nodeTypes).forEach(nodeType => {
 
     myDiagram.nodeTemplateMap.add(
-      nodeType.category,
+      String(nodeType.id),
       createNode(
         nodeType.fill,
         nodeType.name,

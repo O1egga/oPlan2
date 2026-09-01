@@ -10,7 +10,6 @@ $stmt = $db->query("
     SELECT
         id,
         name,
-        category,
         fill
     FROM NodeTypes
     ORDER BY id

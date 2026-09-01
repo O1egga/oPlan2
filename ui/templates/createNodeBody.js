@@ -7,7 +7,8 @@ export function createNodeBody(PortTypes, title) {
 
   return new go.Panel("Vertical", {
     row: 3,
-    name: "NodeBody"
+    name: "NodeBody",
+    visible: false
   })
     .add(
       createNodeToolbar(title),

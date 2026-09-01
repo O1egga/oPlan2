@@ -9,7 +9,6 @@ $stmt = $db->query("
     SELECT
         id,
         name,
-        category,
         level,
         figure,
         fill,

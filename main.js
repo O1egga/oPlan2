@@ -1,3 +1,5 @@
+import { loadEquipmentDialog, loadGroupDialog, loadReferenceDialog, initReferenceButton } from "./ui/interface/interface.js"
+
 import { configureDiagram } from "./core/utils/configureDiagram.js"
 import { registerNodeTemplates } from "./ui/templates/registerNodeTemplates.js"
 import { registerLinkTemplates } from "./ui/templates/registerLinkTemplates.js"
@@ -12,6 +14,7 @@ import { registerNodeModelListener } from "./core/listeners/nodeModelListener.js
 import { GroupCommandHandler } from "./core/commands/groupCommandHandler.js"
 import { initEquipmentDoubleClick } from "./ui/equipment/equipmentDoubleClick.js"
 import { registerLinkModelListener } from "./core/listeners/linkModelListener.js"
+import { initReferenceDialog } from "./ui/interface/referenceDialog.js"
 
 const myDiagram = new go.Diagram("myDiagramDiv", {
 
@@ -118,8 +121,16 @@ configureDiagram(myDiagram)
 registerNodeTemplates(myDiagram, portTypes, nodeTypes)
 registerLinkTemplates(myDiagram)
 
+await loadEquipmentDialog()
+await loadGroupDialog()
+await loadReferenceDialog()
+initReferenceButton()
+
 initEquipmentDialog(myDiagram, portTypes)
 initEquipmentDoubleClick(myDiagram, portTypes)
+
+await loadReferenceDialog()
+initReferenceDialog()
 
 const groupDialog = initGroupDialog(myDiagram, groupTypes)
 const contextMenu = initEquipmentContextMenu(myDiagram, groupDialog)

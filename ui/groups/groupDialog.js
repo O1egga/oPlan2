@@ -120,7 +120,7 @@ export function initGroupDialog(myDiagram, groupTypes) {
       const groupData = {
         key: `g${result.id}`,
         isGroup: true,
-        type: groupType.category,
+        type: String(groupType.id),
         text: data.name,
         groupTypeId: data.groupTypeId,
         icon: groupType.icon,

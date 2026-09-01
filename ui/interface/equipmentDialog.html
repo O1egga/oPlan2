@@ -1,0 +1,134 @@
+<dialog id="equipmentDialog" class="right">
+
+  <h6 class="equipment-dialog-title">Добавить оборудование</h6>
+
+  <div class="large-space"></div>
+
+  <!-- тип -->
+  <div class="row">
+    <div class="max">
+      <div class="field border label">
+        <select class="equipment-type"></select>
+        <label>Тип</label>
+      </div>
+    </div>
+
+    <!-- название -->
+    <div class="max">
+      <div class="field border label">
+        <input class="equipment-name">
+        <label>Название</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- производитель -->
+  <div class="row">
+    <div class="max">
+      <div class="field border label">
+        <select class="equipment-vendor" disabled></select>
+        <label>Производитель</label>
+      </div>
+    </div>
+
+    <!-- модель -->
+    <div class="max">
+      <div class="field border label">
+        <select class="equipment-model" disabled>
+          <option>iPassolink400</option>
+          <option>3606C</option>
+          <option>PB-M5-500</option>
+        </select>
+        <label>Модель</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- порты -->
+  <ul class="no-space ports">
+  </ul>
+
+  <hr class="medium">
+
+  <div class="row">
+    <div class="field small border">
+      <select class="port-count">
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
+      </select>
+    </div>
+
+    <div class="field small border label">
+      <select class="port-type">
+        <option value="1">Radio</option>
+        <option value="2">Coaxial</option>
+        <option value="3">Cross</option>
+        <option value="4">Ethernet</option>
+        <option value="5">Optical</option>
+        <option value="6">SFP-Eth</option>
+        <option value="7">SFP-Opt</option>
+        <option value="10">Other</option>
+      </select>
+      <label>тип</label>
+    </div>
+
+    <div class="max"></div>
+
+    <!-- добавить порты -->
+    <nav class="group connected">
+
+      <button class="left-round square add-ports">
+        <i>add</i>
+        <span class="tooltip">Добавить порты</span>
+      </button>
+
+      <!-- удалить все порты -->
+      <button class="square delete-all-ports">
+        <i>delete</i>
+        <span class="tooltip">Удалить все порты</span>
+
+        <!-- удалить порты -->
+        <button class="right-round square delete-ports">
+          <i>remove</i>
+          <span class="tooltip">Удалить порты</span>
+        </button>
+    </nav>
+
+  </div>
+
+  <dialog id="confirmDialog">
+
+    <h5 class="confirm-title">Удалить порты?</h5>
+
+    <p class="confirm-message">
+      Вы действительно хотите удалить порты?
+    </p>
+
+    <nav>
+      <button class="error confirm-ok">
+        <i>delete</i>
+        <span>Удалить</span>
+      </button>
+
+      <button class="border confirm-cancel">
+        Отмена
+      </button>
+    </nav>
+
+  </dialog>
+
+  <div class="large-space"></div>
+
+  <!-- созранить/отменаа -->
+  <nav>
+    <button class="save-equipment" disabled>Сохранить</button>
+    <button class="border cancel-equipment">Отмена</button>
+  </nav>
+
+</dialog>

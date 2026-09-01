@@ -1,0 +1,71 @@
+<dialog id="referenceDialog" class="modal max">
+
+  <nav class="no-space">
+    <h6>Справочники</h6>
+    <div class="max"></div>
+    <button id="reference-dialog-close" class="transparent"><i>close</i> </button>
+  </nav>
+
+  <div id="referenceDialogRow" class="row top-align large-space"> </div>
+
+  <div class="space"></div>
+
+  <!-- Выбранные значения -->
+
+
+  <div class="row center-align">
+    <div id="selectedType">.</div>
+    <div id="selectedVendor">.</div>
+    <div id="selectedModel">.</div>
+    <i id="relationAction" class="front">playlist_add</i>
+  </div>
+
+  <div class="space"></div>
+
+  <!-- Связи Type - Vendor - Model -->
+
+  <div class="small-height scroll border">
+
+    <table class="no-space center-align">
+
+      <thead class="fixed surface">
+
+        <tr>
+          <th>Тип</th>
+          <th>Производитель</th>
+          <th>Модель</th>
+          <th></th>
+        </tr>
+
+      </thead>
+
+      <tbody id="referenceModelNodeTypes"> </tbody>
+
+    </table>
+
+  </div>
+
+</dialog>
+
+
+<!-- Диалог переименования -->
+
+<dialog id="referenceEditDialog">
+
+  <h5>Изменить</h5>
+
+  <div class="field label border">
+
+    <input id="referenceEditInput" type="text">
+    <label>Название</label>
+
+  </div>
+
+  <nav class="right-align">
+
+    <button id="referenceEditSave"> Сохранить </button>
+    <button id="referenceEditCancel" class="border"> Отмена </button>
+
+  </nav>
+
+</dialog>

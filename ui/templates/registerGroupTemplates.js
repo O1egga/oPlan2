@@ -2,16 +2,16 @@ import { createGroup } from "./createGroupTemplate.js"
 
 export function registerGroupTemplates(diagram, groupTypes, contextMenu) {
 
-  Object.values(groupTypes).forEach(group => {
+  Object.values(groupTypes).forEach(groupType => {
 
     diagram.groupTemplateMap.add(
 
-      group.category,
+      String(groupType.id),
 
       createGroup(
-        group.figure,
-        group.fill,
-        group.header,
+        groupType.figure,
+        groupType.fill,
+        groupType.header,
         contextMenu,
         groupTypes
       )

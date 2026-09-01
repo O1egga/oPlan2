@@ -84,8 +84,7 @@ export async function loadModel(diagram, portTypes, linkTypes) {
           key: `g${group.id}`,
 
           isGroup: true,
-
-          type: group.category,
+          type: String(group.groupTypeId),
 
           text: group.name,
 
@@ -98,6 +97,7 @@ export async function loadModel(diagram, portTypes, linkTypes) {
             : {}),
 
           note: group.note
+
         })),
 
         // Nodes
@@ -148,6 +148,11 @@ export async function loadModel(diagram, portTypes, linkTypes) {
 
     // Создаём модель GoJS
     diagram.model = go.Model.fromJson(modelData)
+
+    // Сворачиваем все группы
+    diagram.findTopLevelGroups().each(group => {
+      group.collapseSubGraph()
+    })
 
   } catch (err) {
 
