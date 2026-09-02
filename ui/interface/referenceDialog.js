@@ -10,11 +10,16 @@ export async function initReferenceDialog() {
 
   const editDialog = document.querySelector("#referenceEditDialog")
   const editInput = document.querySelector("#referenceEditInput")
+  const editColorField = document.querySelector("#referenceEditColorField")
+  const editColor = document.querySelector("#referenceEditColor")
+  const buttonColor = document.querySelector("#buttonColor")
   const editCancel = document.querySelector("#referenceEditCancel")
   const editSave = document.querySelector("#referenceEditSave")
 
   const referenceDialog = document.querySelector("#referenceDialog")
-  const referenceDialogClose = referenceDialog.querySelector("#reference-dialog-close")
+  const referenceDialogClose =
+    referenceDialog.querySelector("#reference-dialog-close")
+
 
   // --------------------------------------------------
   // Состояние
@@ -27,12 +32,17 @@ export async function initReferenceDialog() {
   let selectedVendor = null
   let selectedModel = null
 
+  // Введённые значения Type и Vendor
+  let enteredNodeType = ""
+  let enteredVendor = ""
+
 
   // --------------------------------------------------
   // Загрузка справочников
   // --------------------------------------------------
 
-  const response = await fetch("./api/getReferences.php")
+  const response =
+    await fetch("./api/getReferences.php")
 
   if (!response.ok) {
     throw new Error(
@@ -40,12 +50,14 @@ export async function initReferenceDialog() {
     )
   }
 
-  const referenceData = await response.json()
+  const referenceData =
+    await response.json()
 
   const nodeTypes = referenceData.nodeTypes
   const vendors = referenceData.vendors
   const models = referenceData.models
   const modelNodeTypes = referenceData.modelNodeTypes
+
 
   // --------------------------------------------------
   // ID приводим к числам
@@ -69,16 +81,17 @@ export async function initReferenceDialog() {
     item.nodeTypeId = Number(item.nodeTypeId)
   })
 
-  nodeTypes.sort((a, b) => a.name.localeCompare(b.name, "ru"))
-  vendors.sort((a, b) => a.name.localeCompare(b.name, "ru"))
-  models.sort((a, b) => a.name.localeCompare(b.name, "ru"))
+  nodeTypes.sort(
+    (a, b) => a.name.localeCompare(b.name, "ru")
+  )
 
-  console.log("Справочники загружены:", {
-    nodeTypes,
-    vendors,
-    models,
-    modelNodeTypes
-  })
+  vendors.sort(
+    (a, b) => a.name.localeCompare(b.name, "ru")
+  )
+
+  models.sort(
+    (a, b) => a.name.localeCompare(b.name, "ru")
+  )
 
 
   // --------------------------------------------------
@@ -86,15 +99,21 @@ export async function initReferenceDialog() {
   // --------------------------------------------------
 
   function getNodeType(name) {
-    return nodeTypes.find(item => item.name === name)
+    return nodeTypes.find(
+      item => item.name === name
+    )
   }
 
   function getVendor(name) {
-    return vendors.find(item => item.name === name)
+    return vendors.find(
+      item => item.name === name
+    )
   }
 
   function getModel(name) {
-    return models.find(item => item.name === name)
+    return models.find(
+      item => item.name === name
+    )
   }
 
 
@@ -153,177 +172,246 @@ export async function initReferenceDialog() {
 
 
   // --------------------------------------------------
-  // Обновление списка моделей
+  // Обновление списков
   // --------------------------------------------------
 
-  function updateModelList() {
+  function updateSelectors(
+    activeSelector = null,
+    activeValue = null
+  ) {
 
-    const modelNames =
-      getModelsForSelection().map(item => item.name)
+    // ------------------------------
+    // Model
+    // ------------------------------
 
-    modelSelector.load(modelNames)
+    const modelItems =
+      getModelsForSelection()
 
-    selectedModel = null
-  }
+    if (activeSelector !== modelSelector) {
 
+      modelSelector.load(
+        modelItems
+      )
 
-  // --------------------------------------------------
-  // Кнопка Add модели
-  // --------------------------------------------------
-
-  function updateModelAddButton() {
-
-    const addButton =
-      modelSelector.element.querySelector(".reference-add")
-
-    if (!addButton) {
-      return
+      if (selectedModel) {
+        modelSelector.setSelected(
+          selectedModel
+        )
+      }
     }
 
-    if (!selectedNodeType || !selectedVendor) {
-      addButton.style.display = "none"
-      return
+
+    // ------------------------------
+    // Vendor
+    // ------------------------------
+
+    let vendorItems = vendors
+
+    if (selectedNodeType) {
+
+      const modelIds = new Set(
+        modelNodeTypes
+          .filter(item =>
+            item.nodeTypeId === selectedNodeType.id
+          )
+          .map(item => item.modelId)
+      )
+
+      vendorItems = vendors.filter(vendor =>
+        models.some(model =>
+          model.vendorId === vendor.id &&
+          modelIds.has(model.id)
+        )
+      )
     }
 
-    addButton.style.display = ""
-  }
+    if (activeSelector !== vendorSelector || !selectedVendor) {
+
+      vendorSelector.load(
+        vendorItems
+      )
+
+      if (selectedVendor) {
+        vendorSelector.setSelected(
+          selectedVendor
+        )
+      }
+    }
 
 
-  // --------------------------------------------------
-  // Обновление модели после изменения Type / Vendor
-  // --------------------------------------------------
+    // ------------------------------
+    // Type
+    // ------------------------------
 
-  function updateModels() {
+    let typeItems = nodeTypes
 
-    const modelNames =
-      getModelsForSelection().map(item => item.name)
+    if (selectedVendor) {
 
-    modelSelector.load(modelNames)
+      const modelIds = new Set(
+        models
+          .filter(model =>
+            model.vendorId === selectedVendor.id
+          )
+          .map(model => model.id)
+      )
 
-    selectedModel = null
+      const typeIds = new Set(
+        modelNodeTypes
+          .filter(item =>
+            modelIds.has(item.modelId)
+          )
+          .map(item => item.nodeTypeId)
+      )
+
+      typeItems = nodeTypes.filter(type =>
+        typeIds.has(type.id)
+      )
+    }
+
+    if (activeSelector !== typeSelector || !selectedNodeType) {
+
+      typeSelector.load(
+        typeItems
+      )
+
+      if (selectedNodeType) {
+        typeSelector.setSelected(
+          selectedNodeType
+        )
+      }
+    }
+
+
+    // ------------------------------
+    // Восстановить активный input
+    // ------------------------------
+
+    if (activeSelector && activeValue !== null) {
+      activeSelector.setInputValue(activeValue)
+    }
+
+
+    // ------------------------------
+    // Add Model
+    // ------------------------------
+
+    const typeName =
+      selectedNodeType
+        ? selectedNodeType.name
+        : enteredNodeType
+
+    const vendorName =
+      selectedVendor
+        ? selectedVendor.name
+        : enteredVendor
+
+    const modelName =
+      modelSelector.getInputValue
+        ? modelSelector.getInputValue()
+        : ""
 
     const canAddModel =
-      selectedNodeType !== null &&
-      selectedVendor !== null
+      typeName.trim() !== "" &&
+      vendorName.trim() !== "" &&
+      modelName.trim() !== ""
 
-    modelSelector.setAddEnabled(canAddModel)
+    modelSelector.setAddEnabled(
+      canAddModel
+    )
   }
+
 
   // --------------------------------------------------
   // Add
   // --------------------------------------------------
 
-  async function addReference(selector, value) {
-
-    // ------------------------------------------------
-    // Тип
-    // ------------------------------------------------
-
-    if (selector === typeSelector) {
-
-      const response = await fetch(
-        "./api/references/createNodeType.php",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            name: value
-          })
-        }
-      )
-
-      const result = await response.json()
-
-      if (!response.ok) {
-
-        alert(
-          result.error ||
-          "Не удалось добавить тип"
-        )
-
-        return
-      }
-
-      nodeTypes.push({
-        id: Number(result.id),
-        name: result.name,
-        fill: result.fill
-      })
-
-      selector.add(result.name)
-
-      return
-    }
-
-
-    // ------------------------------------------------
-    // Производитель
-    // ------------------------------------------------
-
-    if (selector === vendorSelector) {
-
-      const response = await fetch(
-        "./api/references/createVendor.php",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            name: value
-          })
-        }
-      )
-
-      const result = await response.json()
-
-      if (!response.ok) {
-
-        alert(
-          result.error ||
-          "Не удалось добавить производителя"
-        )
-
-        return
-      }
-
-      vendors.push({
-        id: Number(result.id),
-        name: result.name
-      })
-
-      selector.add(result.name)
-
-      return
-    }
-
+  async function addReference(
+    selector,
+    value
+  ) {
 
     // ------------------------------------------------
     // Модель
     // ------------------------------------------------
 
-    if (selector === modelSelector) {
+    if (selector !== modelSelector) {
+      return
+    }
 
-      // Модель нельзя добавить без существующего
-      // Type и Vendor
+    const modelName =
+      value.trim()
 
-      if (!selectedNodeType || !selectedVendor) {
-        return
+    const typeName =
+      selectedNodeType
+        ? selectedNodeType.name
+        : enteredNodeType.trim()
+
+    const vendorName =
+      selectedVendor
+        ? selectedVendor.name
+        : enteredVendor.trim()
+
+
+    if (!typeName || !vendorName || !modelName) {
+      return
+    }
+
+
+    // Проверяем дубликат модели
+    // у этого производителя
+
+    const exists = models.some(model => {
+
+      if (
+        selectedVendor &&
+        model.vendorId !== selectedVendor.id
+      ) {
+        return false
       }
 
-      const exists = models.some(model =>
-        model.vendorId === selectedVendor.id &&
-        model.name.trim().toLowerCase() === value.trim().toLowerCase()
+      if (!selectedVendor) {
+        const vendor =
+          vendors.find(item =>
+            item.name.trim().toLowerCase() ===
+            vendorName.toLowerCase()
+          )
+
+        if (
+          vendor &&
+          model.vendorId !== vendor.id
+        ) {
+          return false
+        }
+      }
+
+      const modelVendor =
+        vendors.find(item =>
+          item.id === model.vendorId
+        )
+
+      return (
+        modelVendor &&
+        modelVendor.name.trim().toLowerCase() ===
+        vendorName.toLowerCase() &&
+        model.name.trim().toLowerCase() ===
+        modelName.toLowerCase()
       )
+    })
 
-      if (exists) {
-        alert("У производителя уже есть такая модель")
-        return
-      }
+    if (exists) {
+      alert(
+        "У производителя уже есть такая модель"
+      )
+      return
+    }
 
-      const response = await fetch(
+
+    // ------------------------------------------------
+    // Создаём Type + Vendor + Model
+    // ------------------------------------------------
+
+    const response =
+      await fetch(
         "./api/references/createModel.php",
         {
           method: "POST",
@@ -331,46 +419,116 @@ export async function initReferenceDialog() {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            name: value,
-            vendorId: selectedVendor.id,
-            nodeTypeId: selectedNodeType.id
+            name: modelName,
+            vendor: vendorName,
+            nodeType: typeName
           })
         }
       )
 
-      const result = await response.json()
+    const result =
+      await response.json()
 
-      if (!response.ok) {
+    if (!response.ok) {
 
-        alert(
-          result.error ||
-          "Не удалось добавить модель"
-        )
-
-        return
-      }
-
-      const newModel = {
-        id: Number(result.id),
-        name: result.name,
-        vendorId: Number(result.vendorId)
-      }
-
-      models.push(newModel)
-
-      modelNodeTypes.push({
-        modelId: newModel.id,
-        nodeTypeId: selectedNodeType.id
-      })
-
-      modelSelector.load(
-        getModelsForSelection().map(item => item.name)
+      alert(
+        result.error ||
+        "Не удалось добавить модель"
       )
 
-      selectedModel = newModel
-
-      updateModelAddButton()
+      return
     }
+
+
+    // ------------------------------------------------
+    // Добавляем Type, если он был создан
+    // ------------------------------------------------
+
+    let newNodeType =
+      getNodeType(result.nodeType)
+
+    if (!newNodeType) {
+
+      newNodeType = {
+        id: Number(result.nodeTypeId),
+        name: result.nodeType,
+        fill: result.fill
+      }
+
+      nodeTypes.push(newNodeType)
+    }
+
+
+    // ------------------------------------------------
+    // Добавляем Vendor, если он был создан
+    // ------------------------------------------------
+
+    let newVendor =
+      getVendor(result.vendor)
+
+    if (!newVendor) {
+
+      newVendor = {
+        id: Number(result.vendorId),
+        name: result.vendor
+      }
+
+      vendors.push(newVendor)
+    }
+
+
+    // ------------------------------------------------
+    // Добавляем Model
+    // ------------------------------------------------
+
+    const newModel = {
+      id: Number(result.id),
+      name: result.name,
+      vendorId: Number(result.vendorId)
+    }
+
+    models.push(newModel)
+
+
+    // ------------------------------------------------
+    // Добавляем связь Model → Type
+    // ------------------------------------------------
+
+    modelNodeTypes.push({
+      modelId: newModel.id,
+      nodeTypeId: Number(result.nodeTypeId)
+    })
+
+
+    // ------------------------------------------------
+    // Устанавливаем выбор
+    // ------------------------------------------------
+
+    selectedNodeType =
+      newNodeType
+
+    selectedVendor =
+      newVendor
+
+    selectedModel =
+      newModel
+
+    enteredNodeType =
+      newNodeType.name
+
+    enteredVendor =
+      newVendor.name
+
+
+    // ------------------------------------------------
+    // Синхронизируем списки
+    // ------------------------------------------------
+
+    updateSelectors()
+
+    modelSelector.setSelected(
+      newModel
+    )
   }
 
 
@@ -390,27 +548,28 @@ export async function initReferenceDialog() {
 
     if (selector === typeSelector) {
 
-      const type = getNodeType(oldValue)
+      const type = oldValue
 
-      if (!type) {
-        return false
-      }
+      if (!type) return false
 
-      const response = await fetch(
-        "./api/references/updateNodeType.php",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            id: type.id,
-            name: newValue
-          })
-        }
-      )
+      const response =
+        await fetch(
+          "./api/references/updateNodeType.php",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              id: type.id,
+              name: newValue,
+              fill: editColor.value
+            })
+          }
+        )
 
-      const result = await response.json()
+      const result =
+        await response.json()
 
       if (!response.ok) {
 
@@ -423,6 +582,16 @@ export async function initReferenceDialog() {
       }
 
       type.name = result.name
+      type.fill = result.fill
+
+      if (
+        selectedNodeType &&
+        selectedNodeType.id === type.id
+      ) {
+        selectedNodeType = type
+      }
+
+      enteredNodeType = type.name
     }
 
 
@@ -432,27 +601,27 @@ export async function initReferenceDialog() {
 
     else if (selector === vendorSelector) {
 
-      const vendor = getVendor(oldValue)
+      const vendor = oldValue
 
-      if (!vendor) {
-        return false
-      }
+      if (!vendor) return false
 
-      const response = await fetch(
-        "./api/references/updateVendor.php",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            id: vendor.id,
-            name: newValue
-          })
-        }
-      )
+      const response =
+        await fetch(
+          "./api/references/updateVendor.php",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              id: vendor.id,
+              name: newValue
+            })
+          }
+        )
 
-      const result = await response.json()
+      const result =
+        await response.json()
 
       if (!response.ok) {
 
@@ -465,6 +634,15 @@ export async function initReferenceDialog() {
       }
 
       vendor.name = result.name
+
+      if (
+        selectedVendor &&
+        selectedVendor.id === vendor.id
+      ) {
+        selectedVendor = vendor
+      }
+
+      enteredVendor = vendor.name
     }
 
 
@@ -474,27 +652,29 @@ export async function initReferenceDialog() {
 
     else if (selector === modelSelector) {
 
-      const model = getModel(oldValue)
+      const model = oldValue
 
       if (!model) {
         return false
       }
 
-      const response = await fetch(
-        "./api/references/updateModel.php",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            id: model.id,
-            name: newValue
-          })
-        }
-      )
+      const response =
+        await fetch(
+          "./api/references/updateModel.php",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              id: model.id,
+              name: newValue
+            })
+          }
+        )
 
-      const result = await response.json()
+      const result =
+        await response.json()
 
       if (!response.ok) {
 
@@ -507,10 +687,22 @@ export async function initReferenceDialog() {
       }
 
       model.name = result.name
+
+      if (
+        selectedModel &&
+        selectedModel.id === model.id
+      ) {
+        selectedModel = model
+      }
     }
 
 
-    selector.rename(oldValue, newValue)
+    selector.rename(
+      oldValue,
+      newValue
+    )
+
+    updateSelectors()
 
     return true
   }
@@ -520,153 +712,10 @@ export async function initReferenceDialog() {
   // Delete
   // --------------------------------------------------
 
-  async function deleteReference(selector, value) {
-
-    // ------------------------------------------------
-    // Тип
-    // ------------------------------------------------
-
-    if (selector === typeSelector) {
-
-      const type = getNodeType(value)
-
-      if (!type) {
-        return
-      }
-
-      const hasModels = modelNodeTypes.some(item =>
-        item.nodeTypeId === type.id
-      )
-
-      if (hasModels) {
-        alert("Нельзя удалить тип: с ним связаны модели")
-        return
-      }
-
-      if (!confirm(`Удалить тип "${value}"?`)) {
-        return
-      }
-
-      const response = await fetch(
-        "./api/references/deleteNodeType.php",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            id: type.id
-          })
-        }
-      )
-
-      const result = await response.json()
-
-      if (!response.ok) {
-
-        alert(
-          result.error ||
-          "Не удалось удалить тип"
-        )
-
-        return
-      }
-
-      const typeIndex = nodeTypes.indexOf(type)
-
-      if (typeIndex !== -1) {
-        nodeTypes.splice(typeIndex, 1)
-      }
-
-      if (
-        selectedNodeType &&
-        selectedNodeType.id === type.id
-      ) {
-        selectedNodeType = null
-      }
-
-      typeSelector.load(
-        nodeTypes.map(item => item.name)
-      )
-
-      updateModels()
-
-      return
-    }
-
-    // ------------------------------------------------
-    // Производитель
-    // ------------------------------------------------
-
-    if (selector === vendorSelector) {
-
-      const vendor = getVendor(value)
-
-      if (!vendor) {
-        return
-      }
-
-      const hasModels = models.some(item =>
-        item.vendorId === vendor.id
-      )
-
-      if (hasModels) {
-        alert("Нельзя удалить производителя: у него есть модели")
-        return
-      }
-
-      if (!confirm(
-        `Удалить производителя "${value}"?`
-      )) {
-        return
-      }
-
-      const response = await fetch(
-        "./api/references/deleteVendor.php",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            id: vendor.id
-          })
-        }
-      )
-
-      const result = await response.json()
-
-      if (!response.ok) {
-
-        alert(
-          result.error ||
-          "Не удалось удалить производителя"
-        )
-
-        return
-      }
-
-      const vendorIndex = vendors.indexOf(vendor)
-
-      if (vendorIndex !== -1) {
-        vendors.splice(vendorIndex, 1)
-      }
-
-      if (
-        selectedVendor &&
-        selectedVendor.id === vendor.id
-      ) {
-        selectedVendor = null
-      }
-
-      vendorSelector.load(
-        vendors.map(item => item.name)
-      )
-
-      updateModels()
-
-      return
-    }
+  async function deleteReference(
+    selector,
+    value
+  ) {
 
     // ------------------------------------------------
     // Модель
@@ -674,30 +723,34 @@ export async function initReferenceDialog() {
 
     if (selector === modelSelector) {
 
-      const model = getModel(value)
+      const model = value
 
       if (!model) {
         return
       }
 
-      if (!confirm(`Удалить модель "${value}"?`)) {
+      if (!confirm(
+        `Удалить модель "${model.name}"?`
+      )) {
         return
       }
 
-      const response = await fetch(
-        "./api/references/deleteModel.php",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            id: model.id
-          })
-        }
-      )
+      const response =
+        await fetch(
+          "./api/references/deleteModel.php",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              id: model.id
+            })
+          }
+        )
 
-      const result = await response.json()
+      const result =
+        await response.json()
 
       if (!response.ok) {
 
@@ -709,23 +762,69 @@ export async function initReferenceDialog() {
         return
       }
 
-      const modelIndex = models.indexOf(model)
+      // Запоминаем Type и Vendor до удаления модели
+      const vendorId = model.vendorId
+
+      const typeId =
+        modelNodeTypes.find(item =>
+          item.modelId === model.id
+        )?.nodeTypeId
+
+      // Удаляем модель из локального массива
+      const modelIndex =
+        models.indexOf(model)
 
       if (modelIndex !== -1) {
         models.splice(modelIndex, 1)
       }
 
-
       // Удаляем связи модели
-
       for (
         let i = modelNodeTypes.length - 1;
         i >= 0;
         i--
       ) {
 
-        if (modelNodeTypes[i].modelId === model.id) {
+        if (
+          modelNodeTypes[i].modelId === model.id
+        ) {
           modelNodeTypes.splice(i, 1)
+        }
+      }
+
+      // Если у Vendor больше нет моделей — удаляем его из памяти
+      if (!models.some(item =>
+        item.vendorId === vendorId
+      )) {
+
+        const vendorIndex =
+          vendors.findIndex(item =>
+            item.id === vendorId
+          )
+
+        if (vendorIndex !== -1) {
+          vendors.splice(vendorIndex, 1)
+        }
+      }
+
+      // Если у Type больше нет моделей — удаляем его из памяти
+      const typeHasModels =
+        modelNodeTypes.some(item =>
+          item.nodeTypeId === typeId
+        )
+
+      if (
+        typeId &&
+        !typeHasModels
+      ) {
+
+        const typeIndex =
+          nodeTypes.findIndex(item =>
+            item.id === typeId
+          )
+
+        if (typeIndex !== -1) {
+          nodeTypes.splice(typeIndex, 1)
         }
       }
 
@@ -736,11 +835,7 @@ export async function initReferenceDialog() {
         selectedModel = null
       }
 
-      modelSelector.load(
-        getModelsForSelection().map(item => item.name)
-      )
-
-      updateModelAddButton()
+      updateSelectors()
     }
   }
 
@@ -749,169 +844,274 @@ export async function initReferenceDialog() {
   // Редактирование
   // --------------------------------------------------
 
-  function editReference(selector, value) {
-
+  function editReference(
+    selector,
+    value
+  ) {
     currentSelector = selector
     currentValue = value
 
-    editInput.value = value
+    editInput.value = value.name
+
+    if (selector === typeSelector) {
+      editColor.value = value.fill
+      buttonColor.style.backgroundColor = editColor.value
+      editColorField.style.display = ""
+    } else {
+      editColorField.style.display = "none"
+    }
 
     editDialog.showModal()
   }
 
+  editColor.addEventListener("input", () => {
+    buttonColor.style.backgroundColor = editColor.value
+  })
 
   // --------------------------------------------------
   // Selector: Тип
   // --------------------------------------------------
 
-  const typeSelector = createReferenceSelector(
-    "Тип",
-    nodeTypes.map(item => item.name),
+  const typeSelector =
+    createReferenceSelector(
+      "Тип",
+      nodeTypes,
+      {
 
-    value => {
+        onSelect: value => {
 
-      selectedNodeType = value
-        ? getNodeType(value)
-        : null
+          selectedNodeType = value
 
-      updateModels()
+          if (value) {
+            enteredNodeType = value.name
+          }
 
-      console.log(
-        "Выбран тип:",
-        selectedNodeType
-      )
-    },
+          updateSelectors()
 
-    value => {
-      addReference(typeSelector, value)
-    },
+          console.log(
+            "Выбран тип:",
+            selectedNodeType
+          )
+        },
 
-    value => {
-      editReference(typeSelector, value)
-    },
+        onInput: (value, match) => {
 
-    value => {
-      deleteReference(typeSelector, value)
-    }
-  )
+          enteredNodeType = value
+          selectedNodeType = match
+
+          updateSelectors(
+            typeSelector,
+            value
+          )
+        },
+
+        onEdit: value => {
+          editReference(
+            typeSelector,
+            value
+          )
+        },
+        colorField: "fill"
+      }
+    )
 
 
   // --------------------------------------------------
   // Selector: Производитель
   // --------------------------------------------------
 
-  const vendorSelector = createReferenceSelector(
-    "Производитель",
-    vendors.map(item => item.name),
+  const vendorSelector =
+    createReferenceSelector(
+      "Производитель",
+      vendors,
+      {
 
-    value => {
+        onSelect: value => {
 
-      selectedVendor = value
-        ? getVendor(value)
-        : null
+          selectedVendor = value
 
-      updateModels()
+          if (value) {
+            enteredVendor = value.name
+          }
 
-      console.log(
-        "Выбран производитель:",
-        selectedVendor
-      )
-    },
+          updateSelectors()
 
-    value => {
-      addReference(vendorSelector, value)
-    },
+          console.log(
+            "Выбран производитель:",
+            selectedVendor
+          )
+        },
 
-    value => {
-      editReference(vendorSelector, value)
-    },
+        onInput: (value, match) => {
 
-    value => {
-      deleteReference(vendorSelector, value)
-    }
-  )
+          enteredVendor = value
+          selectedVendor = match
+
+          updateSelectors(
+            vendorSelector,
+            value
+          )
+        },
+
+        onEdit: value => {
+          editReference(
+            vendorSelector,
+            value
+          )
+        }
+      }
+    )
 
 
   // --------------------------------------------------
   // Selector: Модель
   // --------------------------------------------------
 
-  const modelSelector = createReferenceSelector(
-    "Модель",
-    models.map(item => item.name),
+  const modelSelector =
+    createReferenceSelector(
+      "Модель",
+      models,
+      {
+        leftIcon: "playlist_add",
 
-    value => {
+        onSelect: value => {
 
-      selectedModel = value
-        ? getModel(value)
-        : null
+          selectedModel = value
 
-      console.log(
-        "Выбрана модель:",
-        selectedModel
-      )
-    },
+          if (selectedModel) {
 
-    value => {
-      addReference(modelSelector, value)
-    },
+            selectedVendor =
+              vendors.find(vendor =>
+                vendor.id === selectedModel.vendorId
+              ) || null
 
-    value => {
-      editReference(modelSelector, value)
-    },
+            const typeLink =
+              modelNodeTypes.find(item =>
+                item.modelId === selectedModel.id
+              )
 
-    value => {
-      deleteReference(modelSelector, value)
-    }
-  )
+            selectedNodeType =
+              typeLink
+                ? nodeTypes.find(type =>
+                  type.id === typeLink.nodeTypeId
+                )
+                : null
+
+            if (selectedNodeType) {
+              enteredNodeType =
+                selectedNodeType.name
+            }
+
+            if (selectedVendor) {
+              enteredVendor =
+                selectedVendor.name
+            }
+
+            updateSelectors()
+          }
+
+          console.log(
+            "Выбрана модель:",
+            selectedModel
+          )
+        },
+
+        onInput: (value, match) => {
+
+          selectedModel = match
+
+          updateSelectors(
+            modelSelector,
+            value
+          )
+        },
+
+        onAdd: value => {
+          addReference(
+            modelSelector,
+            value
+          )
+        },
+
+        onEdit: value => {
+          editReference(
+            modelSelector,
+            value
+          )
+        },
+
+        onDelete: value => {
+          deleteReference(
+            modelSelector,
+            value
+          )
+        }
+      }
+    )
 
 
   // --------------------------------------------------
   // Edit dialog
   // --------------------------------------------------
 
-  editCancel.addEventListener("click", () => {
-    editDialog.close()
-  })
-
-
-  editSave.addEventListener("click", async () => {
-
-    const newValue = editInput.value.trim()
-
-    if (!newValue) {
-      return
+  editCancel.addEventListener(
+    "click",
+    () => {
+      editDialog.close()
     }
+  )
 
-    if (currentSelector.hasValue(newValue, currentValue)) {
 
-      alert("Такое значение уже существует")
+  editSave.addEventListener(
+    "click",
+    async () => {
 
-      return
+      const newValue =
+        editInput.value.trim()
+
+      if (!newValue) {
+        return
+      }
+
+      if (
+        currentSelector.hasValue(
+          newValue,
+          currentValue
+        )
+      ) {
+        alert(
+          "Такое значение уже существует"
+        )
+
+        return
+      }
+
+      const success =
+        await renameReference(
+          currentSelector,
+          currentValue,
+          newValue
+        )
+
+      if (!success) {
+        return
+      }
+
+      editDialog.close()
     }
-
-    const success =
-      await renameReference(
-        currentSelector,
-        currentValue,
-        newValue
-      )
-
-    if (!success) {
-      return
-    }
-
-    editDialog.close()
-  })
+  )
 
 
   // --------------------------------------------------
   // Reference dialog
   // --------------------------------------------------
 
-  referenceDialogClose.addEventListener("click", () => {
-    referenceDialog.close()
-  })
+  referenceDialogClose.addEventListener(
+    "click",
+    () => {
+      referenceDialog.close()
+    }
+  )
 
 
   // --------------------------------------------------
@@ -929,5 +1129,5 @@ export async function initReferenceDialog() {
   // Первая отрисовка
   // --------------------------------------------------
 
-  updateModels()
+  updateSelectors()
 }

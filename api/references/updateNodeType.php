@@ -15,6 +15,7 @@ try {
 
     $id = (int)($data['id'] ?? 0);
     $name = trim($data['name'] ?? '');
+    $fill = trim($data['fill'] ?? '');
 
     if ($id <= 0 || $name === '') {
 
@@ -53,15 +54,16 @@ try {
         exit;
     }
 
-    // Переименовываем тип
+    // Обновляем тип и его цвет
     $stmt = $db->prepare("
         UPDATE NodeTypes
-        SET name = ?
+        SET name = ?, fill = ?
         WHERE id = ?
     ");
 
     $stmt->execute([
         $name,
+        $fill,
         $id
     ]);
 
@@ -80,7 +82,8 @@ try {
     echo json_encode([
         'success' => true,
         'id' => $id,
-        'name' => $name
+        'name' => $name,
+        'fill' => $fill
     ], JSON_UNESCAPED_UNICODE);
 
 } catch (Exception $e) {

@@ -14,13 +14,13 @@ try {
     );
 
     $name = trim($data['name'] ?? '');
-    $vendorId = (int)($data['vendorId'] ?? 0);
-    $nodeTypeId = (int)($data['nodeTypeId'] ?? 0);
+    $vendorName = trim($data['vendor'] ?? '');
+    $nodeTypeName = trim($data['nodeType'] ?? '');
 
     if (
         $name === '' ||
-        $vendorId <= 0 ||
-        $nodeTypeId <= 0
+        $vendorName === '' ||
+        $nodeTypeName === ''
     ) {
 
         http_response_code(400);
@@ -33,49 +33,82 @@ try {
         exit;
     }
 
-    // Проверяем производителя
+    $db->beginTransaction();
+
+    // ------------------------------------------------
+    // Тип
+    // ------------------------------------------------
+
     $stmt = $db->prepare("
-        SELECT id
-        FROM Vendors
-        WHERE id = ?
-    ");
-
-    $stmt->execute([$vendorId]);
-
-    if (!$stmt->fetch()) {
-
-        http_response_code(400);
-
-        echo json_encode([
-            'success' => false,
-            'error' => 'Производитель не найден'
-        ], JSON_UNESCAPED_UNICODE);
-
-        exit;
-    }
-
-    // Проверяем тип
-    $stmt = $db->prepare("
-        SELECT id
+        SELECT id, name, fill
         FROM NodeTypes
-        WHERE id = ?
+        WHERE LOWER(name) = LOWER(?)
     ");
 
-    $stmt->execute([$nodeTypeId]);
+    $stmt->execute([$nodeTypeName]);
 
-    if (!$stmt->fetch()) {
+    $nodeType = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        http_response_code(400);
+    if (!$nodeType) {
 
-        echo json_encode([
-            'success' => false,
-            'error' => 'Тип оборудования не найден'
-        ], JSON_UNESCAPED_UNICODE);
+        $stmt = $db->prepare("
+            INSERT INTO NodeTypes (name, fill)
+            VALUES (?, ?)
+        ");
 
-        exit;
+        $stmt->execute([
+            $nodeTypeName,
+            '#90CAF9'
+        ]);
+
+        $nodeTypeId = (int)$db->lastInsertId();
+        $nodeTypeFill = '#90CAF9';
+
+    } else {
+
+        $nodeTypeId = (int)$nodeType['id'];
+        $nodeTypeName = $nodeType['name'];
+        $nodeTypeFill = $nodeType['fill'];
     }
 
-    // Проверяем, нет ли такой модели у этого производителя
+
+    // ------------------------------------------------
+    // Производитель
+    // ------------------------------------------------
+
+    $stmt = $db->prepare("
+        SELECT id, name
+        FROM Vendors
+        WHERE LOWER(name) = LOWER(?)
+    ");
+
+    $stmt->execute([$vendorName]);
+
+    $vendor = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$vendor) {
+
+        $stmt = $db->prepare("
+            INSERT INTO Vendors (name)
+            VALUES (?)
+        ");
+
+        $stmt->execute([$vendorName]);
+
+        $vendorId = (int)$db->lastInsertId();
+        $vendorName = $vendorName;
+
+    } else {
+
+        $vendorId = (int)$vendor['id'];
+        $vendorName = $vendor['name'];
+    }
+
+
+    // ------------------------------------------------
+    // Проверяем модель
+    // ------------------------------------------------
+
     $stmt = $db->prepare("
         SELECT id
         FROM Models
@@ -90,6 +123,8 @@ try {
 
     if ($stmt->fetch()) {
 
+        $db->rollBack();
+
         http_response_code(409);
 
         echo json_encode([
@@ -100,10 +135,11 @@ try {
         exit;
     }
 
-    // Начинаем транзакцию
-    $db->beginTransaction();
 
+    // ------------------------------------------------
     // Создаём модель
+    // ------------------------------------------------
+
     $stmt = $db->prepare("
         INSERT INTO Models (
             name,
@@ -119,7 +155,11 @@ try {
 
     $modelId = (int)$db->lastInsertId();
 
+
+    // ------------------------------------------------
     // Связываем модель с типом
+    // ------------------------------------------------
+
     $stmt = $db->prepare("
         INSERT INTO ModelNodeTypes (
             modelId,
@@ -133,6 +173,7 @@ try {
         $nodeTypeId
     ]);
 
+
     $db->commit();
 
     echo json_encode([
@@ -140,7 +181,10 @@ try {
         'id' => $modelId,
         'name' => $name,
         'vendorId' => $vendorId,
-        'nodeTypeId' => $nodeTypeId
+        'vendor' => $vendorName,
+        'nodeTypeId' => $nodeTypeId,
+        'nodeType' => $nodeTypeName,
+        'fill' => $nodeTypeFill
     ], JSON_UNESCAPED_UNICODE);
 
 } catch (Exception $e) {

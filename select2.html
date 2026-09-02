@@ -16,6 +16,36 @@
 
       <h4>Справочники</h4>
 
+
+      <dialog id="referenceEditDialog" class="">
+
+        <h5>Изменить</h5>
+
+        <div class="field label border">
+
+          <input id="referenceEditInput" type="text">
+          <label>Название</label>
+
+        </div>
+
+        <div id="referenceEditColorField" class="field label border">
+          <button class="black-text" style="background-color: red;">
+            <i>palette</i>
+            <span>Цвет</span>
+            <input id="referenceEditColor" type="color">
+          </button>
+        </div>
+
+        <nav class="right-align">
+
+          <button id="referenceEditSave">Сохранить</button>
+          <button id="referenceEditCancel" class="border">Отмена</button>
+
+        </nav>
+
+      </dialog>
+
+
       <div class="large-space"></div>
 
       <div class="row top-align large-space">
@@ -27,11 +57,11 @@
 
             <div class="field label prefix suffix ">
 
-              <i>search</i>
+              <i>filter_list</i>
               <input type="text">
               <label>Тип</label>
+              <i class="front">search</i>
               <!-- <i class="front">playlist_add</i> -->
-              <!-- <i class="front">save</i> -->
             </div>
 
           </nav>
@@ -39,7 +69,8 @@
           <div style="height: 300px; overflow-y: auto;">
             <ul class="list no-space">
               <li>
-                <div class="max">RRL</div>
+                <div class="round" style="background-color: red; padding:0px 10px 0px;">Router</div>
+                <div class="max"></div>
                 <i class="tiny">edit</i>
                 <i class="tiny">delete</i>
               </li>
@@ -59,9 +90,10 @@
 
             <div class="field label prefix suffix ">
 
-              <i>search</i>
+              <i>filter_list</i>
               <input type="text">
               <label>Производитель</label>
+              <i>close</i>
               <!-- <i class="front">playlist_add</i> -->
               <!-- <i class="front">save</i> -->
             </div>
@@ -101,10 +133,10 @@
 
             <div class="field label prefix suffix ">
 
-              <i>search</i>
+              <i class="front">playlist_add</i>
               <input type="text">
               <label>Модель</label>
-              <i class="front">playlist_add</i>
+              <i>close</i>
               <!-- <i class="front">save</i> -->
             </div>
 

@@ -1,10 +1,15 @@
 export function createReferenceSelector(
   title,
   data,
-  onSelect = () => { },
-  onAdd = () => { },
-  onEdit = () => { },
-  onDelete = () => { }
+  {
+    onSelect = () => { },
+    onInput = () => { },
+    onAdd = null,
+    onEdit = null,
+    onDelete = null,
+    colorField = null,
+    leftIcon = "filter_list"
+  } = {}
 ) {
 
   const container = document.createElement("div")
@@ -15,15 +20,15 @@ export function createReferenceSelector(
 
     <nav>
       <div class="field label prefix suffix">
-        <i>search</i>
+        <i class="front reference-left">${leftIcon}</i>
         <input type="text">
         <label>${title}</label>
-        <i class="front reference-add">playlist_add</i>
+        <i class="front reference-clear">search</i>
       </div>
     </nav>
 
     <div class="right-align">
-      <span id="countItem" class="large-padding"></span>
+      <span class="large-padding count-item">0</span>
     </div>
 
     <div style="height: 400px; overflow-y: auto;">
@@ -32,170 +37,234 @@ export function createReferenceSelector(
   `
 
   const input = container.querySelector("input")
-  const addButton = container.querySelector(".reference-add")
+  const leftButton = container.querySelector(".reference-left")
+  const clearButton = container.querySelector(".reference-clear")
   const list = container.querySelector("ul")
-  const countItem = container.querySelector("#countItem")
+  const countItem = container.querySelector(".count-item")
 
   let items = [...data]
   let selected = null
   let addEnabled = true
 
-  addButton.style.display = "none"
-
-
   // --------------------------------------------------
-  // Отрисовка списка
+  // Список
   // --------------------------------------------------
 
   function renderList() {
 
-    const search = input.value.trim().toLowerCase()
+    const search =
+      input.value.trim().toLowerCase()
 
-    const filteredItems = items.filter(item =>
-      item.trim().toLowerCase().includes(search)
+    const filteredItems =
+      items.filter(item =>
+        item.name.trim().toLowerCase().includes(search)
+      )
+
+    countItem.textContent =
+      filteredItems.length
+
+    list.innerHTML =
+      filteredItems.map(item => `
+        <li>
+          <div class="round" style="${colorField && item[colorField] ? `background:${item[colorField]}; padding:0px 10px 0px;` : ""}">${item.name}</div>
+          <div class="max"></div>
+          ${onEdit ? '<i class="tiny reference-edit">edit</i>' : ""}
+          ${onDelete ? '<i class="tiny reference-delete">delete</i>' : ""}
+        </li>
+      `).join("")
+
+
+    list.querySelectorAll("li").forEach(
+      (li, index) => {
+
+        const item = filteredItems[index]
+
+        li.addEventListener("click", event => {
+
+          if (
+            onEdit &&
+            event.target.closest(".reference-edit")
+          ) {
+            onEdit(item)
+            return
+          }
+
+          if (
+            onDelete &&
+            event.target.closest(".reference-delete")
+          ) {
+            onDelete(item)
+            return
+          }
+
+          selected = item
+          input.value = selected.name
+
+          onSelect(selected)
+          renderList()
+        })
+      }
     )
-
-    countItem.textContent = filteredItems.length
-
-    list.innerHTML = filteredItems.map(item => `
-
-      <li>
-        <div class="max">${item}</div>
-        <i class="tiny reference-edit">edit</i>
-        <i class="tiny reference-delete">delete</i>
-      </li>
-
-    `).join("")
-
-    list.querySelectorAll("li").forEach((li, index) => {
-
-      const item = filteredItems[index]
-
-      li.addEventListener("click", event => {
-
-        if (event.target.closest(".reference-edit")) {
-          onEdit(item)
-          return
-        }
-
-        if (event.target.closest(".reference-delete")) {
-          onDelete(item)
-          return
-        }
-
-        selected = item
-        input.value = selected
-
-        updateAddButton()
-        onSelect(selected)
-        renderList()
-
-      })
-
-    })
-
+    updateClearButton()
+    updateLeftButton()
   }
 
 
   // --------------------------------------------------
-  // Кнопка Add
+  // Update left button
   // --------------------------------------------------
 
-  function updateAddButton() {
+  function updateLeftButton() {
+
+    if (!onAdd) {
+      leftButton.textContent = "filter_list"
+      return
+    }
 
     const value = input.value.trim()
 
     if (!value || !addEnabled) {
-      addButton.style.display = "none"
+      leftButton.textContent = "filter_list"
       return
     }
 
     const exists = items.some(item =>
-      item.trim().toLowerCase() === value.toLowerCase()
+      item.name.trim().toLowerCase() ===
+      value.toLowerCase()
     )
 
-    addButton.style.display =
-      exists ? "none" : ""
+    leftButton.textContent =
+      exists ? "filter_list" : "playlist_add"
   }
+
+
+  // --------------------------------------------------
+  // Clear button X/search
+  // --------------------------------------------------
+
+  function updateClearButton() {
+
+    clearButton.textContent =
+      input.value.trim() ? "close" : "search"
+  }
+
+  // --------------------------------------------------
+  // Add enabled
+  // --------------------------------------------------
 
   function setAddEnabled(value) {
 
     addEnabled = value
-    updateAddButton()
+    updateLeftButton()
   }
 
+
   // --------------------------------------------------
-  // Загрузка нового списка
+  // Load
   // --------------------------------------------------
 
   function load(newItems) {
 
     items = [...newItems]
-    selected = null
-    input.value = ""
 
     renderList()
-    updateAddButton()
   }
 
+
   // --------------------------------------------------
-  // Выбранное значение
+  // Selected
   // --------------------------------------------------
 
   function getSelected() {
     return selected
   }
 
+  function setSelected(value) {
 
-  // --------------------------------------------------
-  // Проверка существования
-  // --------------------------------------------------
+    selected = value
+    input.value = value ? value.name : ""
 
-  function hasValue(value, exceptValue = null) {
-
-    const searchValue = value.trim().toLowerCase()
-
-    return items.some(item => {
-
-      if (item === exceptValue) {
-        return false
-      }
-
-      return item.trim().toLowerCase() === searchValue
-
-    })
-
+    renderList()
   }
 
 
   // --------------------------------------------------
-  // Переименование
+  // Проверка значения
   // --------------------------------------------------
 
-  function rename(oldValue, newValue) {
+  function hasValue(
+    value,
+    exceptValue = null
+  ) {
 
-    const index = items.indexOf(oldValue)
+    const searchValue =
+      value.trim().toLowerCase()
+
+    return items.some(item => {
+
+      if (
+        exceptValue &&
+        item.id === exceptValue.id
+      ) {
+        return false
+      }
+
+      return item.name.trim().toLowerCase() ===
+        searchValue
+    })
+  }
+
+
+  function setInputValue(value) {
+    input.value = value || ""
+
+    renderList()
+  }
+
+  function getInputValue() {
+    return input.value
+  }
+
+  // --------------------------------------------------
+  // Rename
+  // --------------------------------------------------
+
+  function rename(
+    oldValue,
+    newValue
+  ) {
+    const index =
+      items.findIndex(item =>
+        item.id === oldValue.id
+      )
 
     if (index === -1) {
       return false
     }
 
-    items[index] = newValue
+    const renamedValue = {
+      ...oldValue,
+      name: newValue
+    }
 
-    if (selected === oldValue) {
-      selected = newValue
-      input.value = newValue
+    items[index] = renamedValue
+
+    if (
+      selected &&
+      selected.id === oldValue.id
+    ) {
+      selected = renamedValue
+      input.value = renamedValue.name
     }
 
     renderList()
-    updateAddButton()
 
     return true
   }
 
 
   // --------------------------------------------------
-  // Добавление
+  // Add item
   // --------------------------------------------------
 
   function add(value) {
@@ -203,55 +272,77 @@ export function createReferenceSelector(
     items.push(value)
 
     selected = value
-    input.value = value
+    input.value = value.name
 
     renderList()
-    updateAddButton()
-
-    onSelect(value)
   }
 
 
   // --------------------------------------------------
-  // Ввод текста
+  // Search / Input
   // --------------------------------------------------
 
   input.addEventListener("input", () => {
 
-    const value = input.value.trim()
+    const value =
+      input.value.trim()
 
-    const existingItem = items.find(item =>
-      item.trim().toLowerCase() === value.toLowerCase()
-    )
+    const match =
+      items.find(item =>
+        item.name.trim().toLowerCase() ===
+        value.toLowerCase()
+      ) || null
 
-    if (existingItem) {
-      selected = existingItem
-      onSelect(existingItem)
-    } else {
-      selected = null
-      onSelect(null)
-    }
+    onInput(value, match)
 
     renderList()
-    updateAddButton()
-
   })
 
+
+  // --------------------------------------------------
+  // Clear button
+  // --------------------------------------------------
+
+  clearButton.addEventListener("click", () => {
+
+    if (!input.value.trim()) {
+      return
+    }
+
+    input.value = ""
+    selected = null
+
+    onInput("", null)
+
+    renderList()
+  })
 
   // --------------------------------------------------
   // Add
   // --------------------------------------------------
 
-  addButton.addEventListener("click", () => {
+  leftButton.addEventListener("click", () => {
 
-    const value = input.value.trim()
-
-    if (!value) {
+    if (!onAdd) {
       return
     }
 
-    onAdd(value)
+    const value =
+      input.value.trim()
 
+    if (!value || !addEnabled) {
+      return
+    }
+
+    const exists = items.some(item =>
+      item.name.trim().toLowerCase() ===
+      value.toLowerCase()
+    )
+
+    if (exists) {
+      return
+    }
+    onAdd(value)
   })
 
 
@@ -262,10 +353,12 @@ export function createReferenceSelector(
     element: container,
     load,
     getSelected,
+    setSelected,
+    setInputValue,
+    getInputValue,
     hasValue,
     rename,
     add,
     setAddEnabled
   }
-
 }

@@ -27,16 +27,23 @@ try {
         exit;
     }
 
-    // Проверяем существование модели
+    // Получаем модель, производителя и тип
     $stmt = $db->prepare("
-        SELECT id
+        SELECT
+            Models.id,
+            Models.vendorId,
+            ModelNodeTypes.nodeTypeId
         FROM Models
-        WHERE id = ?
+        LEFT JOIN ModelNodeTypes
+            ON ModelNodeTypes.modelId = Models.id
+        WHERE Models.id = ?
     ");
 
     $stmt->execute([$id]);
 
-    if (!$stmt->fetch()) {
+    $model = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$model) {
 
         http_response_code(404);
 
@@ -48,9 +55,35 @@ try {
         exit;
     }
 
+    $vendorId = (int)$model['vendorId'];
+    $nodeTypeId = (int)$model['nodeTypeId'];
+
     $db->beginTransaction();
 
-    // Удаляем связи модели с типами
+    // Проверяем использование модели оборудованием
+    $stmt = $db->prepare("
+        SELECT COUNT(*)
+        FROM Nodes
+        WHERE modelId = ?
+    ");
+
+    $stmt->execute([$id]);
+
+    if ((int)$stmt->fetchColumn() > 0) {
+
+        $db->rollBack();
+
+        http_response_code(409);
+
+        echo json_encode([
+            'success' => false,
+            'error' => 'Модель используется оборудованием и не может быть удалена'
+        ], JSON_UNESCAPED_UNICODE);
+
+        exit;
+    }
+
+    // Удаляем связь модели с типом
     $stmt = $db->prepare("
         DELETE FROM ModelNodeTypes
         WHERE modelId = ?
@@ -65,6 +98,44 @@ try {
     ");
 
     $stmt->execute([$id]);
+
+    // Если у производителя больше нет моделей — удаляем производителя
+    $stmt = $db->prepare("
+        SELECT COUNT(*)
+        FROM Models
+        WHERE vendorId = ?
+    ");
+
+    $stmt->execute([$vendorId]);
+
+    if ((int)$stmt->fetchColumn() === 0) {
+
+        $stmt = $db->prepare("
+            DELETE FROM Vendors
+            WHERE id = ?
+        ");
+
+        $stmt->execute([$vendorId]);
+    }
+
+    // Если у типа больше нет моделей — удаляем тип
+    $stmt = $db->prepare("
+        SELECT COUNT(*)
+        FROM ModelNodeTypes
+        WHERE nodeTypeId = ?
+    ");
+
+    $stmt->execute([$nodeTypeId]);
+
+    if ((int)$stmt->fetchColumn() === 0) {
+
+        $stmt = $db->prepare("
+            DELETE FROM NodeTypes
+            WHERE id = ?
+        ");
+
+        $stmt->execute([$nodeTypeId]);
+    }
 
     $db->commit();
 
@@ -85,5 +156,4 @@ try {
         'success' => false,
         'error' => $e->getMessage()
     ], JSON_UNESCAPED_UNICODE);
-
 }

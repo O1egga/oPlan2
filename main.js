@@ -129,7 +129,6 @@ initReferenceButton()
 initEquipmentDialog(myDiagram, portTypes)
 initEquipmentDoubleClick(myDiagram, portTypes)
 
-await loadReferenceDialog()
 initReferenceDialog()
 
 const groupDialog = initGroupDialog(myDiagram, groupTypes)

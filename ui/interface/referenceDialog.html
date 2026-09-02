@@ -3,14 +3,14 @@
   <nav class="no-space">
     <h6>Справочники</h6>
     <div class="max"></div>
-    <button id="reference-dialog-close" class="transparent"><i>close</i> </button>
+    <button id="reference-dialog-close" class="transparent"><i>close</i></button>
   </nav>
 
-  <div id="referenceDialogRow" class="row top-align center-align large-space"> </div>
+  <div id="referenceDialogRow" class="row top-align center-align large-space"></div>
 
 </dialog>
 
-<!-- Диалог переименования -->
+<!-- Диалог редактирования -->
 <dialog id="referenceEditDialog">
 
   <h5>Изменить</h5>
@@ -22,10 +22,18 @@
 
   </div>
 
+  <div id="referenceEditColorField" class="field label border">
+    <button id="buttonColor" class="black-text">
+      <i>palette</i>
+      <span>Цвет</span>
+      <input id="referenceEditColor" type="color">
+    </button>
+  </div>
+
   <nav class="right-align">
 
-    <button id="referenceEditSave"> Сохранить </button>
-    <button id="referenceEditCancel" class="border"> Отмена </button>
+    <button id="referenceEditSave">Сохранить</button>
+    <button id="referenceEditCancel" class="border">Отмена</button>
 
   </nav>
 
