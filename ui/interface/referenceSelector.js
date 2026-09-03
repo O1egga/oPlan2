@@ -52,16 +52,14 @@ export function createReferenceSelector(
 
   function renderList() {
 
-    const search =
-      input.value.trim().toLowerCase()
+    const search = input.value.trim().toLowerCase()
 
     const filteredItems =
       items.filter(item =>
         item.name.trim().toLowerCase().includes(search)
       )
 
-    countItem.textContent =
-      filteredItems.length
+    countItem.textContent = filteredItems.length
 
     list.innerHTML =
       filteredItems.map(item => `
@@ -74,36 +72,31 @@ export function createReferenceSelector(
       `).join("")
 
 
-    list.querySelectorAll("li").forEach(
-      (li, index) => {
+    list.querySelectorAll("li").forEach((li, index) => {
 
-        const item = filteredItems[index]
+      const item = filteredItems[index]
 
-        li.addEventListener("click", event => {
+      li.addEventListener("click", event => {
 
-          if (
-            onEdit &&
-            event.target.closest(".reference-edit")
-          ) {
-            onEdit(item)
-            return
-          }
+        if (onEdit && event.target.closest(".reference-edit")
+        ) {
+          onEdit(item)
+          return
+        }
 
-          if (
-            onDelete &&
-            event.target.closest(".reference-delete")
-          ) {
-            onDelete(item)
-            return
-          }
+        if (onDelete && event.target.closest(".reference-delete")
+        ) {
+          onDelete(item)
+          return
+        }
 
-          selected = item
-          input.value = selected.name
+        selected = item
+        input.value = selected.name
 
-          onSelect(selected)
-          renderList()
-        })
-      }
+        onSelect(selected)
+        renderList()
+      })
+    }
     )
     updateClearButton()
     updateLeftButton()
@@ -133,8 +126,7 @@ export function createReferenceSelector(
       value.toLowerCase()
     )
 
-    leftButton.textContent =
-      exists ? "filter_list" : "playlist_add"
+    leftButton.textContent = exists ? "filter_list" : "playlist_add"
   }
 
 
@@ -143,9 +135,7 @@ export function createReferenceSelector(
   // --------------------------------------------------
 
   function updateClearButton() {
-
-    clearButton.textContent =
-      input.value.trim() ? "close" : "search"
+    clearButton.textContent = input.value.trim() ? "close" : "search"
   }
 
   // --------------------------------------------------
@@ -166,7 +156,6 @@ export function createReferenceSelector(
   function load(newItems) {
 
     items = [...newItems]
-
     renderList()
   }
 
@@ -175,9 +164,7 @@ export function createReferenceSelector(
   // Selected
   // --------------------------------------------------
 
-  function getSelected() {
-    return selected
-  }
+  function getSelected() { return selected }
 
   function setSelected(value) {
 
@@ -197,20 +184,15 @@ export function createReferenceSelector(
     exceptValue = null
   ) {
 
-    const searchValue =
-      value.trim().toLowerCase()
+    const searchValue = value.trim().toLowerCase()
 
     return items.some(item => {
 
-      if (
-        exceptValue &&
-        item.id === exceptValue.id
-      ) {
+      if (exceptValue && item.id === exceptValue.id) {
         return false
       }
 
-      return item.name.trim().toLowerCase() ===
-        searchValue
+      return item.name.trim().toLowerCase() === searchValue
     })
   }
 
@@ -221,9 +203,7 @@ export function createReferenceSelector(
     renderList()
   }
 
-  function getInputValue() {
-    return input.value
-  }
+  function getInputValue() { return input.value }
 
   // --------------------------------------------------
   // Rename
@@ -233,14 +213,9 @@ export function createReferenceSelector(
     oldValue,
     newValue
   ) {
-    const index =
-      items.findIndex(item =>
-        item.id === oldValue.id
-      )
+    const index = items.findIndex(item => item.id === oldValue.id)
 
-    if (index === -1) {
-      return false
-    }
+    if (index === -1) { return false }
 
     const renamedValue = {
       ...oldValue,
@@ -249,10 +224,7 @@ export function createReferenceSelector(
 
     items[index] = renamedValue
 
-    if (
-      selected &&
-      selected.id === oldValue.id
-    ) {
+    if (selected && selected.id === oldValue.id) {
       selected = renamedValue
       input.value = renamedValue.name
     }
@@ -284,14 +256,9 @@ export function createReferenceSelector(
 
   input.addEventListener("input", () => {
 
-    const value =
-      input.value.trim()
+    const value = input.value
 
-    const match =
-      items.find(item =>
-        item.name.trim().toLowerCase() ===
-        value.toLowerCase()
-      ) || null
+    const match = items.find(item => item.name.trim().toLowerCase() === value.toLowerCase()) || null
 
     onInput(value, match)
 
@@ -305,9 +272,7 @@ export function createReferenceSelector(
 
   clearButton.addEventListener("click", () => {
 
-    if (!input.value.trim()) {
-      return
-    }
+    if (!input.value.trim()) { return }
 
     input.value = ""
     selected = null
@@ -323,25 +288,19 @@ export function createReferenceSelector(
 
   leftButton.addEventListener("click", () => {
 
-    if (!onAdd) {
-      return
-    }
+    if (!onAdd) { return }
 
-    const value =
-      input.value.trim()
+    const value = input.value.trim()
 
-    if (!value || !addEnabled) {
-      return
-    }
+    if (!value || !addEnabled) { return }
 
     const exists = items.some(item =>
       item.name.trim().toLowerCase() ===
       value.toLowerCase()
     )
 
-    if (exists) {
-      return
-    }
+    if (exists) { return }
+
     onAdd(value)
   })
 

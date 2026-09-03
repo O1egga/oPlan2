@@ -17,40 +17,76 @@ export function createNode(fill, title, portTypes) {
         .addRowDefinition(2)
         .addRowDefinition(3, { background: "#fff8dc" })
 
-        .addColumnDefinition(0)
+        .addColumnDefinition(0, {
+          width: 20,
+          sizing: go.Sizing.None
+        })
+
+        .addColumnDefinition(1)
+
+        .addColumnDefinition(2, {
+          width: 20,
+          sizing: go.Sizing.None
+        })
 
         .add(
 
-          createNodeHeaderType(title),
-          new go.TextBlock({ row: 1, stroke: "#2f4f4f" }).bind("text", "", data => `${data.vendor}: ${data.model}`),
-          new go.TextBlock({ row: 2, stroke: "#ffffff" }).bind("text", "name"),
+          // Кружок
+          new go.Shape("Circle", {
+            row: 0,
+            column: 0,
+            width: 7,
+            height: 7,
+            fill: "lime",
+            stroke: null
+          }),
+
+          // Тип оборудования
+          new go.TextBlock(title, {
+            row: 0,
+            column: 1,
+            stroke: "#000000",
+            wrap: go.Wrap.None
+          }),
+
+          // Кнопка сворачивания
+          go.GraphObject.build(
+            "PanelExpanderButton",
+            {
+              row: 0,
+              column: 2,
+              "ButtonIcon.stroke": "#ffff00"
+            },
+            "NodeBody"
+          ),
+
+          // Vendor: Model
+          new go.TextBlock({
+            row: 1,
+            column: 0,
+            columnSpan: 3,
+            stroke: "#2f4f4f"
+          })
+            .bind(
+              "text",
+              "",
+              data => `${data.vendor}: ${data.model}`
+            ),
+
+          // Имя оборудования
+          new go.TextBlock({
+            row: 2,
+            column: 0,
+            columnSpan: 3,
+            stroke: "#ffffff"
+          })
+            .bind("text", "name"),
+
+          // Основная часть оборудования
           createNodeBody(portTypes, title)
+
         )
 
     )
 
-}
-
-// функция создания заголовка узла с типом, индикатором и кнопкой сворачивания
-function createNodeHeaderType(title) {
-
-  return new go.Panel("Table", { row: 0, stretch: go.Stretch.Horizontal })
-
-    .addColumnDefinition(0, { width: 20 })
-    .addColumnDefinition(1)
-    .addColumnDefinition(2, { width: 20 })
-
-    .add(
-
-      // Индикатор слева
-      new go.Shape("Circle", { column: 0, width: 7, height: 7, fill: "lime", stroke: null }),
-
-      // Тип узла
-      new go.TextBlock(title, { column: 1, stroke: "#000000" }),
-
-      // Кнопка сворачивания
-      go.GraphObject.build("PanelExpanderButton", { column: 2, "ButtonIcon.stroke": "#ffff00" }, "NodeBody")
-      // .add(new go.TextBlock("@"))
-
-    )
 }

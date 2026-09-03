@@ -41,17 +41,11 @@ export async function initReferenceDialog() {
   // Загрузка справочников
   // --------------------------------------------------
 
-  const response =
-    await fetch("./api/getReferences.php")
+  const response = await fetch("./api/getReferences.php")
 
-  if (!response.ok) {
-    throw new Error(
-      `Ошибка загрузки справочников: HTTP ${response.status}`
-    )
-  }
+  if (!response.ok) { throw new Error(`Ошибка загрузки справочников: HTTP ${response.status}`) }
 
-  const referenceData =
-    await response.json()
+  const referenceData = await response.json()
 
   const nodeTypes = referenceData.nodeTypes
   const vendors = referenceData.vendors
@@ -63,13 +57,9 @@ export async function initReferenceDialog() {
   // ID приводим к числам
   // --------------------------------------------------
 
-  nodeTypes.forEach(item => {
-    item.id = Number(item.id)
-  })
+  nodeTypes.forEach(item => { item.id = Number(item.id) })
 
-  vendors.forEach(item => {
-    item.id = Number(item.id)
-  })
+  vendors.forEach(item => { item.id = Number(item.id) })
 
   models.forEach(item => {
     item.id = Number(item.id)
@@ -81,17 +71,9 @@ export async function initReferenceDialog() {
     item.nodeTypeId = Number(item.nodeTypeId)
   })
 
-  nodeTypes.sort(
-    (a, b) => a.name.localeCompare(b.name, "ru")
-  )
-
-  vendors.sort(
-    (a, b) => a.name.localeCompare(b.name, "ru")
-  )
-
-  models.sort(
-    (a, b) => a.name.localeCompare(b.name, "ru")
-  )
+  nodeTypes.sort((a, b) => a.name.localeCompare(b.name, "ru"))
+  vendors.sort((a, b) => a.name.localeCompare(b.name, "ru"))
+  models.sort((a, b) => a.name.localeCompare(b.name, "ru"))
 
 
   // --------------------------------------------------

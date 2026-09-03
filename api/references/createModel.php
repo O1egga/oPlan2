@@ -58,11 +58,11 @@ try {
 
         $stmt->execute([
             $nodeTypeName,
-            '#90CAF9'
+            '#CCCCCC'
         ]);
 
         $nodeTypeId = (int)$db->lastInsertId();
-        $nodeTypeFill = '#90CAF9';
+        $nodeTypeFill = '#CCCCCC';
 
     } else {
 
