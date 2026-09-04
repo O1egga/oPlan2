@@ -1,0 +1,82 @@
+.tree-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 360px;
+  box-sizing: border-box;
+  height: 100vh;
+
+  margin: 0;
+  padding: 1.5rem;
+
+  border: none;
+  border-radius: 0;
+
+  background: white;
+  box-shadow: 4px 0 20px rgb(0 0 0 / 20%);
+
+  z-index: 99999;
+
+  overflow: hidden;
+}
+
+#treeWunderbaum {
+  height: calc(100vh - 100px);
+  overflow: auto;
+}
+
+.tree-dialog[open] {
+  animation: tree-dialog-show 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tree-dialog.closing {
+  animation: tree-dialog-hide 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes tree-dialog-show {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes tree-dialog-hide {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.tree-dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  margin-bottom: 1rem;
+}
+
+.tree-dialog-header h5 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.tree-dialog-header button {
+  margin-left: auto;
+
+  border: none;
+  background: transparent;
+
+  cursor: pointer;
+}
+
+#tree {
+  height: calc(100vh - 5rem);
+  overflow: auto;
+}

@@ -7,7 +7,12 @@
   <title>Document</title>
 
   <link rel="stylesheet" href="pluginJsCss/beer.scoped.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/wunderbaum@0/dist/wunderbaum.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
   <script type="module" src="pluginJsCss/beer.min.js"></script>
+
+
 
   <head>
 
@@ -264,46 +269,26 @@
 
       <div class="space"></div>
 
-      <!-- Таблица -->
 
 
-      <div class="row surface center-align">
-        <div id="selectedType">RRL</div>
-        <div id="selectedVendor">Nec</div>
-        <div id="selectedModel">iPassolink200</div>
-        <!-- <i>delete</i> -->
-        <i>playlist_add</i>
+
+
+      <div class="ports">
+
+        <div class="grid tiny-margin" data-type="2" data-id="40">
+          <div class="s1 port-number">1</div>
+          <div class="s1 round port-type" style="background-color: #c1f3b7;"> Coaxial </div>
+          <div class="s10"></div>
+        </div>
+
+        <div class="grid tiny-margin" data-type="2" data-id="40">
+          <div class="s1 port-number">1</div>
+          <div class="s1 round port-type" style="background-color: #c1f3b7;"> C</div>
+          <div class="s10"></div>
+        </div>
+
+
       </div>
-
-      <div class="space"></div>
-
-
-      <div class="small-height scroll">
-        <table class="no-space center-align">
-          <thead class="fixed primary">
-            <tr>
-              <th>Тип</th>
-              <th>Производитель</th>
-              <th>Модель</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>RRL</td>
-              <td>Nec</td>
-              <td>iPassolink200</td>
-            </tr>
-            <tr>
-              <td>RRL</td>
-              <td>Nec</td>
-              <td>iPassolink400</td>
-            </tr>
-
-          </tbody>
-        </table>
-      </div>
-
 
 
 
@@ -314,6 +299,122 @@
 
 
     </div>
+
+
+
+    <!-- дерево -->
+
+
+    <div id="treeDialog" class="left medium active">
+
+      <h5>Структура</h5>
+
+      <div class="large-space"></div>
+
+      <!-- wunderbaum -->
+      <div id="tree" class="wb-skeleton wb-initializing wb-fade-expander"></div>
+
+    </div>
+
+
+
+    <script type="module">
+
+      import { Wunderbaum } from "https://cdn.jsdelivr.net/npm/wunderbaum@0/+esm"
+
+      const data = [
+
+        {
+          title: "Казахстан",
+          expanded: true,
+
+          children: [
+
+            {
+              title: "Костанайская область",
+              expanded: true,
+
+              children: [
+
+                {
+                  title: "Костанай",
+
+                  children: [
+
+                    {
+                      title: "BTS-001"
+                    },
+
+                    {
+                      title: "Router-001"
+                    },
+
+                    {
+                      title: "RRL-001"
+                    }
+
+                  ]
+                },
+
+                {
+                  title: "Рудный",
+
+                  children: [
+
+                    {
+                      title: "BTS-002"
+                    },
+
+                    {
+                      title: "Router-002"
+                    }
+
+                  ]
+                }
+
+              ]
+            },
+
+            {
+              title: "Акмолинская область",
+
+              children: [
+
+                {
+                  title: "Кокшетау",
+
+                  children: [
+
+                    {
+                      title: "BTS-003"
+                    },
+
+                    {
+                      title: "Router-003"
+                    }
+
+                  ]
+                }
+
+              ]
+            }
+
+          ]
+        }
+
+      ]
+
+      const tree = new Wunderbaum({
+
+        element: document.getElementById("tree"),
+
+        source: data
+
+      })
+
+    </script>
+
+
 
   </body>
 

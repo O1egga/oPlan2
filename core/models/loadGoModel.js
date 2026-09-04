@@ -86,7 +86,10 @@ export async function loadModel(diagram, portTypes, linkTypes) {
           isGroup: true,
           type: String(group.groupTypeId),
 
+          groupId: group.id,
           text: group.name,
+
+          visible: false,
 
           groupTypeId: group.groupTypeId,
 
@@ -115,6 +118,10 @@ export async function loadModel(diagram, portTypes, linkTypes) {
           model: node.model,
           modelId: node.modelId,
 
+          visible: false,
+
+          groupId: node.groupId,
+
           ...(node.groupId !== null
             ? { group: `g${node.groupId}` }
             : {}),
@@ -134,6 +141,8 @@ export async function loadModel(diagram, portTypes, linkTypes) {
 
         linkTypeId: link.linkTypeId,
 
+        visible: false,
+
         name: link.name ?? "",
         note: link.note ?? ""
       }))
@@ -148,6 +157,32 @@ export async function loadModel(diagram, portTypes, linkTypes) {
 
     // Создаём модель GoJS
     diagram.model = go.Model.fromJson(modelData)
+
+
+
+    // Изначально скрываем все группы и оборудование
+    diagram.nodes.each(part => {
+      part.visible = false
+    })
+
+    // Изначально скрываем все линии
+    diagram.links.each(link => {
+      link.visible = false
+    })
+
+
+    // // Проверяем видимость элементов после создания модели
+    // diagram.nodes.each(part => {
+
+    //   console.log(
+    //     "GoJS:",
+    //     part.data.key,
+    //     part.data.isGroup ? "GROUP" : "NODE",
+    //     "visible =", part.visible
+    //   )
+
+    // })
+
 
     // Сворачиваем все группы
     diagram.findTopLevelGroups().each(group => {

@@ -92,8 +92,7 @@ export async function deletePorts(portIds) {
     }
   )
 
-  const result =
-    await response.json()
+  const result = await response.json()
 
   if (!response.ok || !result.success) {
 
@@ -103,8 +102,7 @@ export async function deletePorts(portIds) {
         "Ошибка удаления портов"
       )
 
-    error.usedPortIds =
-      result.usedPortIds || []
+    error.usedPortIds = result.usedPortIds || []
 
     throw error
   }

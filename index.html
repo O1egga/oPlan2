@@ -8,13 +8,18 @@
 
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="pluginJsCss/beer.scoped.min.css">
-
+  <link rel="stylesheet" href="./ui/tree/treeDialog.css">
+  <link rel="stylesheet" href="./pluginJsCss/bootstrap-icons/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="./pluginJsCss/wunderbaum/wunderbaum.css">
   <script src="pluginJsCss/go-debug.js"></script>
   <script type="module" src="pluginJsCss/beer.min.js"></script>
-  <!-- <script src="pluginJsCss/virtual-select.min.js"></script> -->
 </head>
 
 <body>
+
+  <!-- дерево -->
+  <div id="treeDialogContainer"></div>
+
   <div id="myDiagramDiv"></div>
 
   <div id="dialogs" class="beer">
@@ -22,11 +27,21 @@
     <!-- диалог "Добавить группу"-->
   </div>
 
+  <!-- кнопки -->
   <div id="instruments" class="beer">
+
+    <button id="treeButton">
+      <i>account_tree</i>
+    </button>
 
     <button id="referencesButton" class="">
       <i>book_2</i>
       <span class="tooltip bottom">Справочник</span>
+    </button>
+
+    <button id="settingsButton" class="">
+      <i>settings</i>
+      <span class="tooltip bottom">Настройки</span>
     </button>
 
   </div>

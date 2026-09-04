@@ -40,32 +40,20 @@ export async function loadReferenceDialog() {
   if (!dialogs) { throw new Error("Не найден контейнер #dialogs") }
 
   dialogs.insertAdjacentHTML("beforeend", html)
-
-  await loadScript("./pluginJsCss/virtual-select.min.js")
-
-  VirtualSelect.init({
-    ele: "#testSelect",
-    enableSecureText: true,
-    options: [
-      { label: "NodeTypes", value: "1" },
-      { label: "PortTypes", value: "2" },
-      { label: "LinkTypes", value: "3" }
-    ]
-  })
 }
 
-function loadScript(src) {
+export async function loadSettingsDialog() {
 
-  return new Promise((resolve, reject) => {
+  const response = await fetch("./ui/interface/settingsDialog.html")
 
-    const script = document.createElement("script")
-    script.src = src
-    script.onload = resolve
-    script.onerror = () => reject(new Error(`Ошибка загрузки ${src}`))
+  if (!response.ok) { throw new Error(`Ошибка загрузки settingsDialog.html: ${response.status}`) }
 
-    document.head.append(script)
+  const html = await response.text()
+  const dialogs = document.querySelector("#dialogs")
 
-  })
+  if (!dialogs) { throw new Error("Не найден контейнер #dialogs") }
+
+  dialogs.insertAdjacentHTML("beforeend", html)
 
 }
 
@@ -80,3 +68,35 @@ export function initReferenceButton() {
   button.addEventListener("click", () => { dialog.showModal() })
 
 }
+
+export function initSettingsButton() {
+
+  const button = document.querySelector("#settingsButton")
+  const dialog = document.querySelector("#settingsDialog")
+  const closeButton = document.querySelector("#settings-dialog-close")
+
+  if (!button) { throw new Error("Не найдена кнопка #settingsButton") }
+  if (!dialog) { throw new Error("Не найден диалог #settingsDialog") }
+  if (!closeButton) { throw new Error("Не найдена кнопка #settings-dialog-close") }
+
+  button.addEventListener("click", () => { dialog.showModal() })
+  closeButton.addEventListener("click", () => { dialog.close() })
+
+}
+
+export async function loadTreeDialog() {
+
+  const response = await fetch("./ui/interface/treeDialog.html")
+
+  if (!response.ok) { throw new Error(`Ошибка загрузки treeDialog.html: ${response.status}`) }
+
+  const html = await response.text()
+  const container = document.querySelector("#treeDialogContainer")
+
+  if (!container) { throw new Error("Не найден контейнер #treeDialogContainer") }
+
+  container.insertAdjacentHTML("beforeend", html)
+
+}
+
+export { initTreeDialog } from "../tree/treeDialog.js"

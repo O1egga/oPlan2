@@ -1,6 +1,9 @@
 import { createNodeBody } from "./createNodeBody.js"
+import { getDisplaySettings } from "../../core/utils/displaySettings.js"
 
 export function createNode(fill, title, portTypes) {
+
+  const settings = getDisplaySettings()
 
   return new go.Node("Auto")
 
@@ -65,7 +68,9 @@ export function createNode(fill, title, portTypes) {
             row: 1,
             column: 0,
             columnSpan: 3,
-            stroke: "#2f4f4f"
+            name: "VendorModel",
+            stroke: "#2f4f4f",
+            visible: settings.showVendorModel
           })
             .bind(
               "text",
@@ -78,7 +83,9 @@ export function createNode(fill, title, portTypes) {
             row: 2,
             column: 0,
             columnSpan: 3,
-            stroke: "#ffffff"
+            name: "EquipmentName",
+            stroke: "#ffffff",
+            visible: settings.showName
           })
             .bind("text", "name"),
 

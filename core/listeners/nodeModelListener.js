@@ -7,8 +7,30 @@ import {
 // Очередь удаления оборудования
 let deleteQueue = Promise.resolve()
 
+// Количество незавершённых изменений групп
+let pendingGroupUpdates = 0
 
-export function registerNodeModelListener(diagram) {
+// Таймер обновления дерева
+let refreshTreeTimer = null
+
+// Планируем обновление дерева
+function scheduleTreeRefresh(refreshTree) {
+
+  clearTimeout(refreshTreeTimer)
+
+  refreshTreeTimer = setTimeout(async () => {
+
+    if (pendingGroupUpdates > 0) {
+      scheduleTreeRefresh(refreshTree)
+      return
+    }
+    await refreshTree()
+
+  }, 100)
+
+}
+
+export function registerNodeModelListener(diagram, refreshTree) {
 
   diagram.model.addChangedListener(event => {
 
@@ -20,29 +42,37 @@ export function registerNodeModelListener(diagram) {
 
       const data = event.object
 
-      if (!data || data.isGroup) {
-        return
-      }
+      if (!data || data.isGroup) { return }
 
       const nodeId = Number(data.key)
-
       const groupId = data.group
         ? Number(
           String(data.group).replace("g", "")
         )
         : null
 
-      updateNodeParent(
-        nodeId,
-        groupId
-      ).catch(error => {
+      // Учитываем незавершённое обновление
+      pendingGroupUpdates++
 
-        console.error(
-          "Ошибка сохранения группы оборудования:",
-          error
-        )
+      updateNodeParent(nodeId, groupId)
+        .catch(error => {
 
-      })
+          console.error(
+            "Ошибка сохранения группы оборудования:",
+            error
+          )
+
+        })
+        .finally(() => {
+
+          // Обновление завершено
+          pendingGroupUpdates--
+
+          scheduleTreeRefresh(
+            refreshTree
+          )
+
+        })
 
       return
     }

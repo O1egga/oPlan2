@@ -1,5 +1,42 @@
 import { canMoveGroup } from "../../core/utils/groupMoveValidation.js"
 
+// Проверяем конфликты имён перед перемещением
+function hasNameConflict(diagram, selection, group) {
+
+  const nodes = diagram.model.nodeDataArray
+
+  const selectedNodes = []
+
+  selection.each(part => { if (!part.data?.isGroup) { selectedNodes.push(part.data) } })
+
+  // Ключи выбранного оборудования
+  const selectedKeys = new Set(selectedNodes.map(node => node.key))
+
+  // Проверяем конфликт с оборудованием, которое уже находится в целевой группе
+  for (const node of selectedNodes) {
+
+    const exists = nodes.some(item =>
+      !selectedKeys.has(item.key) &&
+      item.group === group.data.key &&
+      item.name === node.name
+    )
+
+    if (exists) { return node.name }
+  }
+
+  // Проверяем одинаковые имена среди самого перемещения
+  const names = new Set()
+
+  for (const node of selectedNodes) {
+
+    if (names.has(node.name)) { return node.name }
+
+    names.add(node.name)
+  }
+
+  return null
+}
+
 export function createGroup(figure, fill, header, contextMenu, groupTypes) {
 
   return new go.Group("Auto", {
@@ -12,14 +49,27 @@ export function createGroup(figure, fill, header, contextMenu, groupTypes) {
 
       const selection = event.diagram.selection
 
-      // Проверяем каждый выбранный элемент
+      // Проверяем возможность перемещения
       const canMove = selection.all(
         item => canMoveGroup(item, group, groupTypes)
       )
 
       if (!canMove) { return }
 
-      // Добавляем выбранные элементы в группу
+      // Проверяем конфликты имён до изменения модели
+      const conflictName = hasNameConflict(
+        event.diagram,
+        selection,
+        group
+      )
+
+      if (conflictName) {
+
+        alert(`В группе "${group.data.text}" уже есть оборудование с именем "${conflictName}".`)
+        return
+      }
+
+      // Только теперь меняем GoJS-модель
       group.addMembers(selection, true)
 
     },
@@ -34,13 +84,9 @@ export function createGroup(figure, fill, header, contextMenu, groupTypes) {
       const selection = event.diagram.selection
 
       // Проверяем каждый выбранный элемент
-      const canMove = selection.all(
-        item => canMoveGroup(item, group, groupTypes)
-      )
+      const canMove = selection.all(item => canMoveGroup(item, group, groupTypes))
 
-      if (canMove) {
-        shape.strokeWidth = 4
-      }
+      if (canMove) { shape.strokeWidth = 4 }
 
     },
 
@@ -81,7 +127,7 @@ export function createGroup(figure, fill, header, contextMenu, groupTypes) {
             row: 0,
             column: 0,
             stroke: "white",
-            font: "bold 16px sans-serif",
+            font: "20px 'Material Symbols Outlined'",
             textAlign: "center",
             alignment: go.Spot.Center
           })

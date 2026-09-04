@@ -30,8 +30,6 @@ export function initEquipmentDialog(myDiagram, portTypes) {
     }
   )
 
-
-
   dialog.addEventListener("input", () => {
 
     if (dialog.dataset.mode === "edit") {
@@ -47,10 +45,6 @@ export function initEquipmentDialog(myDiagram, portTypes) {
     }
 
   })
-
-
-
-
 
   // Кнопки диалога
   dialog.addEventListener("click", async (event) => {
@@ -69,7 +63,6 @@ export function initEquipmentDialog(myDiagram, portTypes) {
 
       return
     }
-
 
     const deletePortsButton = event.target.closest(".delete-ports")
     if (deletePortsButton) {
@@ -106,8 +99,7 @@ export function initEquipmentDialog(myDiagram, portTypes) {
       return
     }
 
-    const saveButton =
-      event.target.closest(".save-equipment")
+    const saveButton = event.target.closest(".save-equipment")
 
     if (saveButton) {
 
@@ -235,11 +227,7 @@ export function initEquipmentDialog(myDiagram, portTypes) {
       } catch (error) {
 
         console.error(error)
-
-        alert(
-          "Не удалось сохранить оборудование:\n" +
-          error.message
-        )
+        alert("Не удалось сохранить оборудование:\n" + error.message)
 
       }
 
@@ -345,9 +333,6 @@ export async function openEquipmentDialog(node, portTypes) {
   fillPorts(dialog, ports, portTypes)
 
 
-
-
-
   dialog._originalEquipmentState = {
 
     nodeTypeId:
@@ -379,11 +364,6 @@ export async function openEquipmentDialog(node, portTypes) {
   dialog.querySelector(
     ".save-equipment"
   ).disabled = true
-
-
-
-
-
 
   dialog.dataset.mode = "edit"
   dialog.dataset.nodeId = node.data.key

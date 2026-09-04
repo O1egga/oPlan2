@@ -1,6 +1,5 @@
 import { renumberPorts } from "./portUtils.js"
 
-
 // Создаёт один порт в списке
 export function createPortListItem(
   portType,
@@ -11,22 +10,16 @@ export function createPortListItem(
 
   const li = document.createElement("li")
 
-  li.className = "grid"
+  li.className = "grid tiny-margin"
   li.dataset.type = portTypeId
 
-  if (portId !== null) {
-    li.dataset.id = portId
-  }
+  if (portId !== null) { li.dataset.id = portId }
 
   li.innerHTML = `
-    <span class="s1 port-number">${portNo}</span>
-    <span class="s4 chip small port-type"
-      style="background-color: ${portType.fill};">
-      ${portType.name}
-    </span>
-    <span class="s7"></span>
+    <div class="s1 port-number">${portNo}</div>
+    <div class="s4 round center-align port-type" style="background-color: ${portType.fill}; padding:0px 10px 0px;">${portType.name}</div>
+    <div class="s7"></div>
   `
-
   return li
 }
 
@@ -38,11 +31,9 @@ export function addPorts(button, portTypes) {
   const portList = dialog.querySelector(".ports")
   const row = button.closest(".row")
 
-  const count =
-    Number(row.querySelector(".port-count").value)
+  const count = Number(row.querySelector(".port-count").value)
 
-  const type =
-    Number(row.querySelector(".port-type").value)
+  const type = Number(row.querySelector(".port-type").value)
 
   const portType = portTypes[type]
 
