@@ -1,6 +1,7 @@
 import { collectPorts, savePorts, loadPorts, deletePorts } from "./equipmentPorts.js"
 
-export async function saveEquipment(dialog, myDiagram) {
+// Сохраняет новое оборудование в указанную группу
+export async function saveEquipment(dialog, myDiagram, groupId) {
 
   const typeSelect = dialog.querySelector(".equipment-type")
   const vendorSelect = dialog.querySelector(".equipment-vendor")
@@ -16,7 +17,8 @@ export async function saveEquipment(dialog, myDiagram) {
     nodeTypeId: Number(nodeTypeId),
     name: name,
     vendorId: Number(vendorId),
-    modelId: Number(modelId)
+    modelId: Number(modelId),
+    groupId: Number(groupId)
   }
 
   console.log("Сохраняем оборудование:", data)
@@ -56,6 +58,7 @@ export async function saveEquipment(dialog, myDiagram) {
     vendor: vendorSelect.options[vendorSelect.selectedIndex].text,
     model: modelSelect.options[modelSelect.selectedIndex].text,
     name: name,
+    groupId: Number(groupId),
     ports: ports
 
   }

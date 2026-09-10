@@ -2,7 +2,7 @@
   "files.exclude": {
     "!docs/": true,
     "!tmp": true,
-    "pluginJsCss": true,
+    "pluginJsCss": false,
     "css": false,
     ".codegraphy": true,
     ".nogic": true,

@@ -80,3 +80,19 @@
   height: calc(100vh - 5rem);
   overflow: auto;
 }
+
+.tree-context-menu {
+  position: fixed;
+  z-index: 100000;
+}
+
+/* Иконки контекстного меню */
+.tree-context-icon {
+  font-family: "Material Symbols Outlined";
+  font-weight: normal;
+  font-style: normal;
+  font-size: 20px;
+  line-height: 1;
+  font-feature-settings: "liga";
+  -webkit-font-smoothing: antialiased;
+}

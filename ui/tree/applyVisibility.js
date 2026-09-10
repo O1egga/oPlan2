@@ -37,7 +37,6 @@ export function applyVisibility(diagram, tree) {
 
   })
 
-
   // Показываем link только если видимы оба оборудования
   diagram.links.each(link => {
 
@@ -46,7 +45,5 @@ export function applyVisibility(diagram, tree) {
       link.toNode?.visible === true
 
   })
-
-
 
 }

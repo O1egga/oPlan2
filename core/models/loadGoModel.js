@@ -8,41 +8,30 @@ export async function loadModel(diagram, portTypes, linkTypes) {
     // Загружаем узлы
     const nodesResponse = await fetch("./api/nodes/getNodes.php")
 
-    if (!nodesResponse.ok) {
-      throw new Error(`Ошибка загрузки Nodes: HTTP ${nodesResponse.status}`)
-    }
+    if (!nodesResponse.ok) { throw new Error(`Ошибка загрузки Nodes: HTTP ${nodesResponse.status}`) }
     const nodes = await nodesResponse.json()
-
 
     // Загружаем порты
     const portsResponse = await fetch("./api/nodes/ports/getPorts.php")
 
-    if (!portsResponse.ok) {
-      throw new Error(`Ошибка загрузки Ports: HTTP ${portsResponse.status}`)
-    }
+    if (!portsResponse.ok) { throw new Error(`Ошибка загрузки Ports: HTTP ${portsResponse.status}`) }
     const ports = await portsResponse.json()
 
     // Связываем ID порта с ID узла
     const portToNode = {}
 
-    ports.forEach(port => {
-      portToNode[port.id] = port.nodeId
-    })
+    ports.forEach(port => { portToNode[port.id] = port.nodeId })
 
     // Загружаем группы
     const groupsResponse = await fetch("./api/groups/getGroups.php")
 
-    if (!groupsResponse.ok) {
-      throw new Error(`Ошибка загрузки Groups: HTTP ${groupsResponse.status}`)
-    }
+    if (!groupsResponse.ok) { throw new Error(`Ошибка загрузки Groups: HTTP ${groupsResponse.status}`) }
     const groups = await groupsResponse.json()
 
     // Загружаем линки
     const linksResponse = await fetch("./api/links/getLinks.php")
 
-    if (!linksResponse.ok) {
-      throw new Error(`Ошибка загрузки Links: HTTP ${linksResponse.status}`)
-    }
+    if (!linksResponse.ok) { throw new Error(`Ошибка загрузки Links: HTTP ${linksResponse.status}`) }
     const links = await linksResponse.json()
 
     // Группируем порты по nodeId
@@ -63,9 +52,7 @@ export async function loadModel(diagram, portTypes, linkTypes) {
     })
 
     // Добавляем порты к узлам
-    nodes.forEach(node => {
-      node.ports = portsByNode[node.id] ?? []
-    })
+    nodes.forEach(node => { node.ports = portsByNode[node.id] ?? [] })
 
     // Формируем модель GoJS
     const modelData = {
@@ -149,53 +136,22 @@ export async function loadModel(diagram, portTypes, linkTypes) {
     }
 
     // Подготовка визуального представления
-    applyPresentation(
-      modelData,
-      portTypes,
-      linkTypes
-    )
+    applyPresentation(modelData, portTypes, linkTypes)
 
     // Создаём модель GoJS
     diagram.model = go.Model.fromJson(modelData)
 
-
-
     // Изначально скрываем все группы и оборудование
-    diagram.nodes.each(part => {
-      part.visible = false
-    })
+    // diagram.nodes.each(part => { part.visible = false })
 
     // Изначально скрываем все линии
-    diagram.links.each(link => {
-      link.visible = false
-    })
-
-
-    // // Проверяем видимость элементов после создания модели
-    // diagram.nodes.each(part => {
-
-    //   console.log(
-    //     "GoJS:",
-    //     part.data.key,
-    //     part.data.isGroup ? "GROUP" : "NODE",
-    //     "visible =", part.visible
-    //   )
-
-    // })
-
+    diagram.links.each(link => { link.visible = false })
 
     // Сворачиваем все группы
-    diagram.findTopLevelGroups().each(group => {
-      group.collapseSubGraph()
-    })
+    // diagram.findTopLevelGroups().each(group => { group.collapseSubGraph() })
 
   } catch (err) {
-
-    console.error(
-      "Ошибка загрузки модели из БД:",
-      err
-    )
-
+    console.error("Ошибка загрузки модели из БД:", err)
   }
 
 }

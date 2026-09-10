@@ -1,8 +1,11 @@
 import { Wunderbaum } from "../../pluginJsCss/wunderbaum/wunderbaum.esm.min.js"
+import { createTreeExpandHandler, initDiagramExpandSync } from "./treeExpandSync.js"
 import { loadTreeData } from "./treeData.js"
 import { applyVisibility } from "./applyVisibility.js"
+import { initTreeContextMenu } from "./treeContextMenu.js"
 
-export async function initTreeDialog(diagram) {
+
+export async function initTreeDialog(diagram, refreshDiagram) {
 
   const button = document.querySelector("#treeButton")
   const dialog = document.querySelector("#treeDialog")
@@ -14,15 +17,19 @@ export async function initTreeDialog(diagram) {
 
   dialog.show()
 
+  const expandHandler = createTreeExpandHandler(diagram)
 
   const tree = new Wunderbaum({
     element: document.querySelector("#treeWunderbaum"),
     source: data,
     checkbox: true,
-    selectMode: "hier",
+    selectMode: "hier", // multi
 
     // Изменение checkbox
-    select: event => { applyVisibility(diagram, tree) }
+    select: event => { applyVisibility(diagram, tree) },
+
+    // Синхронизация раскрытия со схемой
+    expand: expandHandler
   })
 
   // Обновляем дерево из БД
@@ -64,6 +71,12 @@ export async function initTreeDialog(diagram) {
     })
   }
 
+  // Контекстное меню
+  initTreeContextMenu(tree, refreshTree, refreshDiagram, diagram)
+
+  // Синхронизация раскрытия
+  initDiagramExpandSync(tree, diagram)
+
   function closeTreeDialog() {
 
     dialog.classList.add("closing")
@@ -87,6 +100,6 @@ export async function initTreeDialog(diagram) {
 
   })
 
-  return refreshTree
-
+  // Возвращаем дерево и функцию обновления
+  return { tree, refreshTree }
 }

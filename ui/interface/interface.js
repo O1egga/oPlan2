@@ -13,21 +13,6 @@ export async function loadEquipmentDialog() {
 
 }
 
-export async function loadGroupDialog() {
-
-  const response = await fetch("./ui/interface/groupDialog.html")
-
-  if (!response.ok) { throw new Error(`Ошибка загрузки groupDialog.html: ${response.status}`) }
-
-  const html = await response.text()
-  const dialogs = document.querySelector("#dialogs")
-
-  if (!dialogs) { throw new Error("Не найден контейнер #dialogs") }
-
-  dialogs.insertAdjacentHTML("beforeend", html)
-
-}
-
 export async function loadReferenceDialog() {
 
   const response = await fetch("./ui/interface/referenceDialog.html")
@@ -100,3 +85,18 @@ export async function loadTreeDialog() {
 }
 
 export { initTreeDialog } from "../tree/treeDialog.js"
+
+export async function loadConfirmDialog() {
+
+  const response = await fetch("./ui/interface/confirmDialog.html")
+
+  if (!response.ok) { throw new Error(`Ошибка загрузки confirmDialog.html: ${response.status}`) }
+
+  const html = await response.text()
+  const dialogs = document.querySelector("#dialogs")
+
+  if (!dialogs) { throw new Error("Не найден контейнер #dialogs") }
+
+  dialogs.insertAdjacentHTML("beforeend", html)
+
+}

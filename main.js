@@ -1,9 +1,9 @@
 import {
   loadEquipmentDialog,
-  loadGroupDialog,
   loadReferenceDialog,
   loadSettingsDialog,
   loadTreeDialog,
+  loadConfirmDialog,
   initReferenceButton,
   initSettingsButton,
   initTreeDialog
@@ -15,12 +15,8 @@ import { registerLinkTemplates } from "./ui/templates/registerLinkTemplates.js"
 import { registerGroupTemplates } from "./ui/templates/registerGroupTemplates.js"
 import { loadModel } from "./core/models/loadGoModel.js"
 import "./pluginJsCss/customFigures.js"
-import { initEquipmentContextMenu } from "./ui/equipment/equipmentContextMenu.js"
 import { initEquipmentDialog } from "./ui/equipment/equipmentDialog.js"
-import { initGroupDialog } from "./ui/groups/groupDialog.js"
-import { registerGroupModelListener } from "./core/listeners/groupModelListener.js"
 import { registerNodeModelListener } from "./core/listeners/nodeModelListener.js"
-import { GroupCommandHandler } from "./core/commands/groupCommandHandler.js"
 import { initEquipmentDoubleClick } from "./ui/equipment/equipmentDoubleClick.js"
 import { registerLinkModelListener } from "./core/listeners/linkModelListener.js"
 import { initReferenceDialog } from "./ui/interface/referenceDialog.js"
@@ -28,37 +24,10 @@ import { initSettingsDialog } from "./ui/interface/settingsDialog.js"
 
 const myDiagram = new go.Diagram("myDiagramDiv", {
 
-  commandHandler: new GroupCommandHandler(),
-
   layout: new go.LayeredDigraphLayout({
     isRealtime: false, // отключаем анимацию перестроения пока перетаскиваете мышью объект
   }),
 })
-
-
-
-// Обработка перемещения элементов на верхний уровень
-myDiagram.mouseDrop = event => {
-
-  const selection = event.diagram.selection
-
-  const target = event.diagram.findPartAt(
-    event.diagram.lastInput.documentPoint,
-    true
-  )
-
-  // Если отпустили внутри другой группы,
-  // Group.mouseDrop обработает перемещение самостоятельно
-  if (
-    target instanceof go.Group &&
-    !selection.has(target)
-  ) {
-    return
-  }
-
-  // Перемещаем выбранные элементы на верхний уровень
-  myDiagram.commandHandler.addTopLevelParts(selection)
-}
 
 // получить типы узлов
 async function loadNodeTypes() {
@@ -132,32 +101,35 @@ registerNodeTemplates(myDiagram, portTypes, nodeTypes)
 registerLinkTemplates(myDiagram)
 
 await loadEquipmentDialog()
-await loadGroupDialog()
 await loadReferenceDialog()
 await loadSettingsDialog()
 await loadTreeDialog()
+await loadConfirmDialog()
 
 initReferenceButton()
 initSettingsButton()
-const refreshTree = await initTreeDialog(myDiagram)
+
+// Обновление схемы из БД
+async function refreshDiagram() { await loadModel(myDiagram, portTypes, linkTypes) }
+
+const { tree, refreshTree } = await initTreeDialog(myDiagram, refreshDiagram)
 
 initSettingsDialog(myDiagram)
-initEquipmentDialog(myDiagram, portTypes)
+initEquipmentDialog(
+  myDiagram,
+  portTypes,
+  refreshTree,
+  refreshDiagram,
+  tree
+)
+
 initEquipmentDoubleClick(myDiagram, portTypes)
 
 initReferenceDialog()
 
-const groupDialog = initGroupDialog(myDiagram, groupTypes)
-const contextMenu = initEquipmentContextMenu(myDiagram, groupDialog)
+registerGroupTemplates(myDiagram, groupTypes)
 
-registerGroupTemplates(myDiagram, groupTypes, contextMenu)
+await loadModel(myDiagram, portTypes, linkTypes)
 
-await loadModel(
-  myDiagram,
-  portTypes,
-  linkTypes
-)
-
-registerGroupModelListener(myDiagram)
 registerNodeModelListener(myDiagram, refreshTree)
 registerLinkModelListener(myDiagram, portTypes, linkTypes, nodeTypes)

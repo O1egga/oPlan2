@@ -24,10 +24,42 @@ body {
   cursor: pointer;
 }
 
-/* Material Symbols для GoJS */
-@font-face {
-  font-family: "Material Symbols Outlined";
-  src: url("../pluginJsCss/wunderbaum/material-symbols-outlined.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
+/* Beer CSS переопределяет стандартный hidden */
+#confirmInputField[hidden] {
+  display: none !important;
+}
+
+/* Контекстное меню дерева */
+.tree-context-menu {
+  position: fixed;
+  z-index: 1000;
+  min-width: 230px;
+  padding: 4px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 20%);
+}
+
+.tree-context-menu button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+.tree-context-menu button:hover {
+  background: #f0f0f0;
+}
+
+.tree-context-menu .material-symbols-rounded {
+  font-size: 20px;
 }

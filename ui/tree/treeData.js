@@ -30,6 +30,7 @@ export async function loadTreeData() {
       title: group.name,
       key: `group-${group.id}`,
       expanded: false,
+      data: group,
       children: []
     })
 
