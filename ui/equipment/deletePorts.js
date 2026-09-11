@@ -2,6 +2,7 @@ import { renumberPorts } from "./portUtils.js"
 import { showConfirmDialog } from "./confirmDialog.js"
 import { checkPorts } from "./equipmentPorts.js"
 
+// Удаляет выбранное количество портов указанного типа
 export async function deletePorts(button) {
 
   const dialog = button.closest("dialog")
@@ -22,10 +23,7 @@ export async function deletePorts(button) {
 
   const portsToDelete = ports.slice(-actualCount)
 
-  // ============================================
   // Проверяем только существующие в БД порты
-  // ============================================
-
   const portIds = portsToDelete
     .filter(port => port.dataset.id)
     .map(port => Number(port.dataset.id))
@@ -45,10 +43,7 @@ export async function deletePorts(button) {
     return
   }
 
-  // ============================================
   // Подтверждение
-  // ============================================
-
   showConfirmDialog(
     "Удалить порты?",
     `Удалить ${actualCount} порт(ов) типа «${typeName}»?`,

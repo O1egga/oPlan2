@@ -1,3 +1,4 @@
+// Создаёт шаблон порта GoJS
 export function createPort(portTypes) {
 
   return new go.Panel("Spot", {
@@ -12,15 +13,12 @@ export function createPort(portTypes) {
     margin: 1
 
   })
-
     .bind("portId", "id", id => String(id))
     .bind("width", "portTypeId", type => { return portTypes[type].width })
     .bind("height", "portTypeId", type => { return portTypes[type].height })
 
     .add(
-
       new go.Shape()
-
         .bind("figure", "portTypeId", type => { return portTypes[type].figure })
         .bind("fill", "portTypeId", type => { return portTypes[type].fill })
         .bind("stroke", "portTypeId", type => { return portTypes[type].stroke })
@@ -30,7 +28,6 @@ export function createPort(portTypes) {
         editable: false,
         isMultiline: false
       })
-
         .bind("text", "name")
         .bind("font", "portTypeId", type => { return portTypes[type].font })
         .bind("stroke", "portTypeId", type => { return portTypes[type].textColor })

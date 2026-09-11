@@ -1,10 +1,11 @@
+// Инициализирует обработчики формы оборудования
 export function initEquipmentForm(dialog) {
 
   const typeSelect = dialog.querySelector(".equipment-type")
   const vendorSelect = dialog.querySelector(".equipment-vendor")
   const modelSelect = dialog.querySelector(".equipment-model")
 
-  // Проверка выбранных данных
+  // Обновляет доступность кнопки сохранения
   function updateSaveButton() {
 
     const isValid =
@@ -15,7 +16,6 @@ export function initEquipmentForm(dialog) {
     const saveButton = dialog.querySelector(".save-equipment")
     saveButton.disabled = !isValid
   }
-
 
   // Тип оборудования
   typeSelect.addEventListener("change", async () => {
@@ -58,10 +58,7 @@ export function initEquipmentForm(dialog) {
 
 }
 
-
-
-// Загрузка производителей
-
+// Загружает производителей для выбранного типа !ПРОВЕРИТЬ
 async function loadVendors(
   nodeTypeId,
   vendorSelect,
@@ -76,7 +73,8 @@ async function loadVendors(
 
   if (!nodeTypeId) { return }
 
-  vendorSelect.innerHTML = `<option value="">Загрузка...</option>`
+  vendorSelect.innerHTML =
+    `<option value="">Загрузка...</option>`
 
   try {
 
@@ -86,7 +84,8 @@ async function loadVendors(
 
     const vendors = await response.json()
 
-    vendorSelect.innerHTML = `<option value="">...</option>`
+    vendorSelect.innerHTML =
+      `<option value="">...</option>`
 
     vendors.forEach(vendor => {
 
@@ -102,15 +101,14 @@ async function loadVendors(
   } catch (error) {
 
     console.error(error)
-    vendorSelect.innerHTML = `<option value="">Ошибка загрузки</option>`
+    vendorSelect.innerHTML =
+      `<option value="">Ошибка загрузки</option>`
 
   }
 
 }
 
-
-//  Загрузка моделей
-
+// Загружает модели выбранного типа и производителя !ПРОВЕРИТЬ
 async function loadModels(
   nodeTypeId,
   vendorId,
@@ -121,9 +119,7 @@ async function loadModels(
 
   modelSelect.disabled = true
 
-  if (!vendorId || !nodeTypeId) {
-    return
-  }
+  if (!vendorId || !nodeTypeId) { return }
 
   modelSelect.innerHTML =
     `<option value="">Загрузка...</option>`
@@ -136,36 +132,25 @@ async function loadModels(
       )
 
     if (!response.ok) {
-
-      throw new Error(
-        "Ошибка загрузки моделей"
-      )
-
+      throw new Error("Ошибка загрузки моделей")
     }
 
-    const models =
-      await response.json()
+    const models = await response.json()
 
     modelSelect.innerHTML =
       `<option value="">...</option>`
 
     models.forEach(model => {
 
-      const option =
-        document.createElement("option")
-
-      option.value =
-        model.id
-
-      option.textContent =
-        model.name
+      const option = document.createElement("option")
+      option.value = model.id
+      option.textContent = model.name
 
       modelSelect.append(option)
 
     })
 
-    modelSelect.disabled =
-      models.length === 0
+    modelSelect.disabled = models.length === 0
 
   } catch (error) {
 
@@ -178,10 +163,7 @@ async function loadModels(
 
 }
 
-
-/*
- * Начальная загрузка типов
- */
+// Загружает типы оборудования !ПРОВЕРИТЬ
 async function loadNodeTypes(select) {
 
   select.innerHTML =
@@ -189,33 +171,23 @@ async function loadNodeTypes(select) {
 
   try {
 
-    const response =
-      await fetch("api/getNodeTypesForForm.php")
+    const response = await fetch("api/getNodeTypesForForm.php")
 
     if (!response.ok) {
-
-      throw new Error(
-        "Ошибка загрузки типов"
-      )
-
+      throw new Error("Ошибка загрузки типов")
     }
 
-    const nodeTypes =
-      await response.json()
+    const nodeTypes = await response.json()
 
     select.innerHTML =
       `<option value="">...</option>`
 
     nodeTypes.forEach(nodeType => {
 
-      const option =
-        document.createElement("option")
+      const option = document.createElement("option")
 
-      option.value =
-        nodeType.id
-
-      option.textContent =
-        nodeType.name
+      option.value = nodeType.id
+      option.textContent = nodeType.name
 
       select.append(option)
 
@@ -232,74 +204,45 @@ async function loadNodeTypes(select) {
 
 }
 
-
-/*
- * Заполнение формы при редактировании
- */
+// Заполняет форму данными оборудования
 export async function fillEquipmentForm(
   dialog,
   node
 ) {
 
-  const typeSelect =
-    dialog.querySelector(".equipment-type")
-
-  const vendorSelect =
-    dialog.querySelector(".equipment-vendor")
-
-  const modelSelect =
-    dialog.querySelector(".equipment-model")
-
-  const nameInput =
-    dialog.querySelector(".equipment-name")
-
+  const typeSelect = dialog.querySelector(".equipment-type")
+  const vendorSelect = dialog.querySelector(".equipment-vendor")
+  const modelSelect = dialog.querySelector(".equipment-model")
+  const nameInput = dialog.querySelector(".equipment-name")
 
   // Название
-
-  nameInput.value =
-    node.name ?? ""
-
+  nameInput.value = node.name ?? ""
 
   // Тип
-
-  typeSelect.value =
-    String(node.nodeTypeId)
-
+  typeSelect.value = String(node.nodeTypeId)
 
   // Загружаем производителей
-
   await loadVendors(
     typeSelect.value,
     vendorSelect,
     modelSelect
   )
 
-
   // Производитель
-
-  vendorSelect.value =
-    String(node.vendorId)
-
+  vendorSelect.value = String(node.vendorId)
 
   // Загружаем модели
-
   await loadModels(
     typeSelect.value,
     vendorSelect.value,
     modelSelect
   )
 
-
   // Модель
-
-  modelSelect.value =
-    String(node.modelId)
-
+  modelSelect.value = String(node.modelId)
 
   // Обновляем кнопку
-
-  const saveButton =
-    dialog.querySelector(".save-equipment")
+  const saveButton = dialog.querySelector(".save-equipment")
 
   saveButton.disabled =
     !(

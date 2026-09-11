@@ -1,23 +1,21 @@
 // Создаёт обработчик раскрытия Wunderbaum → GoJS
 export function createTreeExpandHandler(diagram) {
 
+  /*
+  Функция получает событие Wunderbaum и:
+  проверяет, что это группа;
+  находит соответствующую GoJS-группу;
+  вызывает штатный expandSubGraph() / collapseSubGraph().
+  */
+
   return event => {
 
     const node = event.node
+    if (!node || !node.key.startsWith("group-")) { return }
 
-    if (!node || !node.key.startsWith("group-")) {
-      return
-    }
-
-    const groupId =
-      node.key.replace("group-", "")
-
-    const group =
-      diagram.findPartForKey(`g${groupId}`)
-
-    if (!group) {
-      return
-    }
+    const groupId = node.key.replace("group-", "")
+    const group = diagram.findPartForKey(`g${groupId}`)
+    if (!group) { return }
 
     // Изменяет состояние группы через CommandHandler, чтобы GoJS использовал стандартную анимацию
     if (event.flag) {
@@ -29,9 +27,16 @@ export function createTreeExpandHandler(diagram) {
 
 }
 
-
-// GoJS → Wunderbaum
+// Синхронизирует раскрытие групп GoJS с Wunderbaum
 export function initDiagramExpandSync(tree, diagram) {
+
+  /*
+  Она слушает:
+  "SubGraphExpanded"
+  и:
+  "SubGraphCollapsed"
+  и меняет состояние соответствующего узла Wunderbaum.
+  */
 
   let syncing = false
 
@@ -40,25 +45,15 @@ export function initDiagramExpandSync(tree, diagram) {
     "SubGraphExpanded",
     event => {
 
-      if (syncing) {
-        return
-      }
+      if (syncing) { return }
 
       event.subject.each(group => {
 
-        if (!(group instanceof go.Group)) {
-          return
-        }
+        if (!(group instanceof go.Group)) { return }
 
-        const groupId =
-          String(group.data.groupId)
-
-        const node =
-          tree.findKey(`group-${groupId}`)
-
-        if (!node) {
-          return
-        }
+        const groupId = String(group.data.groupId)
+        const node = tree.findKey(`group-${groupId}`)
+        if (!node) { return }
 
         syncing = true
 
@@ -76,25 +71,15 @@ export function initDiagramExpandSync(tree, diagram) {
     "SubGraphCollapsed",
     event => {
 
-      if (syncing) {
-        return
-      }
+      if (syncing) { return }
 
       event.subject.each(group => {
 
-        if (!(group instanceof go.Group)) {
-          return
-        }
+        if (!(group instanceof go.Group)) { return }
 
-        const groupId =
-          String(group.data.groupId)
-
-        const node =
-          tree.findKey(`group-${groupId}`)
-
-        if (!node) {
-          return
-        }
+        const groupId = String(group.data.groupId)
+        const node = tree.findKey(`group-${groupId}`)
+        if (!node) { return }
 
         syncing = true
 

@@ -1,3 +1,4 @@
+// Показывает диалог подтверждения
 export function showConfirmDialog(title, message, onConfirm) {
 
   const dialog = document.querySelector("#confirmDialog")

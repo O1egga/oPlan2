@@ -1,3 +1,4 @@
+// Создаёт шаблон Link GoJS
 export function createLink() {
 
   return new go.Link({
@@ -14,10 +15,7 @@ export function createLink() {
 
     .add(
 
-      // ==========================================
       // Линия
-      // ==========================================
-
       new go.Shape()
 
         .bind(
@@ -38,11 +36,7 @@ export function createLink() {
           style => style.strokeDashArray
         ),
 
-
-      // ==========================================
       // Стрелка
-      // ==========================================
-
       new go.Shape({
 
         toArrow: "Standard",
@@ -52,10 +46,7 @@ export function createLink() {
         .bind("fill", "style", style => style.stroke),
 
 
-      // ==========================================
       // Подпись откуда
-      // ==========================================
-
       createLinkLabel(
         "FROM_LABEL",
         0,
@@ -64,11 +55,7 @@ export function createLink() {
         go.Spot.Left
       ),
 
-
-      // ==========================================
       // Подпись куда
-      // ==========================================
-
       createLinkLabel(
         "TO_LABEL",
         -1,
@@ -77,11 +64,7 @@ export function createLink() {
         go.Spot.Right
       ),
 
-
-      // ==========================================
       // Название Link
-      // ==========================================
-
       createLinkLabel(
         "LINK_LABEL",
         NaN,
@@ -94,11 +77,7 @@ export function createLink() {
 
 }
 
-
-// ==================================================
-// Создаёт Label Link
-// ==================================================
-
+// Создаёт подпись Link
 function createLinkLabel(
   name,
   segmentIndex,

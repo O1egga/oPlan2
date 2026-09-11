@@ -1,21 +1,16 @@
 import { applyPortStyle } from "./applyPortStyle.js"
 import { applyLinkStyle } from "./applyLinkStyle.js"
 
+// Применяет стили портов и Link к модели !ПРОВЕРИТЬ
 export function applyPresentation(model, portTypes, linkTypes) {
 
-  //
-  // Groups + Ports
-  //
+  /*
+  после аудита нужно будет посмотреть, где вызывается applyPresentation() и действительно ли она нужна как отдельный слой.
+  */
 
   model.nodeDataArray.forEach(node => {
 
-
-
-    //
-    // Ports
-    //
-
-    if (!node.ports) return
+    if (!node.ports) { return }
 
     node.ports.forEach(port => {
 
@@ -25,10 +20,8 @@ export function applyPresentation(model, portTypes, linkTypes) {
 
   })
 
-  //
-  // Links
-  //
-
-  model.linkDataArray?.forEach(link => { applyLinkStyle(link, linkTypes) })
+  model.linkDataArray?.forEach(link => {
+    applyLinkStyle(link, linkTypes)
+  })
 
 }

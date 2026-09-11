@@ -1,5 +1,10 @@
-// Обновляем родителя группы в БД
+// Обновляет родителя группы в БД !Проверить
 export async function updateGroupParent(groupId, parentId) {
+
+  /*
+  пока нужно проверить по фактическому использованию.
+  Мы уже знаем, что перенос групп теперь должен происходить в Wunderbaum. Поэтому именно эта функция должна использоваться обработчиком переноса дерева. Если она нигде не используется — тогда после полного аудита решим, нужна ли она.
+  */
 
   const response = await fetch("./api/groups/updateParent.php", {
     method: "POST",
@@ -24,7 +29,7 @@ export async function updateGroupParent(groupId, parentId) {
 
 }
 
-// Удаляем группу из БД
+// Удаляет группу из БД
 export async function deleteGroup(groupId) {
 
   const response = await fetch("./api/groups/deleteGroup.php", {
@@ -48,7 +53,7 @@ export async function deleteGroup(groupId) {
   return result
 }
 
-// Обновляем название группы в БД
+// Обновляет название группы в БД
 export async function updateGroupName(groupId, name) {
 
   const response = await fetch("./api/groups/updateName.php", {

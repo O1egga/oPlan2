@@ -1,7 +1,9 @@
 import { openEquipmentDialog } from "./equipmentDialog.js"
 
+// Регистрирует обработчик двойного клика по оборудованию
 export function initEquipmentDoubleClick(myDiagram, portTypes) {
 
+  // Открывает диалог редактирования оборудования
   myDiagram.addDiagramListener(
     "ObjectDoubleClicked",
     async event => {
@@ -22,15 +24,8 @@ export function initEquipmentDoubleClick(myDiagram, portTypes) {
 
       } catch (error) {
 
-        console.error(
-          "Ошибка открытия оборудования:",
-          error
-        )
-
-        alert(
-          "Не удалось открыть оборудование:\n" +
-          error.message
-        )
+        console.error("Ошибка открытия оборудования:", error)
+        alert("Не удалось открыть оборудование:\n" + error.message)
 
       }
 

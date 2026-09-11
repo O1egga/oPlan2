@@ -1,6 +1,7 @@
 import { createNodeBody } from "./createNodeBody.js"
 import { getDisplaySettings } from "../../core/utils/displaySettings.js"
 
+// Создаёт шаблон узла оборудования GoJS
 export function createNode(fill, title, portTypes) {
 
   const settings = getDisplaySettings()

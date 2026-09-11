@@ -1,5 +1,6 @@
 import { getDisplaySettings, saveDisplaySettings } from "../../core/utils/displaySettings.js"
 
+// Инициализирует настройки отображения оборудования
 export function initSettingsDialog(myDiagram) {
 
   const vendorModelCheckbox = document.querySelector("#showVendorModel")

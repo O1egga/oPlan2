@@ -1,12 +1,15 @@
-// все шаблоны узлов
-
 import { createNode } from "./createNodeTemplate.js"
 
-export function registerNodeTemplates(myDiagram, portTypes, nodeTypes) {
+// Регистрирует шаблоны узлов GoJS
+export function registerNodeTemplates(diagram, portTypes, nodeTypes) {
+
+  /*
+  Функция регистрирует шаблон для каждого nodeType
+  */
 
   Object.values(nodeTypes).forEach(nodeType => {
 
-    myDiagram.nodeTemplateMap.add(
+    diagram.nodeTemplateMap.add(
       String(nodeType.id),
       createNode(
         nodeType.fill,

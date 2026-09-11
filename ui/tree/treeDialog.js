@@ -4,8 +4,21 @@ import { loadTreeData } from "./treeData.js"
 import { applyVisibility } from "./applyVisibility.js"
 import { initTreeContextMenu } from "./treeContextMenu.js"
 
-
+// Инициализирует диалог и дерево Wunderbaum
 export async function initTreeDialog(diagram, refreshDiagram) {
+
+  /*
+  получает button и dialog;
+  загружает данные дерева;
+  создаёт Wunderbaum;
+  подключает выбор элементов к applyVisibility();
+  подключает раскрытие к GoJS;
+  создаёт refreshTree();
+  подключает контекстное меню;
+  подключает синхронизацию раскрытия;
+  настраивает открытие/закрытие диалога;
+  возвращает tree и refreshTree.
+  */
 
   const button = document.querySelector("#treeButton")
   const dialog = document.querySelector("#treeDialog")
@@ -32,7 +45,7 @@ export async function initTreeDialog(diagram, refreshDiagram) {
     expand: expandHandler
   })
 
-  // Обновляем дерево из БД
+  // Обновляет дерево из БД с сохранением состояния
   async function refreshTree() {
 
     // Запоминаем выбранные узлы
@@ -77,6 +90,7 @@ export async function initTreeDialog(diagram, refreshDiagram) {
   // Синхронизация раскрытия
   initDiagramExpandSync(tree, diagram)
 
+  // Закрывает диалог с анимацией
   function closeTreeDialog() {
 
     dialog.classList.add("closing")

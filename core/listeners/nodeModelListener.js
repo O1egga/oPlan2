@@ -1,6 +1,6 @@
 import { updateNodeParent, deleteNode } from "../services/nodeService.js"
 
-// Очередь удаления оборудования
+// Очередь удаления оборудования ----
 let deleteQueue = Promise.resolve()
 
 // Количество незавершённых изменений групп
@@ -9,7 +9,7 @@ let pendingGroupUpdates = 0
 // Таймер обновления дерева
 let refreshTreeTimer = null
 
-// Планируем обновление дерева
+// Планирует обновление дерева после изменений
 function scheduleTreeRefresh(refreshTree) {
 
   clearTimeout(refreshTreeTimer)
@@ -26,14 +26,17 @@ function scheduleTreeRefresh(refreshTree) {
 
 }
 
+// Ожидаем завершения всех удалений
+export function waitForNodeDeletes() {
+  return deleteQueue
+}
+
+// Регистрирует обработчики перемещения и удаления оборудования
 export function registerNodeModelListener(diagram, refreshTree) {
 
   diagram.model.addChangedListener(event => {
 
-    // =====================================================
     // Перемещение оборудования
-    // =====================================================
-
     if (event.propertyName === "group") {
 
       const data = event.object
@@ -62,11 +65,7 @@ export function registerNodeModelListener(diagram, refreshTree) {
       return
     }
 
-
-    // =====================================================
     // Удаление оборудования
-    // =====================================================
-
     if (
       event.modelChange === "nodeDataArray" &&
       event.change === go.ChangeType.Remove
@@ -84,7 +83,6 @@ export function registerNodeModelListener(diagram, refreshTree) {
           return deleteNode(nodeId)
         })
         .catch(error => { console.error("Ошибка удаления оборудования из БД:", error) })
-
     }
 
   })

@@ -1,4 +1,4 @@
-// загрузка модели
+// Загружает данные из БД и формирует модель GoJS
 import { applyPresentation } from "../presentation/applyPresentation.js"
 
 export async function loadModel(diagram, portTypes, linkTypes) {
@@ -141,14 +141,8 @@ export async function loadModel(diagram, portTypes, linkTypes) {
     // Создаём модель GoJS
     diagram.model = go.Model.fromJson(modelData)
 
-    // Изначально скрываем все группы и оборудование
-    // diagram.nodes.each(part => { part.visible = false })
-
     // Изначально скрываем все линии
     diagram.links.each(link => { link.visible = false })
-
-    // Сворачиваем все группы
-    // diagram.findTopLevelGroups().each(group => { group.collapseSubGraph() })
 
   } catch (err) {
     console.error("Ошибка загрузки модели из БД:", err)

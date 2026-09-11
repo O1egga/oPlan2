@@ -1,3 +1,4 @@
+// Проверяет возможность размещения группы
 export function canPlaceGroup(group, parentGroup, groupTypes) {
 
   // Нет родителя — разрешаем

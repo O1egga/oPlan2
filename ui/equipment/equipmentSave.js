@@ -1,6 +1,6 @@
 import { collectPorts, savePorts, loadPorts, deletePorts } from "./equipmentPorts.js"
 
-// Сохраняет новое оборудование в указанную группу
+// Сохраняет новое оборудование и его порты
 export async function saveEquipment(dialog, myDiagram, groupId) {
 
   const typeSelect = dialog.querySelector(".equipment-type")
@@ -69,17 +69,18 @@ export async function saveEquipment(dialog, myDiagram, groupId) {
   return nodeData
 }
 
-// Обновляем оборудование в БД
+// Обновляет оборудование и его порты !ПРОВЕРИТЬ
 export async function updateEquipment(
   nodeId,
   data,
   dialog
 ) {
 
-  // ============================================
-  // Обновляем оборудование
-  // ============================================
+  /*
+  Причина: проверить, должен ли при смене модели автоматически меняться/сохраняться vendorId.
+  */
 
+  // Обновляем оборудование
   const response = await fetch(
     "api/nodes/updateNode.php",
     {
@@ -98,8 +99,7 @@ export async function updateEquipment(
     }
   )
 
-  const result =
-    await response.json()
+  const result = await response.json()
 
   if (!response.ok || !result.success) {
 
@@ -110,42 +110,26 @@ export async function updateEquipment(
 
   }
 
-
-  // ============================================
   // Удаляем порты
-  // ============================================
-
   const deletedPortIds = dialog._deletedPortIds || []
 
   if (deletedPortIds.length > 0) {
     await deletePorts(deletedPortIds)
   }
 
-  // ============================================
   // Находим новые порты
-  // ============================================
-
   const ports = collectPorts(dialog)
 
-  const newPorts =
-    ports.filter(
-      port => !port.id
-    )
+  const newPorts = ports.filter(port => !port.id)
 
-
-  // ============================================
   // Сохраняем новые порты
-  // ============================================
-
   await savePorts(
     nodeId,
     newPorts
   )
 
-
   // Получаем актуальный список портов из БД
-  const updatedPorts =
-    await loadPorts(nodeId)
+  const updatedPorts = await loadPorts(nodeId)
 
   return {
     ...result,

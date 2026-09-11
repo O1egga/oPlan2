@@ -1,5 +1,4 @@
-// localstorage
-
+// Настройки отображения оборудования в localStorage
 const STORAGE_KEY = "oPlan2.nodeDisplaySettings"
 
 const DEFAULT_SETTINGS = {
@@ -7,6 +6,7 @@ const DEFAULT_SETTINGS = {
   showName: true
 }
 
+// Получает настройки отображения оборудования
 export function getDisplaySettings() {
 
   const saved = localStorage.getItem(STORAGE_KEY)
@@ -27,6 +27,7 @@ export function getDisplaySettings() {
   }
 }
 
+// Сохраняет настройки отображения оборудования
 export function saveDisplaySettings(settings) {
 
   localStorage.setItem(

@@ -1,3 +1,4 @@
+// Создаёт шаблон группы GoJS
 export function createGroup(figure, fill, header) {
 
   return new go.Group("Auto", {

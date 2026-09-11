@@ -1,3 +1,4 @@
+// Перенумеровывает порты выбранного типа
 export function renumberPorts(portList, type) {
 
   const ports = [...portList.querySelectorAll(`li[data-type="${type}"]`)]

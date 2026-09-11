@@ -2,8 +2,9 @@ import { Wunderbaum } from "../../pluginJsCss/wunderbaum/wunderbaum.esm.min.js"
 import { showConfirmDialog } from "../interface/confirmDialog.js"
 import { applyVisibility } from "./applyVisibility.js"
 import { openAddEquipmentDialog } from "../equipment/equipmentDialog.js"
+import { waitForNodeDeletes } from "../../core/listeners/nodeModelListener.js"
 
-// Контекстное меню дерева
+// Инициализирует контекстное меню дерева
 export function initTreeContextMenu(tree, refreshTree, refreshDiagram, diagram) {
 
   const menu = document.createElement("div")
@@ -153,6 +154,41 @@ export function initTreeContextMenu(tree, refreshTree, refreshDiagram, diagram) 
       return
     }
 
+    // Удаляем оборудование
+    if (action === "delete-equipment") {
+
+      showConfirmDialog(
+        "Удалить оборудование",
+        `Удалить «${contextNode.title}»?`,
+        async () => {
+
+          const nodeId = Number(
+            String(contextNode.key).replace("node-", "")
+          )
+
+          const node = diagram.findNodeForKey(nodeId)
+
+          if (!node) { return }
+
+          // Удаляем Node из GoJS
+          diagram.model.removeNodeData(node.data)
+
+          // Ждём фактического удаления из БД
+          await waitForNodeDeletes()
+
+          // Обновляем схему и дерево
+          await refreshDiagram()
+          await refreshTree()
+          applyVisibility(diagram, tree)
+
+        },
+        {
+          okText: "Удалить"
+        }
+      )
+
+      return
+    }
 
     // Удалить помещение
     if (action === "delete-room") {
@@ -205,8 +241,16 @@ export function initTreeContextMenu(tree, refreshTree, refreshDiagram, diagram) 
   })
 }
 
-// Создаёт группу через API
+// Создаёт группу через API !ПРОВЕРИТЬ
 async function createGroup(name, groupTypeId, parentNode) {
+
+  /*
+  Причина — у нас уже есть:
+  core/services/groupService.js
+  и там есть операции с группами.
+  Сейчас treeContextMenu.js сам делает:
+  fetch("./api/groups/createGroup.php", ...)
+  */
 
   const parentId = parentNode
     ? Number(String(parentNode.key).replace("group-", ""))
@@ -252,8 +296,16 @@ async function createGroup(name, groupTypeId, parentNode) {
   }
 }
 
-// Удаляет группу через API
+// Удаляет группу через API !ПРОВЕРИТЬ
 function deleteGroup(node, title, refreshTree, refreshDiagram, diagram, tree) {
+
+  /*
+  По той же причине — есть groupService.deleteGroup().
+  Кроме того, проверка:
+  if (node.children?.length) {
+  правильна для текущей логики дерева: нельзя удалить группу, пока в ней есть оборудование или дочерние группы.
+  Но позже нужно проверить, достаточно ли этого ограничения с учётом БД. Поэтому я бы пока оставил функцию как есть
+  */
 
   // Группа должна быть пустой
   if (node.children?.length) {
@@ -307,8 +359,14 @@ function deleteGroup(node, title, refreshTree, refreshDiagram, diagram, tree) {
   )
 }
 
-// Переименовывает группу через API
+// Переименовывает группу через API !ПРОВЕРИТЬ
 function renameGroup(node, title, refreshTree, refreshDiagram, diagram, tree) {
+
+  /*
+  Опять же, есть:
+  groupService.updateGroupName()
+  Сначала проверим service, потом решим, надо ли здесь заменить fetch.
+  */
 
   showConfirmDialog(
     title,
@@ -364,7 +422,7 @@ function renameGroup(node, title, refreshTree, refreshDiagram, diagram, tree) {
   )
 }
 
-// Формирует пункты меню для выбранного узла
+// Формирует пункты контекстного меню для узла дерева
 function getMenuItems(node) {
 
   const data = node.data.data

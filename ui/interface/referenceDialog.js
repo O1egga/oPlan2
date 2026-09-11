@@ -1,11 +1,9 @@
 import { createReferenceSelector } from "./referenceSelector.js"
 
+// Инициализирует диалог справочников
 export async function initReferenceDialog() {
 
-  // --------------------------------------------------
   // DOM
-  // --------------------------------------------------
-
   const row = document.querySelector("#referenceDialogRow")
 
   const editDialog = document.querySelector("#referenceEditDialog")
@@ -17,14 +15,9 @@ export async function initReferenceDialog() {
   const editSave = document.querySelector("#referenceEditSave")
 
   const referenceDialog = document.querySelector("#referenceDialog")
-  const referenceDialogClose =
-    referenceDialog.querySelector("#reference-dialog-close")
+  const referenceDialogClose = referenceDialog.querySelector("#reference-dialog-close")
 
-
-  // --------------------------------------------------
   // Состояние
-  // --------------------------------------------------
-
   let currentSelector = null
   let currentValue = null
 
@@ -36,11 +29,7 @@ export async function initReferenceDialog() {
   let enteredNodeType = ""
   let enteredVendor = ""
 
-
-  // --------------------------------------------------
   // Загрузка справочников
-  // --------------------------------------------------
-
   const response = await fetch("./api/getReferences.php")
 
   if (!response.ok) { throw new Error(`Ошибка загрузки справочников: HTTP ${response.status}`) }
@@ -52,11 +41,7 @@ export async function initReferenceDialog() {
   const models = referenceData.models
   const modelNodeTypes = referenceData.modelNodeTypes
 
-
-  // --------------------------------------------------
   // ID приводим к числам
-  // --------------------------------------------------
-
   nodeTypes.forEach(item => { item.id = Number(item.id) })
 
   vendors.forEach(item => { item.id = Number(item.id) })
@@ -75,74 +60,55 @@ export async function initReferenceDialog() {
   vendors.sort((a, b) => a.name.localeCompare(b.name, "ru"))
   models.sort((a, b) => a.name.localeCompare(b.name, "ru"))
 
-
-  // --------------------------------------------------
-  // Поиск объектов
-  // --------------------------------------------------
-
+  // Находит тип оборудования по названию
   function getNodeType(name) {
     return nodeTypes.find(
       item => item.name === name
     )
   }
 
+  // Находит производителя по названию
   function getVendor(name) {
     return vendors.find(
       item => item.name === name
     )
   }
 
+  // Находит модель по названию
   function getModel(name) {
     return models.find(
       item => item.name === name
     )
   }
 
-
-  // --------------------------------------------------
-  // Модели для текущего выбора
-  // --------------------------------------------------
-
+  // Формирует список моделей по выбранному типу и производителю !ПРОВЕРИТЬ
   function getModelsForSelection() {
 
     // Type и Vendor не выбраны
-    if (!selectedNodeType && !selectedVendor) {
-      return models
-    }
-
+    if (!selectedNodeType && !selectedVendor) { return models }
 
     // Только Type
     if (selectedNodeType && !selectedVendor) {
 
       const modelIds = new Set(
         modelNodeTypes
-          .filter(item =>
-            item.nodeTypeId === selectedNodeType.id
-          )
+          .filter(item => item.nodeTypeId === selectedNodeType.id)
           .map(item => item.modelId)
       )
 
-      return models.filter(model =>
-        modelIds.has(model.id)
-      )
+      return models.filter(model => modelIds.has(model.id))
     }
-
 
     // Только Vendor
     if (!selectedNodeType && selectedVendor) {
 
-      return models.filter(model =>
-        model.vendorId === selectedVendor.id
-      )
+      return models.filter(model => model.vendorId === selectedVendor.id)
     }
-
 
     // Type + Vendor
     const modelIds = new Set(
       modelNodeTypes
-        .filter(item =>
-          item.nodeTypeId === selectedNodeType.id
-        )
+        .filter(item => item.nodeTypeId === selectedNodeType.id)
         .map(item => item.modelId)
     )
 
@@ -152,28 +118,22 @@ export async function initReferenceDialog() {
     )
   }
 
-
-  // --------------------------------------------------
-  // Обновление списков
-  // --------------------------------------------------
-
+  // Обновляет списки справочников и состояние выбора !ПРОВЕРИТЬ
   function updateSelectors(
     activeSelector = null,
     activeValue = null
   ) {
 
-    // ------------------------------
-    // Model
-    // ------------------------------
+    /*
+    А по нашей новой архитектуре Type и Vendor не должны фильтровать друг друга.
+     */
 
-    const modelItems =
-      getModelsForSelection()
+    // Model
+    const modelItems = getModelsForSelection()
 
     if (activeSelector !== modelSelector) {
 
-      modelSelector.load(
-        modelItems
-      )
+      modelSelector.load(modelItems)
 
       if (selectedModel) {
         modelSelector.setSelected(
@@ -182,20 +142,14 @@ export async function initReferenceDialog() {
       }
     }
 
-
-    // ------------------------------
     // Vendor
-    // ------------------------------
-
     let vendorItems = vendors
 
     if (selectedNodeType) {
 
       const modelIds = new Set(
         modelNodeTypes
-          .filter(item =>
-            item.nodeTypeId === selectedNodeType.id
-          )
+          .filter(item => item.nodeTypeId === selectedNodeType.id)
           .map(item => item.modelId)
       )
 
@@ -220,28 +174,20 @@ export async function initReferenceDialog() {
       }
     }
 
-
-    // ------------------------------
     // Type
-    // ------------------------------
-
     let typeItems = nodeTypes
 
     if (selectedVendor) {
 
       const modelIds = new Set(
         models
-          .filter(model =>
-            model.vendorId === selectedVendor.id
-          )
+          .filter(model => model.vendorId === selectedVendor.id)
           .map(model => model.id)
       )
 
       const typeIds = new Set(
         modelNodeTypes
-          .filter(item =>
-            modelIds.has(item.modelId)
-          )
+          .filter(item => modelIds.has(item.modelId))
           .map(item => item.nodeTypeId)
       )
 
@@ -252,9 +198,7 @@ export async function initReferenceDialog() {
 
     if (activeSelector !== typeSelector || !selectedNodeType) {
 
-      typeSelector.load(
-        typeItems
-      )
+      typeSelector.load(typeItems)
 
       if (selectedNodeType) {
         typeSelector.setSelected(
@@ -263,20 +207,12 @@ export async function initReferenceDialog() {
       }
     }
 
-
-    // ------------------------------
     // Восстановить активный input
-    // ------------------------------
-
     if (activeSelector && activeValue !== null) {
       activeSelector.setInputValue(activeValue)
     }
 
-
-    // ------------------------------
     // Add Model
-    // ------------------------------
-
     const typeName =
       selectedNodeType
         ? selectedNodeType.name
@@ -302,27 +238,17 @@ export async function initReferenceDialog() {
     )
   }
 
+  // Добавляет новую модель и связанные тип и производителя !ПРОВЕРИТЬ
+  async function addReference(selector, value) {
 
-  // --------------------------------------------------
-  // Add
-  // --------------------------------------------------
+    /*
+       Но нужно проверить createModel.php, потому что текущий JS ещё содержит старую логику поиска/фильтрации и важно убедиться, что API действительно делает именно то, что мы решили.
+    */
 
-  async function addReference(
-    selector,
-    value
-  ) {
-
-    // ------------------------------------------------
     // Модель
-    // ------------------------------------------------
+    if (selector !== modelSelector) { return }
 
-    if (selector !== modelSelector) {
-      return
-    }
-
-    const modelName =
-      value.trim()
-
+    const modelName = value.trim()
     const typeName =
       selectedNodeType
         ? selectedNodeType.name
@@ -334,14 +260,10 @@ export async function initReferenceDialog() {
         : enteredVendor.trim()
 
 
-    if (!typeName || !vendorName || !modelName) {
-      return
-    }
+    if (!typeName || !vendorName || !modelName) { return }
 
 
-    // Проверяем дубликат модели
-    // у этого производителя
-
+    // Проверяем дубликат модели у этого производителя
     const exists = models.some(model => {
 
       if (
@@ -388,13 +310,9 @@ export async function initReferenceDialog() {
     }
 
 
-    // ------------------------------------------------
     // Создаём Type + Vendor + Model
-    // ------------------------------------------------
-
     const response =
-      await fetch(
-        "./api/references/createModel.php",
+      await fetch("./api/references/createModel.php",
         {
           method: "POST",
           headers: {
@@ -408,26 +326,16 @@ export async function initReferenceDialog() {
         }
       )
 
-    const result =
-      await response.json()
+    const result = await response.json()
 
     if (!response.ok) {
-
-      alert(
-        result.error ||
-        "Не удалось добавить модель"
-      )
-
+      alert(result.error || "Не удалось добавить модель")
       return
     }
 
 
-    // ------------------------------------------------
     // Добавляем Type, если он был создан
-    // ------------------------------------------------
-
-    let newNodeType =
-      getNodeType(result.nodeType)
+    let newNodeType = getNodeType(result.nodeType)
 
     if (!newNodeType) {
 
@@ -441,12 +349,8 @@ export async function initReferenceDialog() {
     }
 
 
-    // ------------------------------------------------
     // Добавляем Vendor, если он был создан
-    // ------------------------------------------------
-
-    let newVendor =
-      getVendor(result.vendor)
+    let newVendor = getVendor(result.vendor)
 
     if (!newVendor) {
 
@@ -458,11 +362,7 @@ export async function initReferenceDialog() {
       vendors.push(newVendor)
     }
 
-
-    // ------------------------------------------------
     // Добавляем Model
-    // ------------------------------------------------
-
     const newModel = {
       id: Number(result.id),
       name: result.name,
@@ -471,41 +371,20 @@ export async function initReferenceDialog() {
 
     models.push(newModel)
 
-
-    // ------------------------------------------------
     // Добавляем связь Model → Type
-    // ------------------------------------------------
-
     modelNodeTypes.push({
       modelId: newModel.id,
       nodeTypeId: Number(result.nodeTypeId)
     })
 
-
-    // ------------------------------------------------
     // Устанавливаем выбор
-    // ------------------------------------------------
+    selectedNodeType = newNodeType
+    selectedVendor = newVendor
+    selectedModel = newModel
+    enteredNodeType = newNodeType.name
+    enteredVendor = newVendor.name
 
-    selectedNodeType =
-      newNodeType
-
-    selectedVendor =
-      newVendor
-
-    selectedModel =
-      newModel
-
-    enteredNodeType =
-      newNodeType.name
-
-    enteredVendor =
-      newVendor.name
-
-
-    // ------------------------------------------------
     // Синхронизируем списки
-    // ------------------------------------------------
-
     updateSelectors()
 
     modelSelector.setSelected(
@@ -513,53 +392,55 @@ export async function initReferenceDialog() {
     )
   }
 
-
-  // --------------------------------------------------
-  // Rename
-  // --------------------------------------------------
-
+  // Переименовывает элемент справочника !ПРОВЕРИТЬ
   async function renameReference(
     selector,
     oldValue,
     newValue
   ) {
 
-    // ------------------------------------------------
-    // Тип
-    // ------------------------------------------------
+    /*
+    Причина уже более серьёзная: здесь существуют отдельные операции:
 
+    updateNodeType.php
+    updateVendor.php
+    updateModel.php
+
+    А по новой архитектуре Type и Vendor не создаются отдельно, но переименование Type/Vendor у нас пока не запрещено.
+
+    Нужно будет решить после просмотра API:
+
+    можно ли оставлять отдельное переименование;
+    что происходит с существующими ModelNodeTypes;
+    не нарушает ли это новую модель данных.
+    */
+
+    // Тип
     if (selector === typeSelector) {
 
       const type = oldValue
 
       if (!type) return false
 
-      const response =
-        await fetch(
-          "./api/references/updateNodeType.php",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              id: type.id,
-              name: newValue,
-              fill: editColor.value
-            })
-          }
-        )
+      const response = await fetch("./api/references/updateNodeType.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            id: type.id,
+            name: newValue,
+            fill: editColor.value
+          })
+        }
+      )
 
-      const result =
-        await response.json()
+      const result = await response.json()
 
       if (!response.ok) {
 
-        alert(
-          result.error ||
-          "Не удалось переименовать тип"
-        )
-
+        alert(result.error || "Не удалось переименовать тип")
         return false
       }
 
@@ -576,43 +457,33 @@ export async function initReferenceDialog() {
       enteredNodeType = type.name
     }
 
-
-    // ------------------------------------------------
     // Производитель
-    // ------------------------------------------------
-
     else if (selector === vendorSelector) {
 
       const vendor = oldValue
 
       if (!vendor) return false
 
-      const response =
-        await fetch(
-          "./api/references/updateVendor.php",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              id: vendor.id,
-              name: newValue
-            })
-          }
-        )
+      const response = await fetch("./api/references/updateVendor.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            id: vendor.id,
+            name: newValue
+          })
+        }
+      )
 
-      const result =
-        await response.json()
+      const result = await response.json()
 
       if (!response.ok) {
 
-        alert(
-          result.error ||
-          "Не удалось переименовать производителя"
-        )
-
+        alert(result.error || "Не удалось переименовать производителя")
         return false
+
       }
 
       vendor.name = result.name
@@ -627,44 +498,31 @@ export async function initReferenceDialog() {
       enteredVendor = vendor.name
     }
 
-
-    // ------------------------------------------------
     // Модель
-    // ------------------------------------------------
-
     else if (selector === modelSelector) {
 
       const model = oldValue
 
-      if (!model) {
-        return false
-      }
+      if (!model) { return false }
 
-      const response =
-        await fetch(
-          "./api/references/updateModel.php",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              id: model.id,
-              name: newValue
-            })
-          }
-        )
+      const response = await fetch("./api/references/updateModel.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            id: model.id,
+            name: newValue
+          })
+        }
+      )
 
-      const result =
-        await response.json()
+      const result = await response.json()
 
       if (!response.ok) {
 
-        alert(
-          result.error ||
-          "Не удалось переименовать модель"
-        )
-
+        alert(result.error || "Не удалось переименовать модель")
         return false
       }
 
@@ -690,26 +548,22 @@ export async function initReferenceDialog() {
   }
 
 
-  // --------------------------------------------------
-  // Delete
-  // --------------------------------------------------
-
+  // Удаляет модель и обновляет связанные данные в памяти !ПРОВЕРИТЬ
   async function deleteReference(
     selector,
     value
   ) {
 
-    // ------------------------------------------------
-    // Модель
-    // ------------------------------------------------
+    /*
+    То есть после удаления последней модели JS удаляет Vendor и Type из локальных массивов.
+    Это соответствует идее «Type/Vendor существуют благодаря моделям», но надо обязательно проверить, делает ли то же самое БД/API
+    */
 
+    // Модель
     if (selector === modelSelector) {
 
       const model = value
-
-      if (!model) {
-        return
-      }
+      if (!model) { return }
 
       if (!confirm(
         `Удалить модель "${model.name}"?`
@@ -717,30 +571,21 @@ export async function initReferenceDialog() {
         return
       }
 
-      const response =
-        await fetch(
-          "./api/references/deleteModel.php",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              id: model.id
-            })
-          }
-        )
+      const response = await fetch("./api/references/deleteModel.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            id: model.id
+          })
+        }
+      )
 
-      const result =
-        await response.json()
-
+      const result = await response.json()
       if (!response.ok) {
-
-        alert(
-          result.error ||
-          "Не удалось удалить модель"
-        )
-
+        alert(result.error || "Не удалось удалить модель")
         return
       }
 
@@ -821,11 +666,7 @@ export async function initReferenceDialog() {
     }
   }
 
-
-  // --------------------------------------------------
-  // Редактирование
-  // --------------------------------------------------
-
+  // Открывает диалог редактирования справочника
   function editReference(
     selector,
     value
@@ -850,10 +691,7 @@ export async function initReferenceDialog() {
     buttonColor.style.backgroundColor = editColor.value
   })
 
-  // --------------------------------------------------
   // Selector: Тип
-  // --------------------------------------------------
-
   const typeSelector =
     createReferenceSelector(
       "Тип",
@@ -864,16 +702,11 @@ export async function initReferenceDialog() {
 
           selectedNodeType = value
 
-          if (value) {
-            enteredNodeType = value.name
-          }
+          if (value) { enteredNodeType = value.name }
 
           updateSelectors()
 
-          console.log(
-            "Выбран тип:",
-            selectedNodeType
-          )
+          console.log("Выбран тип:", selectedNodeType)
         },
 
         onInput: (value, match) => {
@@ -898,10 +731,7 @@ export async function initReferenceDialog() {
     )
 
 
-  // --------------------------------------------------
   // Selector: Производитель
-  // --------------------------------------------------
-
   const vendorSelector =
     createReferenceSelector(
       "Производитель",
@@ -912,16 +742,11 @@ export async function initReferenceDialog() {
 
           selectedVendor = value
 
-          if (value) {
-            enteredVendor = value.name
-          }
+          if (value) { enteredVendor = value.name }
 
           updateSelectors()
 
-          console.log(
-            "Выбран производитель:",
-            selectedVendor
-          )
+          console.log("Выбран производитель:", selectedVendor)
         },
 
         onInput: (value, match) => {
@@ -944,11 +769,7 @@ export async function initReferenceDialog() {
       }
     )
 
-
-  // --------------------------------------------------
   // Selector: Модель
-  // --------------------------------------------------
-
   const modelSelector =
     createReferenceSelector(
       "Модель",
@@ -1031,29 +852,17 @@ export async function initReferenceDialog() {
       }
     )
 
-
-  // --------------------------------------------------
   // Edit dialog
-  // --------------------------------------------------
-
-  editCancel.addEventListener(
-    "click",
-    () => {
-      editDialog.close()
-    }
-  )
+  editCancel.addEventListener("click", () => { editDialog.close() })
 
 
   editSave.addEventListener(
     "click",
     async () => {
 
-      const newValue =
-        editInput.value.trim()
+      const newValue = editInput.value.trim()
 
-      if (!newValue) {
-        return
-      }
+      if (!newValue) { return }
 
       if (
         currentSelector.hasValue(
@@ -1061,9 +870,7 @@ export async function initReferenceDialog() {
           currentValue
         )
       ) {
-        alert(
-          "Такое значение уже существует"
-        )
+        alert("Такое значение уже существует")
 
         return
       }
@@ -1075,41 +882,22 @@ export async function initReferenceDialog() {
           newValue
         )
 
-      if (!success) {
-        return
-      }
+      if (!success) { return }
 
       editDialog.close()
     }
   )
 
-
-  // --------------------------------------------------
   // Reference dialog
-  // --------------------------------------------------
+  referenceDialogClose.addEventListener("click", () => { referenceDialog.close() })
 
-  referenceDialogClose.addEventListener(
-    "click",
-    () => {
-      referenceDialog.close()
-    }
-  )
-
-
-  // --------------------------------------------------
   // Добавляем selector'ы
-  // --------------------------------------------------
-
   row.append(
     typeSelector.element,
     vendorSelector.element,
     modelSelector.element
   )
 
-
-  // --------------------------------------------------
   // Первая отрисовка
-  // --------------------------------------------------
-
   updateSelectors()
 }

@@ -1,6 +1,5 @@
-export function createReferenceSelector(
-  title,
-  data,
+// Создаёт селектор справочника
+export function createReferenceSelector(title, data,
   {
     onSelect = () => { },
     onInput = () => { },
@@ -46,10 +45,7 @@ export function createReferenceSelector(
   let selected = null
   let addEnabled = true
 
-  // --------------------------------------------------
-  // Список
-  // --------------------------------------------------
-
+  // Отображает отфильтрованный список элементов
   function renderList() {
 
     const search = input.value.trim().toLowerCase()
@@ -102,11 +98,7 @@ export function createReferenceSelector(
     updateLeftButton()
   }
 
-
-  // --------------------------------------------------
-  // Update left button
-  // --------------------------------------------------
-
+  // Обновляет иконку кнопки добавления
   function updateLeftButton() {
 
     if (!onAdd) {
@@ -129,43 +121,28 @@ export function createReferenceSelector(
     leftButton.textContent = exists ? "filter_list" : "playlist_add"
   }
 
-
-  // --------------------------------------------------
-  // Clear button X/search
-  // --------------------------------------------------
-
+  // Обновляет иконку кнопки поиска и очистки
   function updateClearButton() {
     clearButton.textContent = input.value.trim() ? "close" : "search"
   }
 
-  // --------------------------------------------------
-  // Add enabled
-  // --------------------------------------------------
-
+  // Управляет доступностью добавления элемента
   function setAddEnabled(value) {
-
     addEnabled = value
     updateLeftButton()
   }
 
-
-  // --------------------------------------------------
-  // Load
-  // --------------------------------------------------
-
+  // Загружает новый список элементов
   function load(newItems) {
 
     items = [...newItems]
     renderList()
   }
 
-
-  // --------------------------------------------------
-  // Selected
-  // --------------------------------------------------
-
+  // Возвращает выбранный элемент
   function getSelected() { return selected }
 
+  // Устанавливает выбранный элемент
   function setSelected(value) {
 
     selected = value
@@ -174,11 +151,7 @@ export function createReferenceSelector(
     renderList()
   }
 
-
-  // --------------------------------------------------
-  // Проверка значения
-  // --------------------------------------------------
-
+  // Проверяет наличие значения в списке
   function hasValue(
     value,
     exceptValue = null
@@ -196,19 +169,17 @@ export function createReferenceSelector(
     })
   }
 
-
+  // Устанавливает значение поля ввода
   function setInputValue(value) {
     input.value = value || ""
 
     renderList()
   }
 
+  // Возвращает значение поля ввода
   function getInputValue() { return input.value }
 
-  // --------------------------------------------------
-  // Rename
-  // --------------------------------------------------
-
+  // Переименовывает элемент в локальном списке
   function rename(
     oldValue,
     newValue
@@ -234,11 +205,7 @@ export function createReferenceSelector(
     return true
   }
 
-
-  // --------------------------------------------------
-  // Add item
-  // --------------------------------------------------
-
+  // Добавляет элемент в локальный список
   function add(value) {
 
     items.push(value)
@@ -249,15 +216,10 @@ export function createReferenceSelector(
     renderList()
   }
 
-
-  // --------------------------------------------------
   // Search / Input
-  // --------------------------------------------------
-
   input.addEventListener("input", () => {
 
     const value = input.value
-
     const match = items.find(item => item.name.trim().toLowerCase() === value.toLowerCase()) || null
 
     onInput(value, match)
@@ -265,11 +227,7 @@ export function createReferenceSelector(
     renderList()
   })
 
-
-  // --------------------------------------------------
   // Clear button
-  // --------------------------------------------------
-
   clearButton.addEventListener("click", () => {
 
     if (!input.value.trim()) { return }
@@ -282,10 +240,7 @@ export function createReferenceSelector(
     renderList()
   })
 
-  // --------------------------------------------------
   // Add
-  // --------------------------------------------------
-
   leftButton.addEventListener("click", () => {
 
     if (!onAdd) { return }
@@ -304,9 +259,7 @@ export function createReferenceSelector(
     onAdd(value)
   })
 
-
   load(items)
-
 
   return {
     element: container,

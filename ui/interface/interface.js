@@ -1,3 +1,4 @@
+// Загружает HTML диалога оборудования
 export async function loadEquipmentDialog() {
 
   const response = await fetch("./ui/interface/equipmentDialog.html")
@@ -13,6 +14,7 @@ export async function loadEquipmentDialog() {
 
 }
 
+// Загружает HTML диалога справочников
 export async function loadReferenceDialog() {
 
   const response = await fetch("./ui/interface/referenceDialog.html")
@@ -27,6 +29,7 @@ export async function loadReferenceDialog() {
   dialogs.insertAdjacentHTML("beforeend", html)
 }
 
+// Загружает HTML диалога настроек
 export async function loadSettingsDialog() {
 
   const response = await fetch("./ui/interface/settingsDialog.html")
@@ -42,6 +45,7 @@ export async function loadSettingsDialog() {
 
 }
 
+// Инициализирует кнопку открытия справочников
 export function initReferenceButton() {
 
   const button = document.querySelector("#referencesButton")
@@ -54,6 +58,7 @@ export function initReferenceButton() {
 
 }
 
+// Инициализирует кнопку открытия настроек
 export function initSettingsButton() {
 
   const button = document.querySelector("#settingsButton")
@@ -69,6 +74,7 @@ export function initSettingsButton() {
 
 }
 
+// Загружает HTML диалога дерева
 export async function loadTreeDialog() {
 
   const response = await fetch("./ui/interface/treeDialog.html")
@@ -86,6 +92,7 @@ export async function loadTreeDialog() {
 
 export { initTreeDialog } from "../tree/treeDialog.js"
 
+// Загружает HTML диалога подтверждения
 export async function loadConfirmDialog() {
 
   const response = await fetch("./ui/interface/confirmDialog.html")

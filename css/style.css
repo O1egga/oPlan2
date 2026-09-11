@@ -20,9 +20,10 @@ body {
   z-index: 1000;
 }
 
-#relationAction {
+/* !ПРОВЕРИТЬ */
+/* #relationAction {
   cursor: pointer;
-}
+} */
 
 /* Beer CSS переопределяет стандартный hidden */
 #confirmInputField[hidden] {

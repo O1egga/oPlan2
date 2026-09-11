@@ -9,6 +9,7 @@ import { loadPorts, fillPorts } from "./equipmentPorts.js"
 
 import { applyVisibility } from "../tree/applyVisibility.js"
 
+// Инициализирует диалог оборудования
 export function initEquipmentDialog(myDiagram, portTypes, refreshTree, refreshDiagram, tree) {
 
   const dialog = document.querySelector("#equipmentDialog")
@@ -222,7 +223,7 @@ export function openAddEquipmentDialog(groupId) {
   dialog.showModal()
 }
 
-
+// Проверяет изменения оборудования и портов
 function checkEquipmentChanges(dialog) {
 
   const original = dialog._originalEquipmentState
@@ -250,7 +251,7 @@ function checkEquipmentChanges(dialog) {
 
 }
 
-
+// Получает текущее состояние портов из формы
 function getCurrentPorts(dialog) {
 
   return [
@@ -264,7 +265,7 @@ function getCurrentPorts(dialog) {
 
 }
 
-
+// Открывает диалог редактирования оборудования
 export async function openEquipmentDialog(node, portTypes) {
 
   const dialog = document.querySelector("#equipmentDialog")

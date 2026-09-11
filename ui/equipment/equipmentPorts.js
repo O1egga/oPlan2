@@ -1,6 +1,11 @@
 import { createPortListItem } from "./addPorts.js"
 
+// Собирает данные портов из формы !ПРОВЕРИТЬ
 export function collectPorts(dialog) {
+
+  /*
+  Причина именно архитектурная: позже нужно сверить, зачем в Ports одновременно хранятся portNo и name, и действительно ли name должен автоматически получать значение номера.
+  */
 
   const portList = dialog.querySelector(".ports")
   const ports = [...portList.querySelectorAll("li")]
@@ -16,6 +21,7 @@ export function collectPorts(dialog) {
 
 }
 
+// Сохраняет порты оборудования в БД
 export async function savePorts(nodeId, ports) {
 
   if (ports.length === 0) { return }
@@ -34,6 +40,7 @@ export async function savePorts(nodeId, ports) {
 
 }
 
+// Загружает порты оборудования из БД
 export async function loadPorts(nodeId) {
 
   const response = await fetch(`api/nodes/ports/getPorts.php?nodeId=${nodeId}`)
@@ -44,6 +51,7 @@ export async function loadPorts(nodeId) {
 
 }
 
+// Заполняет список портов данными оборудования
 export function fillPorts(dialog, ports, portTypes) {
 
   const portList = dialog.querySelector(".ports")
@@ -73,6 +81,7 @@ export function fillPorts(dialog, ports, portTypes) {
 
 }
 
+// Удаляет порты оборудования из БД
 export async function deletePorts(portIds) {
 
   if (!portIds || portIds.length === 0) {
@@ -109,6 +118,7 @@ export async function deletePorts(portIds) {
 
 }
 
+// Проверяет использование портов перед удалением
 export async function checkPorts(portIds) {
 
   if (!portIds || portIds.length === 0) {

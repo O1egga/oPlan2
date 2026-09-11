@@ -1,5 +1,12 @@
-// Показывает окно подтверждения
+// Показывает окно подтверждения !ПРОВЕРИТЬ
 export function showConfirmDialog(title, message, onConfirm, options = {}) {
+
+  /*
+  То есть сейчас в проекте два showConfirmDialog():
+  
+  ui/equipment/confirmDialog.js
+  ui/interface/confirmDialog.js
+  */
 
   const dialog = document.querySelector("#confirmDialog")
 
@@ -42,16 +49,12 @@ export function showConfirmDialog(title, message, onConfirm, options = {}) {
       : await onConfirm()
 
     // Закрываем только если обработчик завершился успешно
-    if (result !== false) {
-      dialog.close()
-    }
+    if (result !== false) { dialog.close() }
   })
 
   cancelButton.onclick = () => { dialog.close() }
 
   dialog.showModal()
 
-  if (options.input) {
-    inputElement.focus()
-  }
+  if (options.input) { inputElement.focus() }
 }

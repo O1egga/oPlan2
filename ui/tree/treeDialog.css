@@ -76,10 +76,10 @@
   cursor: pointer;
 }
 
-#tree {
+/* #tree {
   height: calc(100vh - 5rem);
   overflow: auto;
-}
+} */
 
 .tree-context-menu {
   position: fixed;

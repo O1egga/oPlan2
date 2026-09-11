@@ -1,4 +1,4 @@
-// Применяет выбранные элементы Wunderbaum к видимости GoJS
+// Применяет видимость элементов GoJS по выбору в Wunderbaum
 export function applyVisibility(diagram, tree) {
 
   // Сначала скрываем все группы и оборудование
@@ -28,12 +28,9 @@ export function applyVisibility(diagram, tree) {
       goKey = Number(node.key.replace("node-", ""))
     }
 
-    const part =
-      diagram.findPartForKey(goKey)
+    const part = diagram.findPartForKey(goKey)
 
-    if (part) {
-      part.visible = true
-    }
+    if (part) { part.visible = true }
 
   })
 

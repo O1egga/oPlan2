@@ -1,4 +1,4 @@
-// Обновляем родителя оборудования в БД
+// Обновляет родителя оборудования в БД
 export async function updateNodeParent(nodeId, groupId) {
 
   const response = await fetch("./api/nodes/updateNodeParent.php", {
@@ -21,7 +21,7 @@ export async function updateNodeParent(nodeId, groupId) {
   return result
 }
 
-// Удаляем оборудование из БД
+// Удаляет оборудование из БД
 export async function deleteNode(nodeId) {
 
   const response = await fetch("./api/nodes/deleteNode.php", {

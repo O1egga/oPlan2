@@ -1,5 +1,4 @@
-// Настройки диаграммы
-
+// Настраивает параметры диаграммы
 export function configureDiagram(diagram) {
   diagram.grid = new go.Panel("Grid").add(
     new go.Shape("LineH", {

@@ -1,6 +1,6 @@
 import { renumberPorts } from "./portUtils.js"
 
-// Создаёт один порт в списке
+// Создаёт элемент списка портов
 export function createPortListItem(
   portType,
   portTypeId,
@@ -24,7 +24,7 @@ export function createPortListItem(
 }
 
 
-// Добавляет порты
+// Добавляет новые порты выбранного типа
 export function addPorts(button, portTypes) {
 
   const dialog = button.closest("dialog")
